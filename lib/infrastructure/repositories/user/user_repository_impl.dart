@@ -1,6 +1,6 @@
-import 'package:sign_in_bloc/infrastructure/services/api_connection_manager.dart';
+import 'package:sign_in_bloc/infrastructure/datasources/api/api_connection_manager.dart';
 
-import '../../../commons/result.dart';
+import '../../../common/result.dart';
 import '../../../domain/user/repository/user_repository.dart';
 import '../../../domain/user/user.dart';
 import '../../../infrastructure/mappers/user/user_mapper.dart';

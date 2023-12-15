@@ -1,4 +1,4 @@
-import '../../../commons/result.dart';
+import '../../../common/result.dart';
 import '../playlist.dart';
 
 abstract class PlaylistRepository {

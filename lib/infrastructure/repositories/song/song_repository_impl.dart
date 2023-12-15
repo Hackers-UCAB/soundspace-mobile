@@ -1,7 +1,7 @@
 import 'package:sign_in_bloc/domain/song/repository/song_repository.dart';
 import 'package:sign_in_bloc/infrastructure/mappers/song/song_mapper.dart';
-import 'package:sign_in_bloc/infrastructure/services/api_connection_manager.dart';
-import 'package:sign_in_bloc/commons/result.dart';
+import 'package:sign_in_bloc/infrastructure/datasources/api/api_connection_manager.dart';
+import 'package:sign_in_bloc/common/result.dart';
 import '../../../domain/song/song.dart';
 
 class SongRepositoryImpl extends SongRepository {

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:sign_in_bloc/application/services/connection_manager.dart';
+import 'package:sign_in_bloc/application/services/internet_connection/connection_manager.dart';
 
 part 'connectivity_event.dart';
 part 'connectivity_state.dart';

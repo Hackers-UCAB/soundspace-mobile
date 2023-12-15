@@ -6,19 +6,39 @@ import 'valueObjects/phone_value_object.dart';
 import 'valueObjects/user_role_value_object.dart';
 
 class User {
-  final IdUser id;
-  final UserName? name;
-  final EmailAddress? email;
-  final PhoneNumber? phone;
-  final UserRole? role;
-  final BirthDate? birthdate;
+  final IdUser? _id;
+  final UserName? _name;
+  final EmailAddress? _email;
+  final PhoneNumber? _phone;
+  final UserRole? _role;
+  final BirthDate? _birthdate;
+  final String? _appToken;
+  final String? _notificationsToken;
 
-  User({
-    required this.id,
-    this.name,
-    this.email,
-    this.phone,
-    this.role,
-    this.birthdate,
-  });
+  User(
+      {IdUser? id,
+      UserName? name,
+      EmailAddress? email,
+      PhoneNumber? phone,
+      UserRole? role,
+      BirthDate? birthdate,
+      String? appToken,
+      String? notificationsToken})
+      : _id = id,
+        _name = name,
+        _email = email,
+        _phone = phone,
+        _role = role,
+        _birthdate = birthdate,
+        _appToken = appToken,
+        _notificationsToken = notificationsToken;
+
+  IdUser? get id => _id;
+  UserName? get name => _name;
+  EmailAddress? get email => _email;
+  PhoneNumber? get phone => _phone;
+  UserRole? get role => _role;
+  BirthDate? get birthdate => _birthdate;
+  String? get appToken => _appToken;
+  String? get notificationsToken => _notificationsToken;
 }

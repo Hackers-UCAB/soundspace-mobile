@@ -1,18 +1,18 @@
 part of 'app_router.dart';
 
 class AuthRouteGuard {
-  final AuthBloc authBloc;
+  final UserPermissionsBloc userPermissionsBloc;
 
-  AuthRouteGuard({required this.authBloc});
+  AuthRouteGuard({required this.userPermissionsBloc});
 
-  bool canNavigate() => authBloc.state is Authenticated;
+  bool canNavigate() => userPermissionsBloc.state.isAuthenticated == true;
 }
 
 class SubscriptionRouteGuard {
   //TODO: implementar subscriptionBLoC
-  final AuthBloc authBloc;
+  final UserPermissionsBloc userPermissionsBloc;
 
-  SubscriptionRouteGuard({required this.authBloc});
+  SubscriptionRouteGuard({required this.userPermissionsBloc});
 
-  bool canNavigate() => authBloc.state is Authenticated;
+  bool canNavigate() => userPermissionsBloc.state.isSubscribed == true;
 }

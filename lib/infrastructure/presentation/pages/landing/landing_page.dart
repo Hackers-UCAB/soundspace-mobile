@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/shared_widgets/ipage.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 
 class LandingPage extends IPage {
   const LandingPage({super.key});

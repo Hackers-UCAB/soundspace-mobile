@@ -1,5 +1,7 @@
 class IdUser {
-  final String id;
+  final String _id;
 
-  const IdUser(this.id);
+  IdUser({required String id}) : _id = id;
+
+  String get id => _id;
 }

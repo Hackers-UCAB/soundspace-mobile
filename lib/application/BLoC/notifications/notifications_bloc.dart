@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../../services/local_notifications.dart';
+import '../../services/foreground_notifications/local_notifications.dart';
 
 part 'notifications_event.dart';
 part 'notifications_state.dart';

@@ -1,4 +1,4 @@
-import 'package:sign_in_bloc/commons/result.dart';
+import 'package:sign_in_bloc/common/result.dart';
 import 'package:sign_in_bloc/domain/user/user.dart';
 
 abstract class UserRepository {

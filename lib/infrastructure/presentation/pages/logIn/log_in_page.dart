@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/router/app_router.dart';
-import '../../../../application/BLoC/auth/auth_bloc.dart';
-import '../../shared_widgets/ipage.dart';
+import '../../widgets/ipage.dart';
 import 'Widgets/custom_text_form_field.dart';
 import 'Widgets/error_square.dart';
 import 'Widgets/my_button.dart';
@@ -70,8 +70,9 @@ class _RegisterForm extends StatelessWidget {
     final getIt = GetIt.instance;
     final registerBloc = getIt.get<LogInSubscriberBloc>();
     final appNavigator = getIt.get<AppNavigator>();
-    return BlocListener<AuthBloc, AuthState>(listener: (context, state) {
-      if (state is Authenticated) {
+    return BlocListener<UserPermissionsBloc, UserPermissionsState>(
+        listener: (context, state) {
+      if (state.isAuthenticated) {
         appNavigator.navigateTo('/home');
       }
     }, child: BlocBuilder<LogInSubscriberBloc, LogInSubscriberState>(

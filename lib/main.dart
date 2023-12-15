@@ -4,16 +4,16 @@ import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/connectivity/connectivity_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/theme/app_theme.dart';
-import 'package:sign_in_bloc/infrastructure/services/inject_manager.dart';
-import 'application/BLoC/auth/auth_bloc.dart';
+import 'package:sign_in_bloc/infrastructure/services/config/inject_manager.dart';
 import 'application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import 'application/BLoC/player/player_bloc.dart';
 import 'infrastructure/presentation/config/router/app_router.dart';
 
 Future<void> main() async {
   //TODO: en vez de tener el main como Future hace un splash screen con future builder
-  await InjectManager.initialized();
+  await InjectManager.setUpInjections();
 
   runApp(const MyApp());
 }
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           create: (context) => getIt.get<PlayerBloc>(),
         ),
         BlocProvider(
-          create: (context) => getIt.get<AuthBloc>(),
+          create: (context) => getIt.get<UserPermissionsBloc>(),
         ),
         BlocProvider(
           create: (context) => getIt.get<TrendingsBloc>(),

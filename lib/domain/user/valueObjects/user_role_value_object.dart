@@ -1,6 +1,10 @@
-class UserRole {
-  final String value;
+enum UserRoles {
+  guest,
+  subscriber,
+}
 
-  const UserRole(this.value);
-//Por ahora es un string, me imagino que tendremos otro tipo de dato para esto
+class UserRole {
+  final UserRoles role;
+
+  const UserRole({required this.role});
 }
