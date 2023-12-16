@@ -1,4 +1,4 @@
 abstract class LocationManager {
-  Future<bool> checkGpsStatus();
+  Stream<bool> locationStatusStream();
   Future<bool> isLocationServiceEnabled();
 }

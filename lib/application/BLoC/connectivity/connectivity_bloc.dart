@@ -15,8 +15,8 @@ class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
 
   Future<void> _checkConnection(
       ConnectivityCheckRequested event, Emitter<ConnectivityState> emit) async {
-    final subscriptionSteam = connectionManager.checkConnectionStream();
-    await for (final isConnected in subscriptionSteam) {
+    final subscriptionStream = connectionManager.checkConnectionStream();
+    await for (final isConnected in subscriptionStream) {
       isConnected
           ? emit(
               ConnectedState(willNeedReconnection: state.willNeedReconnection))

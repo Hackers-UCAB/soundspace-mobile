@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
@@ -29,6 +30,8 @@ import '../../repositories/playlist/playlist_repository_impl.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../repositories/user/user_repository_impl.dart';
 import '../foreground_notifications/local_notifications_impl.dart';
+import '../location/location_manager.dart';
+import '../location/location_permission_manager.dart';
 
 class InjectManager {
   static Future<void> firebaseMessagingBackgroundHandler(
@@ -49,13 +52,14 @@ class InjectManager {
     //env
     await dotenv.load(fileName: ".env");
     //services
-
     final apiConnectionManagerImpl = ApiConnectionManagerImpl(
         baseUrl:
             dotenv.env['API_URL']!); //TODO:a esto hay que hacerle la interfaz
 
     final localNotifications = LocalNotificationsImpl()
       ..inicializeLocalNotifications();
+    final locationManager = LocationManagerImpl();
+    final locationPermission = LocationPermissionImpl();
     //repositories
     final userRepository =
         UserRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
@@ -106,12 +110,21 @@ class InjectManager {
         ConnectivityBloc(connectionManager: ConnectionManagerImpl()));
     getIt.registerSingleton<NotificationsBloc>(
         NotificationsBloc(localNotifications: localNotifications));
-    //para chekear el estado de la autenticacion
+    getIt.registerSingleton<GpsBloc>(GpsBloc(
+        locationManager: locationManager,
+        locationPermission: locationPermission));
+    //check if user has a session
     userPermissionsBloc.add(UserPermissionsRequested());
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);
     final subscriptionGuard =
         SubscriptionRouteGuard(userPermissionsBloc: userPermissionsBloc);
+
     getIt.registerSingleton<AppNavigator>(AppNavigator(
         authRouteGuard: authGuard, subscriptionRouteGuard: subscriptionGuard));
+
+    //active the gps bloc if is subscribed
+    if (userPermissionsBloc.state.isSubscribed) {
+      getIt.get<GpsBloc>().add(GpsInitializedEvent());
+    }
   }
 }
