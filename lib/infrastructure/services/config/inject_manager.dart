@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
@@ -59,7 +60,8 @@ class InjectManager {
     final localNotifications = LocalNotificationsImpl()
       ..inicializeLocalNotifications();
     final locationManager = LocationManagerImpl();
-    final locationPermission = LocationPermissionImpl();
+    final locationPermission =
+        LocationPermissionImpl(permissions: Permission.location);
     //repositories
     final userRepository =
         UserRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
@@ -124,7 +126,9 @@ class InjectManager {
 
     //active the gps bloc if is subscribed
     if (userPermissionsBloc.state.isSubscribed) {
-      getIt.get<GpsBloc>().add(GpsInitializedEvent());
+      final gpsBloc = getIt.get<GpsBloc>();
+      gpsBloc.add(GpsInitializedEvent());
+      gpsBloc.add(GpsStatusChangedEvent());
     }
   }
 }

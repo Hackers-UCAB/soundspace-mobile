@@ -37,13 +37,10 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
 
   Future<void> _requestedGpsAccessEvent(
       RequestedGpsAccess event, Emitter<GpsState> emit) async {
-    final status = await locationPermission.requestPermission();
+    final hasPermission = await locationPermission.requestPermission();
 
-    status
+    hasPermission
         ? emit(state.copyWith(isGpsPermissionGranted: true))
         : emit(state.copyWith(isGpsPermissionGranted: false));
-
-    final isGranted = await locationPermission.requestPermission();
-    emit(state.copyWith(isGpsPermissionGranted: isGranted));
   }
 }
