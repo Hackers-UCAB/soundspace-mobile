@@ -2,9 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-// import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
@@ -32,8 +32,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../repositories/user/user_repository_impl.dart';
 import '../foreground_notifications/local_notifications_impl.dart';
 import '../streaming/socket_client_impl.dart';
-// import '../location/location_manager.dart';
-// import '../location/location_permission_manager.dart';
+import '../location/location_manager.dart';
+import '../location/location_permission_manager.dart';
 
 class InjectManager {
   static Future<void> firebaseMessagingBackgroundHandler(
@@ -64,9 +64,9 @@ class InjectManager {
 
     final localNotifications = LocalNotificationsImpl()
       ..inicializeLocalNotifications();
-    // final locationManager = LocationManagerImpl();
-    // final locationPermission =
-    //     LocationPermissionImpl(permissions: Permission.location);
+    final locationManager = LocationManagerImpl();
+    final locationPermission =
+        LocationPermissionImpl(permissions: Permission.location);
     //repositories
     final userRepository =
         UserRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
@@ -82,6 +82,10 @@ class InjectManager {
         SongRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
     final sharedPreferences = await SharedPreferences.getInstance();
     final localStorage = LocalStorageImpl(prefs: sharedPreferences);
+    await localStorage.setKeyValue('userId', '1');
+    await localStorage.setKeyValue('appToken', '1');
+    await localStorage.setKeyValue('notificationsToken', '1');
+    await localStorage.setKeyValue('userRole', 'subscriber');
     //usecases
     final LogInUseCase logInUseCase = LogInUseCase(
         userRepository: userRepository, localStorage: localStorage);
@@ -112,16 +116,17 @@ class InjectManager {
     getIt.registerSingleton<PlayerBloc>(PlayerBloc());
     getIt.registerSingleton<LogInSubscriberBloc>(
         LogInSubscriberBloc(logInUseCase: logInUseCase));
-    final userPermissionsBloc = getIt.get<UserPermissionsBloc>();
+    final userPermissionsBloc = getIt.get<UserPermissionsBloc>()
+      ..add(UserPermissionsRequested());
     getIt.registerSingleton<ConnectivityBloc>(
         ConnectivityBloc(connectionManager: ConnectionManagerImpl()));
     getIt.registerSingleton<NotificationsBloc>(
         NotificationsBloc(localNotifications: localNotifications));
-    // getIt.registerSingleton<GpsBloc>(GpsBloc(
-    //     locationManager: locationManager,
-    //     locationPermission: locationPermission));
+    getIt.registerSingleton<GpsBloc>(GpsBloc(
+        locationManager: locationManager,
+        locationPermission: locationPermission,
+        userPermissionsBloc: userPermissionsBloc));
     //check if user has a session
-    userPermissionsBloc.add(UserPermissionsRequested());
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);
     final subscriptionGuard =
         SubscriptionRouteGuard(userPermissionsBloc: userPermissionsBloc);
@@ -129,11 +134,6 @@ class InjectManager {
     getIt.registerSingleton<AppNavigator>(AppNavigator(
         authRouteGuard: authGuard, subscriptionRouteGuard: subscriptionGuard));
 
-    //active the gps bloc if is subscribed
-    // if (userPermissionsBloc.state.isSubscribed) {
-    //   final gpsBloc = getIt.get<GpsBloc>();
-    //   gpsBloc.add(GpsInitializedEvent());
-    //   gpsBloc.add(GpsStatusChangedEvent());
-    // }
+    // active the gps bloc if is subscribed
   }
 }

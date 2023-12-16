@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/application/services/location/location_manager.dart';
 import 'package:sign_in_bloc/application/services/location/location_permission_manager.dart';
 
@@ -9,13 +10,23 @@ part 'gps_state.dart';
 class GpsBloc extends Bloc<GpsEvent, GpsState> {
   final LocationManager locationManager;
   final LocationPermission locationPermission;
+  final UserPermissionsBloc userPermissionsBloc;
 
-  GpsBloc({required this.locationManager, required this.locationPermission})
+  GpsBloc(
+      {required this.userPermissionsBloc,
+      required this.locationManager,
+      required this.locationPermission})
       : super(const GpsState(
             isGpsEnabled: false, isGpsPermissionGranted: false)) {
     on<GpsInitializedEvent>(_gpsInitializedEvent);
     on<GpsStatusChangedEvent>(_gpsStatusChangedEvent);
     on<RequestedGpsAccess>(_requestedGpsAccessEvent);
+
+    userPermissionsBloc.stream.listen((state) {
+      if (state.isSubscribed) {
+        add(GpsInitializedEvent());
+      }
+    });
   }
 
   Future<void> _gpsInitializedEvent(

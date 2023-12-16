@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/connectivity/connectivity_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 
 abstract class IPage extends StatelessWidget {
   const IPage({super.key});
@@ -16,7 +18,6 @@ abstract class IPage extends StatelessWidget {
         BlocListener<ConnectivityBloc, ConnectivityState>(
           listener: (context, state) {
             if (state is NotConnectedState || state.willNeedReconnection) {
-              //TODO: poner esto como un showDialog bonito en un widget privado or something
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: state is NotConnectedState
@@ -26,6 +27,15 @@ abstract class IPage extends StatelessWidget {
                       state is NotConnectedState ? Colors.red : Colors.green,
                 ),
               );
+            }
+
+            if (GetIt.instance.get<UserPermissionsBloc>().state.isSubscribed &&
+                state is ConnectedState) {
+              BlocListener<GpsBloc, GpsState>(listener: (context, state) {
+                if (!state.isGpsEnabled) {
+                } else if (!state.isAllGranted) {}
+                //verificar si esta en Venezuela
+              });
             }
           },
           child: BlocBuilder<ConnectivityBloc, ConnectivityState>(
