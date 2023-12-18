@@ -1,14 +1,16 @@
 part of 'notifications_bloc.dart';
 
+enum NotificationsStatus { authorized, denied, notDetermined }
+
 class NotificationsState extends Equatable {
-  final AuthorizationStatus status;
+  final bool status; //TODO: No deberia estar aqui
 
   const NotificationsState({
-    this.status = AuthorizationStatus.notDetermined,
+    this.status = false,
   });
 
   NotificationsState copyWith({
-    AuthorizationStatus? status,
+    bool? status,
   }) =>
       NotificationsState(
         status: status ?? this.status,

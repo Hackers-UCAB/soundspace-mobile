@@ -9,7 +9,6 @@ class AuthRouteGuard {
 }
 
 class SubscriptionRouteGuard {
-  //TODO: implementar subscriptionBLoC
   final UserPermissionsBloc userPermissionsBloc;
 
   SubscriptionRouteGuard({required this.userPermissionsBloc});

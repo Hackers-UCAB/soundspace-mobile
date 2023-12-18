@@ -41,8 +41,6 @@ class InjectManager {
     // If you're going to use other Firebase services in the background, such as Firestore,
     // make sure you call `initializeApp` before using other Firebase services.
     await Firebase.initializeApp();
-
-    print("Handling a background message: ${message.messageId}");
   }
 
   static Future<void> setUpInjections() async {
@@ -58,13 +56,14 @@ class InjectManager {
     final socketClient = SocketClientImpl();
     socketClient.inicializeSocket();
 
-    final apiConnectionManagerImpl = ApiConnectionManagerImpl(
-        baseUrl:
-            dotenv.env['API_URL']!); //TODO:a esto hay que hacerle la interfaz
+    final apiConnectionManagerImpl =
+        ApiConnectionManagerImpl(baseUrl: dotenv.env['API_URL']!);
 
     final localNotifications = LocalNotificationsImpl(
-        flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin())
+        flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin(),
+        messaging: FirebaseMessaging.instance)
       ..inicializeLocalNotifications();
+
     final locationManager = LocationManagerImpl();
     //repositories
     final userRepository =
@@ -81,11 +80,11 @@ class InjectManager {
         SongRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
     final sharedPreferences = await SharedPreferences.getInstance();
     final localStorage = LocalStorageImpl(prefs: sharedPreferences);
-
-    // await localStorage.setKeyValue('userId', '1');
-    // await localStorage.setKeyValue('appToken', '1');
-    // await localStorage.setKeyValue('notificationsToken', '1');
-    // await localStorage.setKeyValue('userRole', 'subscriber');
+    print(await localNotifications.getToken());
+    await localStorage.setKeyValue('userId', '1');
+    await localStorage.setKeyValue('appToken', '1');
+    await localStorage.setKeyValue('notificationsToken', '1');
+    await localStorage.setKeyValue('userRole', 'subscriber');
     //usecases
     final LogInUseCase logInUseCase = LogInUseCase(
         userRepository: userRepository, localStorage: localStorage);

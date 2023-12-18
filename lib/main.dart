@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
     final getIt = GetIt.instance;
     final appNavigator = getIt.get<AppNavigator>();
 
-    //TODO: poner esto en un widget privado
     return MaterialApp.router(
       title: dotenv.env['APP_NAME']!,
       debugShowCheckedModeBanner: false,
@@ -39,6 +38,7 @@ class MyApp extends StatelessWidget {
       routeInformationParser: appNavigator.routeInformationParser,
       routeInformationProvider: appNavigator.routeInformationProvider,
       builder: (context, child) {
+        //TODO: poner esto en un widget separado
         return MultiBlocProvider(
             providers: [
               BlocProvider(

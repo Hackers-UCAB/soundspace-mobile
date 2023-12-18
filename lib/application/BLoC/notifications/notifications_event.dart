@@ -5,6 +5,6 @@ abstract class NotificationsEvent {
 }
 
 class NotificationStatusChanged extends NotificationsEvent {
-  final AuthorizationStatus status;
-  NotificationStatusChanged(this.status);
+  final bool status;
+  NotificationStatusChanged({required this.status});
 }

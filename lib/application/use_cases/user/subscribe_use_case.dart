@@ -10,9 +10,9 @@ class SubscribeUseCase {
 
   Future<Result<User>> execute(String number, String operator) async {
     final result = await userRepository.signUpUser(number, operator);
+    //TODO: Setear el resto de keys
     if (result.hasValue()) {
       await localStorage.setKeyValue('token', result.value!.id!.id);
-      //TODO: esto no se si es asi, Francis revisalo plej
     }
 
     return result;

@@ -14,7 +14,8 @@ class AlbumRepositoryImpl extends AlbumRepository {
   @override
   Future<Result<List<Album>>> getTrendingAlbums() async {
     final result = await _apiConnectionManager.request(
-        'playlist/top_playlists?type=album', 'GET'); //TODO: carefull here
+        'playlist/top_playlists?type=album',
+        'GET'); //TODO: el type seria un query param? hacer prueba
     if (result.hasValue()) {
       return Result(
           value: AlbumMapper.fromJsonList(result.value.data['data']),
