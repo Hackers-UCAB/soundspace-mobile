@@ -25,3 +25,8 @@ class GpsState extends Equatable {
   String toString() =>
       '{ isGpsEnabled: $isGpsEnabled, isGpsPermissionGranted: $isGpsPermissionGranted }';
 }
+
+class GpsInitial extends GpsState {
+  const GpsInitial()
+      : super(isGpsEnabled: false, isGpsPermissionGranted: false);
+}

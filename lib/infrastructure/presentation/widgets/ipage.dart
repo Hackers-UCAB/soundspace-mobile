@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/connectivity/connectivity_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/bloc_listeners/gps_listener.dart';
 
 abstract class IPage extends StatelessWidget {
   const IPage({super.key});
@@ -15,40 +13,11 @@ abstract class IPage extends StatelessWidget {
     return Scaffold(
       body: Stack(children: [
         _GradientBackground(),
-        BlocListener<ConnectivityBloc, ConnectivityState>(
-          listener: (context, state) {
-            if (state is NotConnectedState || state.willNeedReconnection) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: state is NotConnectedState
-                      ? const Text('No internet connection')
-                      : const Text('Reconnecting...'),
-                  backgroundColor:
-                      state is NotConnectedState ? Colors.red : Colors.green,
-                ),
-              );
-            }
-
-            if (GetIt.instance.get<UserPermissionsBloc>().state.isSubscribed &&
-                state is ConnectedState) {
-              BlocListener<GpsBloc, GpsState>(listener: (context, state) {
-                if (!state.isGpsEnabled) {
-                } else if (!state.isAllGranted) {}
-                //verificar si esta en Venezuela
-              });
-            }
+        GpsListener(child: BlocBuilder<ConnectivityBloc, ConnectivityState>(
+          builder: (context, state) {
+            return child(context);
           },
-          child: BlocBuilder<ConnectivityBloc, ConnectivityState>(
-            builder: (context, state) {
-              if (state is ConnectivityInitialState) {
-                GetIt.instance
-                    .get<ConnectivityBloc>()
-                    .add(ConnectivityInitialCheckRequested());
-              }
-              return child(context);
-            },
-          ),
-        ),
+        ))
       ]),
     );
   }

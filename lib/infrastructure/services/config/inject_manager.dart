@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
@@ -33,7 +32,6 @@ import '../../repositories/user/user_repository_impl.dart';
 import '../foreground_notifications/local_notifications_impl.dart';
 import '../streaming/socket_client_impl.dart';
 import '../location/location_manager.dart';
-import '../location/location_permission_manager.dart';
 
 class InjectManager {
   static Future<void> firebaseMessagingBackgroundHandler(
@@ -65,8 +63,6 @@ class InjectManager {
     final localNotifications = LocalNotificationsImpl()
       ..inicializeLocalNotifications();
     final locationManager = LocationManagerImpl();
-    final locationPermission =
-        LocationPermissionImpl(permissions: Permission.location);
     //repositories
     final userRepository =
         UserRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
@@ -118,13 +114,13 @@ class InjectManager {
         LogInSubscriberBloc(logInUseCase: logInUseCase));
     final userPermissionsBloc = getIt.get<UserPermissionsBloc>()
       ..add(UserPermissionsRequested());
+    final connectionManager = ConnectionManagerImpl();
     getIt.registerSingleton<ConnectivityBloc>(
-        ConnectivityBloc(connectionManager: ConnectionManagerImpl()));
+        ConnectivityBloc(connectionManager: connectionManager));
     getIt.registerSingleton<NotificationsBloc>(
         NotificationsBloc(localNotifications: localNotifications));
     getIt.registerSingleton<GpsBloc>(GpsBloc(
         locationManager: locationManager,
-        locationPermission: locationPermission,
         userPermissionsBloc: userPermissionsBloc));
     //check if user has a session
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);

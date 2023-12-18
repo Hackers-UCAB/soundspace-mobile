@@ -12,3 +12,5 @@ class GpsInitializedEvent extends GpsEvent {}
 class GpsStatusChangedEvent extends GpsEvent {}
 
 class RequestedGpsAccess extends GpsEvent {}
+
+class PermissionStatusChangedEvent extends GpsEvent {}
