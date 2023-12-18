@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_u
 import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_local_data_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/user/subscribe_use_case.dart';
 import 'package:sign_in_bloc/infrastructure/repositories/album/album_repository_impl.dart';
 import 'package:sign_in_bloc/infrastructure/repositories/artist/artist_repository_impl.dart';
 import 'package:sign_in_bloc/infrastructure/repositories/promotional_banner/promotional_banner_repository_impl.dart';
@@ -60,7 +62,8 @@ class InjectManager {
         baseUrl:
             dotenv.env['API_URL']!); //TODO:a esto hay que hacerle la interfaz
 
-    final localNotifications = LocalNotificationsImpl()
+    final localNotifications = LocalNotificationsImpl(
+        flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin())
       ..inicializeLocalNotifications();
     final locationManager = LocationManagerImpl();
     //repositories
@@ -78,12 +81,15 @@ class InjectManager {
         SongRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
     final sharedPreferences = await SharedPreferences.getInstance();
     final localStorage = LocalStorageImpl(prefs: sharedPreferences);
-    await localStorage.setKeyValue('userId', '1');
-    await localStorage.setKeyValue('appToken', '1');
-    await localStorage.setKeyValue('notificationsToken', '1');
-    await localStorage.setKeyValue('userRole', 'subscriber');
+
+    // await localStorage.setKeyValue('userId', '1');
+    // await localStorage.setKeyValue('appToken', '1');
+    // await localStorage.setKeyValue('notificationsToken', '1');
+    // await localStorage.setKeyValue('userRole', 'subscriber');
     //usecases
     final LogInUseCase logInUseCase = LogInUseCase(
+        userRepository: userRepository, localStorage: localStorage);
+    final SubscribeUseCase subscribeUseCase = SubscribeUseCase(
         userRepository: userRepository, localStorage: localStorage);
     final GetPromotionalBannerUseCase getPromotionalBannerUseCase =
         GetPromotionalBannerUseCase(
@@ -110,8 +116,8 @@ class InjectManager {
     getIt.registerSingleton<UserPermissionsBloc>(
         UserPermissionsBloc(getUserLocalDataUseCase: getUserLocalDataUseCase));
     getIt.registerSingleton<PlayerBloc>(PlayerBloc());
-    getIt.registerSingleton<LogInSubscriberBloc>(
-        LogInSubscriberBloc(logInUseCase: logInUseCase));
+    getIt.registerSingleton<LogInSubscriberBloc>(LogInSubscriberBloc(
+        logInUseCase: logInUseCase, subscribeUseCase: subscribeUseCase));
     final userPermissionsBloc = getIt.get<UserPermissionsBloc>()
       ..add(UserPermissionsRequested());
     final connectionManager = ConnectionManagerImpl();

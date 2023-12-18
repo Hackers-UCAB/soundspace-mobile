@@ -98,9 +98,8 @@ class _RegisterForm extends StatelessWidget {
                     'Datos inválidos, intenta nuevamente.', //TODO: este mensaje puede ser de la api, hacerlo dinamico
               ),
 
-            if (state.formStatus == FormStatus.failure)
+            if (state.formStatus == FormStatus.posting)
               const CircularProgressIndicator(),
-
             const SizedBox(height: 15),
 
             if (state.formStatus != FormStatus.posting)
@@ -144,7 +143,11 @@ class _RegisterForm extends StatelessWidget {
               child: ImageContainer(
                   imagePath: 'images/digitel_blanco.png',
                   onTap: () {
-                    //TODO: metodo operadoras;
+                    //TODO: Poner una entity de operadora en el dominio para manejar mejor esto, maybe usar el local storage para guardar los codigos
+                    registerBloc.add(OperatorSubmittedEvent(
+                        phone: state.phone.value,
+                        selectedOperator:
+                            'd850ca20-cd91-4c53-95f4-7091ff46defe'));
                   }),
             ),
             //Boton digitel
@@ -153,7 +156,10 @@ class _RegisterForm extends StatelessWidget {
               child: ImageContainer(
                   imagePath: 'images/movistar_blanco.png',
                   onTap: () {
-                    //TODO: metodo operadoras;
+                    registerBloc.add(OperatorSubmittedEvent(
+                        phone: state.phone.value,
+                        selectedOperator:
+                            '0cf45d3b-187e-49c2-b24f-18e6da8245e9'));
                   }),
             ),
           ],

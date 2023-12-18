@@ -6,23 +6,24 @@ class LogInSubscriberState extends Equatable {
   final FormStatus formStatus;
   final bool isValid;
   final Phone phone;
+  final String operator;
 
-  const LogInSubscriberState({
-    this.formStatus = FormStatus.validating,
-    this.isValid = false,
-    this.phone = const Phone.pure(),
-  });
+  const LogInSubscriberState(
+      {this.formStatus = FormStatus.validating,
+      this.isValid = false,
+      this.phone = const Phone.pure(),
+      this.operator = ''});
 
-  LogInSubscriberState copyWith({
-    FormStatus? formStatus,
-    bool? isValid,
-    Phone? phone,
-  }) =>
+  LogInSubscriberState copyWith(
+          {FormStatus? formStatus,
+          bool? isValid,
+          Phone? phone,
+          String? operator}) =>
       LogInSubscriberState(
-        formStatus: formStatus ?? this.formStatus,
-        isValid: isValid ?? this.isValid,
-        phone: phone ?? this.phone,
-      );
+          formStatus: formStatus ?? this.formStatus,
+          isValid: isValid ?? this.isValid,
+          phone: phone ?? this.phone,
+          operator: operator ?? this.operator);
   @override
   List<Object> get props => [formStatus, isValid, phone];
 }

@@ -2,12 +2,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../../application/services/foreground_notifications/local_notifications.dart';
 
 class LocalNotificationsImpl extends LocalNotifications {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  LocalNotificationsImpl({required this.flutterLocalNotificationsPlugin});
+
   @override
   Future<void> inicializeLocalNotifications() async {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
@@ -24,14 +24,14 @@ class LocalNotificationsImpl extends LocalNotifications {
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      //TODO despues
+      //TODO: despues
     );
   }
 
   @override
   Future<void> showLocalNotifications(
       {required int id, String? title, String? body, String? data}) async {
-    //TODO CUADRAR LO DE LA IMAGEN CON HTTP
+    //TODO: CUADRAR LO DE LA IMAGEN CON HTTP
     const androidDetails = AndroidNotificationDetails(
         "channelId", "channelName",
         playSound: true,
@@ -41,7 +41,7 @@ class LocalNotificationsImpl extends LocalNotifications {
 
     const notificationDetails = NotificationDetails(
       android: androidDetails,
-      //TODO IOS DETAILS
+      //TODO: IOS DETAILS
     );
 
     await flutterLocalNotificationsPlugin

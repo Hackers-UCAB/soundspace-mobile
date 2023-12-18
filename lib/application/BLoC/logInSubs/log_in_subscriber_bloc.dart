@@ -3,9 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/common/error.dart';
-
 import '../../../infrastructure/presentation/pages/logIn/inputs/phone.dart';
 import '../../use_cases/user/log_in_use_case.dart';
+import '../../use_cases/user/subscribe_use_case.dart';
 import '../user_permissions/user_permissions_bloc.dart';
 
 part 'log_in_subscriber_event.dart';
@@ -14,10 +14,13 @@ part 'log_in_subscriber_state.dart';
 class LogInSubscriberBloc
     extends Bloc<LogInSubscriberEvent, LogInSubscriberState> {
   final LogInUseCase logInUseCase;
-  LogInSubscriberBloc({required this.logInUseCase})
+  final SubscribeUseCase subscribeUseCase;
+  LogInSubscriberBloc(
+      {required this.logInUseCase, required this.subscribeUseCase})
       : super(const LogInSubscriberState()) {
     on<LogInSubscriberSubmitted>(_onSubmited);
     on<LogInSubscriberPhoneChanged>(_phoneChanged);
+    on<OperatorSubmittedEvent>(_onSubscribe);
   }
 
   Future<void> _onSubmited(
@@ -41,6 +44,35 @@ class LogInSubscriberBloc
             .add(UserPermissionsChanged(isAuthenticated: true));
         emit(state.copyWith(formStatus: FormStatus.success));
       } else if (logInResult.error! is NoAuthoizedError) {
+        emit(state.copyWith(formStatus: FormStatus.invalid));
+      } else {
+        emit(state.copyWith(formStatus: FormStatus.failure));
+      }
+    }
+  }
+
+  Future<void> _onSubscribe(
+      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
+    final isValid = Formz.validate([state.phone]);
+
+    emit(
+      state.copyWith(
+          formStatus: FormStatus.validating,
+          phone: Phone.dirty(state.phone.value),
+          isValid: isValid,
+          operator: state.operator),
+    );
+
+    if (isValid) {
+      emit(state.copyWith(formStatus: FormStatus.posting));
+      final signUpResult =
+          await subscribeUseCase.execute(state.phone.value, state.operator);
+      if (signUpResult.hasValue()) {
+        GetIt.instance
+            .get<UserPermissionsBloc>()
+            .add(UserPermissionsChanged(isAuthenticated: true));
+        emit(state.copyWith(formStatus: FormStatus.success));
+      } else if (signUpResult.error! is NoAuthoizedError) {
         emit(state.copyWith(formStatus: FormStatus.invalid));
       } else {
         emit(state.copyWith(formStatus: FormStatus.failure));

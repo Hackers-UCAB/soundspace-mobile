@@ -8,7 +8,8 @@ part 'notifications_state.dart';
 
 //TODO: mandar la config de permiso de las local por constructor como inversion de dependencias
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging messaging = FirebaseMessaging
+      .instance; //TODO: Esto tiene que hacerse por inyeccion e inversion de dependencias (esto ultimo se puede hacer colocandolo dentro del mismo local notifications)
   LocalNotifications localNotifications;
 
   NotificationsBloc({required this.localNotifications})
@@ -25,14 +26,15 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   void _notificationStatusChanged(
       NotificationStatusChanged event, Emitter<NotificationsState> emit) {
     emit(state.copyWith(status: event.status));
-    _getFCMToken();
   }
 
   void _initialStatusCheck() async {
-    final settings = await messaging.getNotificationSettings();
+    final settings = await messaging
+        .getNotificationSettings(); //TODO: Esto se delega a la interfaz de Notifications
     add(NotificationStatusChanged(settings.authorizationStatus));
   }
 
+  //TODO: Esto lo deberia manejar la interfaz de Notifications y asi lo puede usar cualquier use case
   void _getFCMToken() async {
     if (state.status != AuthorizationStatus.authorized) return;
 
@@ -46,7 +48,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     localNotifications.showLocalNotifications(
       id: 1,
       body: message.notification!.body ?? '',
-      data: message.data.toString(),
+      data: message.data
+          .toString(), //TODO:Aqui hacemos el manejo de la redireccion y del caso de uso para quitar el permiso de subscriptor
       title: message.notification!.title ?? '',
     );
   }
