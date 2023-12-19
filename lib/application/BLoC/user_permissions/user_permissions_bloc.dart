@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_local_data_use_case.dart';
-
 import '../../../domain/user/valueObjects/user_role_value_object.dart';
 
 part 'user_permissions_event.dart';

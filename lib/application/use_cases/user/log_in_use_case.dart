@@ -12,7 +12,9 @@ class LogInUseCase {
     final result = await userRepository.logInUser(number);
     //TODO: Setear el resto de keys
     if (result.hasValue()) {
-      await localStorage.setKeyValue('token', result.value!.id!.id);
+      await localStorage.setKeyValue('user_id', result.value!.id!.id);
+      await localStorage.setKeyValue(
+          'role', result.value!.role!.role.toString());
     }
 
     return result;

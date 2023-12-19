@@ -15,7 +15,8 @@ class UserRepositoryImpl extends UserRepository {
   Future<Result<User>> logInUser(String number) async {
     final response = await _apiConnectionManager
         .request('auth/login', 'POST', body: {'number': number});
-
+    // TODO: Extraer el token del response
+    // _apiConnectionManager.setHeaders('Authorization', 'Bearer $token');
     if (response.hasValue()) {
       return Result<User>(
           value: UserMapper.fromJson(response.value.data['data']), error: null);
@@ -29,7 +30,8 @@ class UserRepositoryImpl extends UserRepository {
     final response = await _apiConnectionManager.request(
         'auth/validate_operator', 'POST',
         body: {'number': number, 'chanelId': operator});
-
+    //TODO: Extraer el token del response
+    //_apiConnectionManager.setHeaders('Authorization', 'Bearer $token');
     if (response.hasValue()) {
       return Result<User>(
           value: UserMapper.fromJson(response.value.data['data']), error: null);

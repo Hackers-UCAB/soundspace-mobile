@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import '../../../../application/BLoC/gps/gps_bloc.dart';
 import '../custom_dialog.dart';
 
@@ -23,6 +24,11 @@ class GpsListener extends BlocListener<GpsBloc, GpsState> {
               onPressed = () {
                 GetIt.instance.get<GpsBloc>().add(RequestedGpsAccess());
               };
+              //TODO: If para verificar si esta en Venezuela
+              //si no esta:
+              // GetIt.instance.get<UserPermissionsBloc>().add(
+              //     UserPermissionsChanged(
+              //         isAuthenticated: true, isSubscribed: false));
             } else {
               CustomDialog().hide(context);
             }

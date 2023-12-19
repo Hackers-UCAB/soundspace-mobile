@@ -3,6 +3,7 @@ part of 'gps_bloc.dart';
 class GpsState extends Equatable {
   final bool isGpsEnabled;
   final bool isGpsPermissionGranted;
+  // final bool isInsideVenezuela;
 
   bool get isAllGranted => isGpsEnabled && isGpsPermissionGranted;
 

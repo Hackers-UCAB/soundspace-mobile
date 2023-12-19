@@ -27,5 +27,9 @@ class LocationManagerImpl implements LocationManager {
     await Geolocator.requestPermission();
   }
 
-  //TODO: Hacer la verificacion de que este en Venezuela
+  @override
+  Future<bool> isLocationInVenezuela() {
+    // TODO: implement isLocationInVenezuela
+    throw UnimplementedError();
+  }
 }

@@ -19,6 +19,7 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
     on<GpsStatusChangedEvent>(_gpsStatusChangedEvent);
     on<RequestedGpsAccess>(_requestedGpsAccessEvent);
     on<PermissionStatusChangedEvent>(_permissionStatusChangedEvent);
+    //TODO: Poner el evento y el handler para verificar si esta en Venezuela
     userPermissionsBloc.stream.listen((state) {
       if (state.isSubscribed) {
         add(GpsInitializedEvent());
@@ -35,6 +36,10 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
 
     emit(state.copyWith(
         isGpsEnabled: isEnable, isGpsPermissionGranted: isGranted));
+
+    if (isEnable && isGranted) {
+      //TODO: ejecutar el evento de si esta en Venezuela
+    }
   }
 
   Future<void> _gpsStatusChangedEvent(
@@ -42,14 +47,22 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
     final gpsServiceSubscription = locationManager.locationStatusStream();
     await for (final isEnable in gpsServiceSubscription) {
       emit(state.copyWith(isGpsEnabled: isEnable));
+      if (isEnable && state.isAllGranted) {
+        //TODO: ejecutar el evento de si esta en Venezuela
+      }
     }
   }
+
+  //TODO: Hacer el handler para el evento de si esta en Venezuela
 
   Future<void> _permissionStatusChangedEvent(
       PermissionStatusChangedEvent event, Emitter<GpsState> emit) async {
     final isGranted = await locationManager.checkPermission();
 
     emit(state.copyWith(isGpsPermissionGranted: isGranted));
+    if (isGranted && state.isGpsEnabled) {
+      //TODO: ejecutar el evento de si esta en Venezuela
+    }
   }
 
   Future<void> _requestedGpsAccessEvent(

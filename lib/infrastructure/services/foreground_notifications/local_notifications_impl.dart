@@ -110,7 +110,7 @@ class LocalNotificationsImpl extends LocalNotifications {
         id: 1,
         body: message.notification!.body ?? '',
         data: message.data
-            .toString(), //TODO:Aqui hacemos el manejo de la redireccion y del caso de uso para quitar el permiso de subscriptor
+            .toString(), //TODO:Aqui hacemos el manejo de la redireccion y del caso de uso para quitar el permiso de suscriptor
         title: message.notification!.title ?? '',
       );
     });
