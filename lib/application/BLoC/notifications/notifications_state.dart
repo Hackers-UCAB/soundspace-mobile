@@ -3,7 +3,7 @@ part of 'notifications_bloc.dart';
 enum NotificationsStatus { authorized, denied, notDetermined }
 
 class NotificationsState extends Equatable {
-  final bool status; //TODO: No deberia estar aqui
+  final bool status;
 
   const NotificationsState({
     this.status = false,
