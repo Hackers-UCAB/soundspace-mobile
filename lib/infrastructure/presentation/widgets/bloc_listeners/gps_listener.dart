@@ -24,12 +24,15 @@ class GpsListener extends BlocListener<GpsBloc, GpsState> {
               onPressed = () {
                 GetIt.instance.get<GpsBloc>().add(RequestedGpsAccess());
               };
+              
+            }else if (state.isGpsEnabled && state.isAllGranted){
               //TODO: If para verificar si esta en Venezuela
               //si no esta:
               // GetIt.instance.get<UserPermissionsBloc>().add(
               //     UserPermissionsChanged(
               //         isAuthenticated: true, isSubscribed: false));
-            } else {
+            }
+             else {
               CustomDialog().hide(context);
             }
 
