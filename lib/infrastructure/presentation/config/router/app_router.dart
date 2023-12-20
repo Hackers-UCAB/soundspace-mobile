@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/home_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
+import '../../pages/album/album_detail.dart';
 import '../../pages/artist/artist_detail.dart';
 
 part 'route_guard.dart';
@@ -28,8 +29,22 @@ class AppNavigator {
           builder: (context, state) => const HomePage(),
         ),
         GoRoute(
-          path: '/artist',
-          builder: (context, state) => const ArtistDetail(),
+          path: '/artist/:id',
+          builder: (context, state) {
+            final artistId = state.pathParameters['id']!;
+            return ArtistDetail(
+              artistId: artistId,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/album/:id',
+          builder: (context, state) {
+            final albumId = state.pathParameters['id']!;
+            return AlbumDetail(
+              albumId: albumId,
+            );
+          },
         ),
       ],
     );

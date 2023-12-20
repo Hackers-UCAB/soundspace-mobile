@@ -7,7 +7,8 @@ import '../../../../application/BLoC/player/player_bloc.dart';
 import '../../widgets/music_player.dart';
 
 class ArtistDetail extends IPage {
-  const ArtistDetail({Key? key}) : super(key: key);
+  final String artistId;
+  const ArtistDetail({Key? key, required this.artistId}) : super(key: key);
 
   @override
   Widget child(BuildContext context) {
