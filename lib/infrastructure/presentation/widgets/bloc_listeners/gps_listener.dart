@@ -25,12 +25,19 @@ class GpsListener extends BlocListener<GpsBloc, GpsState> {
                 GetIt.instance.get<GpsBloc>().add(RequestedGpsAccess());
               };
               
-            }else if (state.isGpsEnabled && state.isAllGranted){
-              //TODO: If para verificar si esta en Venezuela
-              //si no esta:
-              // GetIt.instance.get<UserPermissionsBloc>().add(
-              //     UserPermissionsChanged(
-              //         isAuthenticated: true, isSubscribed: false));
+            }else if (state.isGpsEnabled && state.isAllGranted) {
+              CustomDialog().hide(context);
+              if (!state.isInsideVenezuela) {
+                GetIt.instance.get<UserPermissionsBloc>().add(
+                  UserPermissionsChanged(
+                    isAuthenticated: true,
+                    isSubscribed: false,
+                  ),
+                );
+                title = 'Fuera de Venezuela';
+                message = 'Debes encontrarte dentro de Venezuela para poder acceder al contenido completo. Ahora solo tienes acceso como invitado';
+                onPressed = null;
+              } 
             }
              else {
               CustomDialog().hide(context);

@@ -71,13 +71,8 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
 
   Future<void> _checkIfInsideVenezuelaEvent(
       CheckIfInsideVenezuelaEvent event, Emitter<GpsState> emit) async {
-    try {
       final isInsideVenezuela = await locationManager.isLocationInVenezuela();
-      // Realiza la lógica necesaria con la información de isInsideVenezuela
-      // Por ejemplo, puedes emitir un nuevo estado con esta información.
       emit(state.copyWith(isInsideVenezuela: isInsideVenezuela));
-    } catch (e) {
-      print("Error al verificar la ubicación en Venezuela: $e");
-    }
-  }
+    } 
+  
 }

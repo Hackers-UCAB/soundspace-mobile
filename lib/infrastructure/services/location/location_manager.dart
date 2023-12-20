@@ -29,19 +29,15 @@ class LocationManagerImpl implements LocationManager {
 
   @override
   Future<bool> isLocationInVenezuela()async{
-   try {
       Position currentPosition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best);
       // verifica si las coordenadas actuales están dentro de los límites de Venezuela
       return _checkIfInsideVenezuela(
           currentPosition.latitude, currentPosition.longitude);
-    } catch (e) {
-      print("error al obtener la ubicación: $e");
-      return false; 
-    }
+
   }
  bool _checkIfInsideVenezuela(double latitude, double longitude) {
-    // Lógica para verificar si las coordenadas están dentro de Venezuela
+    //  verificar si las coordenadas están dentro de Venezuela
     const double minLatitude = 0.66;
     const double maxLatitude = 12.2;
     const double minLongitude = -73.4;
