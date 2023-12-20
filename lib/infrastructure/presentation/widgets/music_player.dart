@@ -31,7 +31,7 @@ class MusicPlayer extends StatelessWidget {
                   child: Column(children: [
                     Text(
                       'Artist',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.bodySmall,
                     )
                   ]),
                 ),
@@ -43,7 +43,7 @@ class MusicPlayer extends StatelessWidget {
                     children: [
                       Text(
                         '1:00',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(width: 6),
                       const Icon(

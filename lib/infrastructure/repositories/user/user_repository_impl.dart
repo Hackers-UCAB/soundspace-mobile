@@ -23,10 +23,9 @@ class UserRepositoryImpl extends UserRepository {
       _apiConnectionManager.setHeaders(
           'Authorization', 'Bearer ${response.value.data['data']['token']}');
 
-      return Result<User>(
-          value: UserMapper.fromJson(response.value.data), error: null);
+      return Result<User>(value: UserMapper.fromJson(response.value.data));
     } else {
-      return Result<User>(value: null, error: response.error);
+      return Result<User>(failure: response.failure);
     }
   }
 
@@ -42,10 +41,9 @@ class UserRepositoryImpl extends UserRepository {
       final token = response.value.data['data'];
       _apiConnectionManager.setHeaders('Authorization', 'Bearer $token');
 
-      return Result<User>(
-          value: UserMapper.fromJson(response.value.data), error: null);
+      return Result<User>(value: UserMapper.fromJson(response.value.data));
     } else {
-      return Result<User>(value: null, error: response.error);
+      return Result<User>(failure: response.failure);
     }
   }
 }

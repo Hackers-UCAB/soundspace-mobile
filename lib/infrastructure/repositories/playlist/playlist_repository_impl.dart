@@ -16,11 +16,11 @@ class PlaylistRepositoryImpl extends PlaylistRepository {
     final result =
         await _apiConnectionManager.request('playlist/top_playlists', 'GET');
     if (result.hasValue()) {
-      return Result(
-          value: PlaylistMapper.fromJsonList(result.value.data['data']),
-          error: null);
+      return Result<List<Playlist>>(
+        value: PlaylistMapper.fromJsonList(result.value.data['data']),
+      );
     } else {
-      return Result(value: null, error: Error());
+      return Result<List<Playlist>>(failure: result.failure);
     }
   }
 }

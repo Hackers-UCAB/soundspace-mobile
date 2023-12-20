@@ -86,7 +86,7 @@ class InjectManager {
     final songRepository =
         SongRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
 
-    // print(await localNotifications.getToken());
+    print(await localNotifications.getToken());
     // await localStorage.setKeyValue('appToken', '1');
     // await localStorage.setKeyValue('notificationsToken', '1');
     // await localStorage.setKeyValue('role', 'subscriber');

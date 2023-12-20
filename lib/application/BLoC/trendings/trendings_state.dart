@@ -1,13 +1,14 @@
 part of 'trendings_bloc.dart';
 
 abstract class TrendingsState extends Equatable {
-  const TrendingsState();
-}
+  final Failure? failure;
+  const TrendingsState({this.failure});
 
-class TrendingsLoading extends TrendingsState {
   @override
   List<Object?> get props => [];
 }
+
+class TrendingsLoading extends TrendingsState {}
 
 class TrendingsLoaded extends TrendingsState {
   final List<Artist> trendingArtists;
@@ -35,6 +36,5 @@ class TrendingsLoaded extends TrendingsState {
 }
 
 class TrendingsFailed extends TrendingsState {
-  @override
-  List<Object?> get props => [];
+  const TrendingsFailed({required super.failure});
 }

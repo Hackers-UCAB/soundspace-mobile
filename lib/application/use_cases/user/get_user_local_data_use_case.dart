@@ -1,4 +1,4 @@
-import 'package:sign_in_bloc/common/error.dart';
+import 'package:sign_in_bloc/common/failure.dart';
 import 'package:sign_in_bloc/common/result.dart';
 import '../../../domain/user/user.dart';
 import '../../../domain/user/valueObjects/id_user_value_object.dart';
@@ -24,10 +24,10 @@ class GetUserLocalDataUseCase {
                         ? UserRoles.guest
                         : UserRoles.subscriber)));
       } else {
-        return Result<User>(error: NoSessionError());
+        return Result<User>(failure: const NoSessionFailure());
       }
     } catch (e) {
-      return Result<User>(error: Error());
+      return Result<User>(failure: const NoSessionFailure());
     }
   }
 }

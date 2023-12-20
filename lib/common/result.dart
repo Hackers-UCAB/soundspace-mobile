@@ -1,21 +1,21 @@
+import 'package:sign_in_bloc/common/failure.dart';
+
 class Result<T> {
   late final T? value;
-  late final Error? error;
+  late final Failure? failure;
 
-  Result({T? value, Error? error}) {
-    if (value == null && error != null) {
-      this.error = error;
+  Result({T? value, Failure? failure}) {
+    if (value == null && failure != null) {
+      this.failure = failure;
       this.value = null;
-    } else if (value != null && error == null) {
+    } else if (value != null && failure == null) {
       this.value = value;
-      this.error = null;
+      this.failure = null;
     } else {
       throw ArgumentError(
-          'Result cannot have a null value and a null error at the same time');
+          'Result cannot have a null value and a null failure at the same time');
     }
   }
 
   bool hasValue() => this.value != null;
-
-  String get messageError => this.error.toString();
 }

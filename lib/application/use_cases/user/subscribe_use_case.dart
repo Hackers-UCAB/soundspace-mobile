@@ -1,3 +1,4 @@
+import 'package:sign_in_bloc/common/failure.dart';
 import 'package:sign_in_bloc/domain/user/user.dart';
 import '../../../common/result.dart';
 import '../../../domain/user/repository/user_repository.dart';
@@ -29,7 +30,7 @@ class SubscribeUseCase {
 
       return result;
     } else {
-      return Result<User>(error: Error());
+      return Result<User>(failure: const UnknownFailure(message: 'No token'));
     }
   }
 }

@@ -9,18 +9,17 @@ class ArtistRepositoryImpl extends ArtistRepository {
 
   ArtistRepositoryImpl({required IApiConnectionManager apiConnectionManager})
       : _apiConnectionManager = apiConnectionManager;
-  //mejorar esto
 
   @override
   Future<Result<List<Artist>>> getTrendingArtists() async {
     final result =
         await _apiConnectionManager.request('artists/top_artists', 'GET');
     if (result.hasValue()) {
-      return Result(
-          value: ArtistMapper.fromJsonList(result.value.data['data']),
-          error: null);
+      return Result<List<Artist>>(
+        value: ArtistMapper.fromJsonList(result.value.data['data']),
+      );
     } else {
-      return Result(value: null, error: Error());
+      return Result<List<Artist>>(failure: result.failure);
     }
   }
 }

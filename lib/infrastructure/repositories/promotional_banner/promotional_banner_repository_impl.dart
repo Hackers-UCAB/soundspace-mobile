@@ -16,10 +16,10 @@ class PromotionalBannerRepositoryImpl extends PromotionalBannerRepository {
     final result = await apiconnectionManager.request('publicidad', 'GET');
     if (result.hasValue()) {
       return Result(
-          value: PromotionalBannerMapper.fromJson(result.value.data['data']),
-          error: null);
+        value: PromotionalBannerMapper.fromJson(result.value.data['data']),
+      );
     } else {
-      return Result(value: null, error: Error());
+      return Result(failure: result.failure);
     }
   }
 }

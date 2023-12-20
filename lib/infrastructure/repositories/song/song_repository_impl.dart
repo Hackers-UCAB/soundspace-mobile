@@ -16,10 +16,10 @@ class SongRepositoryImpl extends SongRepository {
         await _apiConnectionManager.request('songs/tracklist', 'GET');
     if (result.hasValue()) {
       return Result(
-          value: SongMapper.fromJsonList(result.value.data['data']),
-          error: null);
+        value: SongMapper.fromJsonList(result.value.data['data']),
+      );
     } else {
-      return Result(value: null, error: Error());
+      return Result(failure: result.failure);
     }
   }
 }

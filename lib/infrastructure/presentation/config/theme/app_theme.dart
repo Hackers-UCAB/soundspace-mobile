@@ -5,8 +5,12 @@ class AppTheme {
   ThemeData getTheme() => ThemeData(
         useMaterial3: true,
         textTheme: TextTheme(
+          bodySmall:
+              GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 17),
+          bodyLarge:
+              GoogleFonts.roboto().copyWith(color: Colors.white, fontSize: 24),
           bodyMedium:
-              GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 15),
+              GoogleFonts.roboto().copyWith(color: Colors.white, fontSize: 18),
         ),
       );
 }

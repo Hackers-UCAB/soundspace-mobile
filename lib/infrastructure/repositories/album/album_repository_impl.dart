@@ -17,11 +17,10 @@ class AlbumRepositoryImpl extends AlbumRepository {
         'playlist/top_playlists?type=album',
         'GET'); //TODO: el type seria un query param? hacer prueba
     if (result.hasValue()) {
-      return Result(
-          value: AlbumMapper.fromJsonList(result.value.data['data']),
-          error: null);
+      return Result<List<Album>>(
+          value: AlbumMapper.fromJsonList(result.value.data['data']));
     } else {
-      return Result(value: null, error: Error());
+      return Result<List<Album>>(failure: result.failure);
     }
   }
 }

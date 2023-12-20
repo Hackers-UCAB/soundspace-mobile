@@ -31,9 +31,7 @@ class CustomTextFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: TextFormField(
-        style: GoogleFonts.poppins().copyWith(
-          color: Colors.white,
-        ),
+        style: Theme.of(context).textTheme.bodySmall,
         onChanged: onChanged,
         validator: validator,
         obscureText: obscureText,

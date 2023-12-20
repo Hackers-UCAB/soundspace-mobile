@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../../common/error.dart';
+import '../../../common/failure.dart';
 import '../../../common/result.dart';
 import 'api_connection_manager.dart';
 
@@ -15,31 +15,31 @@ class ApiConnectionManagerImpl extends IApiConnectionManager {
     try {
       final response = await _dio.request(path,
           data: body, options: Options(method: method));
-      return Result(value: response, error: null);
+      return Result(value: response);
     } on DioException catch (e) {
-      return Result(error: handleException(e));
+      return Result(failure: handleException(e));
     } catch (e) {
-      return Result(error: Error());
+      return Result(failure: UnknownFailure(message: e.toString()));
     }
   }
 
-  Error handleException(DioException e) {
+  Failure handleException(DioException e) {
     switch (e.type) {
-      case DioExceptionType.connectionTimeout:
-        return TimeOutError();
-      case DioExceptionType.sendTimeout:
-        return TimeOutError();
-      case DioExceptionType.receiveTimeout:
-        return ServerError();
-      case DioExceptionType.badResponse:
+      case DioExceptionType
+                .connectionTimeout || //TODO: Ver si todo esto se relaciona a fallas de internet
+            DioExceptionType.sendTimeout ||
+            DioExceptionType.receiveTimeout:
+        return const NoInternetFailure();
+      case DioExceptionType.badResponse: //TODO: Pedirle los codigos al back
         final statusCode = e.response?.statusCode;
         if (statusCode == 404) {
-          return NoAuthoizedError();
+          //TODO: Decirle al back que cambie el codigo de no autorizado, 404 ya es usado cuando la ruta no existe
+          return const NoAuthorizeFailure();
         } else {
-          return Error();
+          return UnknownFailure(message: e.toString());
         }
       default:
-        return Error();
+        return UnknownFailure(message: e.toString());
     }
   }
 

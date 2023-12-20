@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:get_it/get_it.dart';
-import 'package:sign_in_bloc/common/error.dart';
+import 'package:sign_in_bloc/common/failure.dart';
 import '../../../infrastructure/presentation/pages/logIn/inputs/phone.dart';
 import '../../use_cases/user/log_in_use_case.dart';
 import '../../use_cases/user/subscribe_use_case.dart';
@@ -42,7 +42,7 @@ class LogInSubscriberBloc
         GetIt.instance.get<UserPermissionsBloc>().add(
             UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
         emit(state.copyWith(formStatus: FormStatus.success));
-      } else if (logInResult.error! is NoAuthoizedError) {
+      } else if (logInResult.failure! is NoAuthorizeFailure) {
         emit(state.copyWith(formStatus: FormStatus.invalid));
       } else {
         emit(state.copyWith(formStatus: FormStatus.failure));
@@ -71,7 +71,7 @@ class LogInSubscriberBloc
             UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
 
         emit(state.copyWith(formStatus: FormStatus.success));
-      } else if (signUpResult.error! is NoAuthoizedError) {
+      } else if (signUpResult.failure! is NoAuthorizeFailure) {
         emit(state.copyWith(formStatus: FormStatus.invalid));
       } else {
         emit(state.copyWith(formStatus: FormStatus.failure));
