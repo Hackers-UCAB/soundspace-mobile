@@ -14,16 +14,16 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
     required this.userPermissionsBloc,
     required this.locationManager,
   }) : super(const GpsState(
-            isGpsEnabled: false, isGpsPermissionGranted: false)) {
+            isGpsEnabled: false, isGpsPermissionGranted: false, isInsideVenezuela: false)) {
     on<GpsInitializedEvent>(_gpsInitializedEvent);
     on<GpsStatusChangedEvent>(_gpsStatusChangedEvent);
     on<RequestedGpsAccess>(_requestedGpsAccessEvent);
     on<PermissionStatusChangedEvent>(_permissionStatusChangedEvent);
-    //TODO: Poner el evento y el handler para verificar si esta en Venezuela
+    on<CheckIfInsideVenezuelaEvent>(_checkIfInsideVenezuelaEvent);
     userPermissionsBloc.stream.listen((state) {
       if (state.isSubscribed) {
         add(GpsInitializedEvent());
-      }
+      } 
     });
   }
 
@@ -38,7 +38,7 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
         isGpsEnabled: isEnable, isGpsPermissionGranted: isGranted));
 
     if (isEnable && isGranted) {
-      //TODO: ejecutar el evento de si esta en Venezuela
+      add(CheckIfInsideVenezuelaEvent());
     }
   }
 
@@ -48,12 +48,10 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
     await for (final isEnable in gpsServiceSubscription) {
       emit(state.copyWith(isGpsEnabled: isEnable));
       if (isEnable && state.isAllGranted) {
-        //TODO: ejecutar el evento de si esta en Venezuela
+        add(CheckIfInsideVenezuelaEvent());
       }
     }
   }
-
-  //TODO: Hacer el handler para el evento de si esta en Venezuela
 
   Future<void> _permissionStatusChangedEvent(
       PermissionStatusChangedEvent event, Emitter<GpsState> emit) async {
@@ -61,7 +59,7 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
 
     emit(state.copyWith(isGpsPermissionGranted: isGranted));
     if (isGranted && state.isGpsEnabled) {
-      //TODO: ejecutar el evento de si esta en Venezuela
+      add(CheckIfInsideVenezuelaEvent());
     }
   }
 
@@ -70,4 +68,11 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
     await locationManager.requestPermission();
     add(PermissionStatusChangedEvent());
   }
+
+  Future<void> _checkIfInsideVenezuelaEvent(
+      CheckIfInsideVenezuelaEvent event, Emitter<GpsState> emit) async {
+      final isInsideVenezuela = await locationManager.isLocationInVenezuela();
+      emit(state.copyWith(isInsideVenezuela: isInsideVenezuela));
+    } 
+  
 }

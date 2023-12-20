@@ -28,8 +28,28 @@ class LocationManagerImpl implements LocationManager {
   }
 
   @override
-  Future<bool> isLocationInVenezuela() {
-    // TODO: implement isLocationInVenezuela
-    throw UnimplementedError();
+  Future<bool> isLocationInVenezuela()async{
+      Position currentPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+      // verifica si las coordenadas actuales están dentro de los límites de Venezuela
+      return _checkIfInsideVenezuela(
+          currentPosition.latitude, currentPosition.longitude);
+
+  }
+ bool _checkIfInsideVenezuela(double latitude, double longitude) {
+    //  verificar si las coordenadas están dentro de Venezuela
+    const double minLatitude = 0.66;
+    const double maxLatitude = 12.2;
+    const double minLongitude = -73.4;
+    const double maxLongitude = -59.8;
+
+    if (latitude >= minLatitude &&
+        latitude <= maxLatitude &&
+        longitude >= minLongitude &&
+        longitude <= maxLongitude) {
+      return true; // dentro de Venezuela
+    } else {
+      return false; // fuera de Venezuela
+    }
   }
 }
