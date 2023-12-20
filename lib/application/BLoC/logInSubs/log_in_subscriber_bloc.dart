@@ -39,9 +39,8 @@ class LogInSubscriberBloc
       emit(state.copyWith(formStatus: FormStatus.posting));
       final logInResult = await logInUseCase.execute(state.phone.value);
       if (logInResult.hasValue()) {
-        GetIt.instance
-            .get<UserPermissionsBloc>()
-            .add(UserPermissionsChanged(isAuthenticated: true));
+        GetIt.instance.get<UserPermissionsBloc>().add(
+            UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
         emit(state.copyWith(formStatus: FormStatus.success));
       } else if (logInResult.error! is NoAuthoizedError) {
         emit(state.copyWith(formStatus: FormStatus.invalid));
@@ -52,7 +51,7 @@ class LogInSubscriberBloc
   }
 
   Future<void> _onSubscribe(
-      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
+      OperatorSubmittedEvent event, Emitter<LogInSubscriberState> emit) async {
     final isValid = Formz.validate([state.phone]);
 
     emit(
@@ -60,17 +59,17 @@ class LogInSubscriberBloc
           formStatus: FormStatus.validating,
           phone: Phone.dirty(state.phone.value),
           isValid: isValid,
-          operator: state.operator),
+          operator: event.selectedOperator),
     );
 
     if (isValid) {
       emit(state.copyWith(formStatus: FormStatus.posting));
-      final signUpResult =
-          await subscribeUseCase.execute(state.phone.value, state.operator);
+      final signUpResult = await subscribeUseCase.execute(
+          state.phone.value, event.selectedOperator);
       if (signUpResult.hasValue()) {
-        GetIt.instance
-            .get<UserPermissionsBloc>()
-            .add(UserPermissionsChanged(isAuthenticated: true));
+        GetIt.instance.get<UserPermissionsBloc>().add(
+            UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
+
         emit(state.copyWith(formStatus: FormStatus.success));
       } else if (signUpResult.error! is NoAuthoizedError) {
         emit(state.copyWith(formStatus: FormStatus.invalid));

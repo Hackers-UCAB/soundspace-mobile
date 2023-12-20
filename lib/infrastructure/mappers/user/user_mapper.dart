@@ -4,7 +4,7 @@ import '../../../domain/user/valueObjects/id_user_value_object.dart';
 class UserMapper {
   static User fromJson(Map<String, dynamic> json) {
     return User(
-      id: IdUser(id: json['codigo_usuario']),
+      id: IdUser(id: '456'), //TODO: Cambiar por el codigo que tenga el back
     );
   }
 

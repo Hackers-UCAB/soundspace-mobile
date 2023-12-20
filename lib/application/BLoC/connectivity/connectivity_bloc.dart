@@ -11,6 +11,8 @@ class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
       : super(const ConnectivityInitialState()) {
     on<ConnectivityInitialCheckRequested>(_checkInitialConnection);
     on<ConnectivityCheckRequested>(_checkConnection);
+
+    add(ConnectivityInitialCheckRequested());
   }
 
   Future<void> _checkConnection(

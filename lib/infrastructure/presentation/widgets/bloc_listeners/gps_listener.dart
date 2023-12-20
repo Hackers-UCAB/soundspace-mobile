@@ -6,7 +6,7 @@ import '../../../../application/BLoC/gps/gps_bloc.dart';
 import '../custom_dialog.dart';
 
 class GpsListener extends BlocListener<GpsBloc, GpsState> {
-  GpsListener({super.key, required child})
+  GpsListener({super.key, required Widget child})
       : super(
           bloc: GetIt.instance.get<GpsBloc>(),
           listener: (BuildContext context, GpsState state) {

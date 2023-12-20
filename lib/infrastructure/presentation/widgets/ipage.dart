@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/connectivity/connectivity_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/bloc_listeners/gps_listener.dart';
 
 abstract class IPage extends StatelessWidget {
@@ -13,11 +11,7 @@ abstract class IPage extends StatelessWidget {
     return Scaffold(
       body: Stack(children: [
         _GradientBackground(),
-        GpsListener(child: BlocBuilder<ConnectivityBloc, ConnectivityState>(
-          builder: (context, state) {
-            return child(context);
-          },
-        ))
+        GpsListener(child: child(context))
       ]),
     );
   }

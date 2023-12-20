@@ -86,16 +86,19 @@ class InjectManager {
     final songRepository =
         SongRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
 
-    print(await localNotifications.getToken());
-    await localStorage.setKeyValue('userId', '1');
-    await localStorage.setKeyValue('appToken', '1');
-    await localStorage.setKeyValue('notificationsToken', '1');
-    await localStorage.setKeyValue('userRole', 'subscriber');
+    // print(await localNotifications.getToken());
+    // await localStorage.setKeyValue('appToken', '1');
+    // await localStorage.setKeyValue('notificationsToken', '1');
+    // await localStorage.setKeyValue('role', 'subscriber');
     //usecases
     final LogInUseCase logInUseCase = LogInUseCase(
-        userRepository: userRepository, localStorage: localStorage);
+        userRepository: userRepository,
+        localStorage: localStorage,
+        localNotifications: localNotifications);
     final SubscribeUseCase subscribeUseCase = SubscribeUseCase(
-        userRepository: userRepository, localStorage: localStorage);
+        userRepository: userRepository,
+        localStorage: localStorage,
+        localNotifications: localNotifications);
     final GetPromotionalBannerUseCase getPromotionalBannerUseCase =
         GetPromotionalBannerUseCase(
             promotionalBannerRepository: promotionalBannerRepository);

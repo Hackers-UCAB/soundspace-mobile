@@ -12,29 +12,38 @@ class UserRepositoryImpl extends UserRepository {
       : _apiConnectionManager = apiConnectionManager;
 
   @override
-  Future<Result<User>> logInUser(String number) async {
+  Future<Result<User>> logInUser(
+      String number, String notificationsToken) async {
+    _apiConnectionManager.setHeaders('firebaseToken', notificationsToken);
+
     final response = await _apiConnectionManager
         .request('auth/login', 'POST', body: {'number': number});
-    // TODO: Extraer el token del response
-    // _apiConnectionManager.setHeaders('Authorization', 'Bearer $token');
+
     if (response.hasValue()) {
+      _apiConnectionManager.setHeaders(
+          'Authorization', 'Bearer ${response.value.data['data']['token']}');
+
       return Result<User>(
-          value: UserMapper.fromJson(response.value.data['data']), error: null);
+          value: UserMapper.fromJson(response.value.data), error: null);
     } else {
       return Result<User>(value: null, error: response.error);
     }
   }
 
   @override
-  Future<Result<User>> signUpUser(String number, String operator) async {
-    final response = await _apiConnectionManager.request(
-        'auth/validate_operator', 'POST',
-        body: {'number': number, 'chanelId': operator});
-    //TODO: Extraer el token del response
-    //_apiConnectionManager.setHeaders('Authorization', 'Bearer $token');
+  Future<Result<User>> signUpUser(
+      String number, String notificationsToken, String operator) async {
+    _apiConnectionManager.setHeaders('firebaseToken', notificationsToken);
+
+    final response = await _apiConnectionManager.request('auth/sign-up', 'POST',
+        body: {'value': number, 'chanelId': operator});
+
     if (response.hasValue()) {
+      final token = response.value.data['data'];
+      _apiConnectionManager.setHeaders('Authorization', 'Bearer $token');
+
       return Result<User>(
-          value: UserMapper.fromJson(response.value.data['data']), error: null);
+          value: UserMapper.fromJson(response.value.data), error: null);
     } else {
       return Result<User>(value: null, error: response.error);
     }

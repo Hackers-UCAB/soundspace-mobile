@@ -73,7 +73,7 @@ class _RegisterForm extends StatelessWidget {
     return BlocListener<UserPermissionsBloc, UserPermissionsState>(
         listener: (context, state) {
       if (state.isAuthenticated) {
-        appNavigator.navigateTo('/home');
+        appNavigator.replaceWith('/artist');
       }
     }, child: BlocBuilder<LogInSubscriberBloc, LogInSubscriberState>(
       builder: (context, state) {

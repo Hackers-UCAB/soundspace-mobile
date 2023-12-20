@@ -12,7 +12,6 @@ import 'application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import 'application/BLoC/player/player_bloc.dart';
 import 'infrastructure/presentation/config/router/app_router.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 import 'infrastructure/presentation/widgets/bloc_listeners/connection_listener.dart';
 
 Future<void> main() async {
@@ -40,35 +39,35 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         //TODO: poner esto en un widget separado
         return MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => getIt.get<PlayerBloc>(),
-              ),
-              BlocProvider(
-                create: (context) => getIt.get<UserPermissionsBloc>(),
-              ),
-              BlocProvider(
-                create: (context) => getIt.get<TrendingsBloc>(),
-              ),
-              BlocProvider(
-                create: (context) => getIt.get<ConnectivityBloc>()
-                  ..add(ConnectivityInitialCheckRequested()),
-              ),
-              BlocProvider(
-                create: (context) {
-                  return getIt.get<LogInSubscriberBloc>();
-                },
-              ),
-              BlocProvider(
-                create: (context) => getIt.get<NotificationsBloc>(),
-              ),
-              BlocProvider(
-                  create: (context) =>
-                      getIt.get<GpsBloc>()..add(GpsInitializedEvent())),
-            ],
-            child: MultiBlocListener(listeners: [
-              ConnectionListener(),
-            ], child: child!));
+          providers: [
+            BlocProvider(
+              create: (context) => getIt.get<PlayerBloc>(),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<UserPermissionsBloc>(),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<TrendingsBloc>(),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<ConnectivityBloc>(),
+            ),
+            BlocProvider(
+              create: (context) {
+                return getIt.get<LogInSubscriberBloc>();
+              },
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<NotificationsBloc>(),
+            ),
+            BlocProvider(
+                create: (context) =>
+                    getIt.get<GpsBloc>()..add(GpsInitializedEvent())),
+          ],
+          child: MultiBlocListener(listeners: [
+            ConnectionListener(),
+          ], child: child!),
+        );
       },
     );
   }

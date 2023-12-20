@@ -97,8 +97,9 @@ class LocalNotificationsImpl extends LocalNotifications {
   }
 
   @override
-  Future<String?> getToken() {
-    return _messaging.getToken();
+  Future<String?> getToken() async {
+    //TODO: Se deberian manejar los errores de esto
+    return await _messaging.getToken();
   }
 
   @override

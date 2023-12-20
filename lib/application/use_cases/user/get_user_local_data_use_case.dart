@@ -12,15 +12,13 @@ class GetUserLocalDataUseCase {
 
   Result<User> execute() {
     try {
-      final userId =
-          localStorage.getValue('userId'); //TODO:mejorar con las .env?
       final appToken = localStorage.getValue('appToken');
       final notificationsToken = localStorage.getValue('notificationsToken');
-      final userRol = localStorage.getValue('userRol');
-      if (userId != null && appToken != null && notificationsToken != null) {
+      final userRol = localStorage.getValue('role');
+      if (appToken != null && notificationsToken != null) {
         return Result<User>(
             value: User(
-                id: IdUser(id: userId),
+                id: IdUser(id: appToken),
                 role: UserRole(
                     role: (userRol == 'guest')
                         ? UserRoles.guest
