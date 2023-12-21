@@ -4,7 +4,7 @@ abstract class GpsEvent extends Equatable {
   const GpsEvent();
 
   @override
-  List<Object> get props => []; 
+  List<Object> get props => [];
 }
 
 class GpsInitializedEvent extends GpsEvent {}
@@ -15,4 +15,4 @@ class RequestedGpsAccess extends GpsEvent {}
 
 class PermissionStatusChangedEvent extends GpsEvent {}
 
-class CheckIfInsideVenezuelaEvent extends GpsEvent {}
+class CheckedIfInsideVenezuelaEvent extends GpsEvent {}

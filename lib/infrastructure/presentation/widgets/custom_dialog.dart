@@ -17,7 +17,7 @@ class CustomDialog {
       {required BuildContext context,
       required String title,
       required String message,
-      bool barrierDismissible = false,
+      required bool barrierDismissible,
       Function()? onPressed}) async {
     _isShowing = true;
     return showDialog<void>(

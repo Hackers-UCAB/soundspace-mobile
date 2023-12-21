@@ -13,6 +13,7 @@ class GpsListener extends BlocListener<GpsBloc, GpsState> {
             String? title;
             String? message;
             Function()? onPressed;
+            bool barrierDismissible = false;
             if (!state.isGpsEnabled) {
               title = 'GPS Deshabilitado';
               message = 'Por favor habilita tu GPS';
@@ -24,31 +25,34 @@ class GpsListener extends BlocListener<GpsBloc, GpsState> {
               onPressed = () {
                 GetIt.instance.get<GpsBloc>().add(RequestedGpsAccess());
               };
-              
-            }else if (state.isGpsEnabled && state.isAllGranted) {
+            } else if (state.isGpsEnabled && state.isAllGranted) {
               CustomDialog().hide(context);
               if (!state.isInsideVenezuela) {
                 GetIt.instance.get<UserPermissionsBloc>().add(
-                  UserPermissionsChanged(
-                    isAuthenticated: true,
-                    isSubscribed: false,
-                  ),
-                );
-                title = 'Fuera de Venezuela';
-                message = 'Debes encontrarte dentro de Venezuela para poder acceder al contenido completo. Ahora solo tienes acceso como invitado';
+                      UserPermissionsChanged(
+                        isAuthenticated: true,
+                        isSubscribed: false,
+                      ),
+                    );
+                title = 'Parece que te encuentras lejos...';
+                message =
+                    'Debes estar dentro de Venezuela para poder acceder al contenido premium. Ahora solo tienes acceso como invitado';
                 onPressed = null;
-              } 
-            }
-             else {
+                barrierDismissible = true;
+              }
+            } else {
               CustomDialog().hide(context);
             }
 
-            if (!state.isGpsEnabled || !state.isAllGranted) {
+            if (!state.isGpsEnabled ||
+                !state.isAllGranted ||
+                !state.isInsideVenezuela) {
               CustomDialog().show(
                   context: context,
                   title: title!,
                   message: message!,
-                  onPressed: onPressed);
+                  onPressed: onPressed,
+                  barrierDismissible: barrierDismissible);
             }
           },
           child: child,

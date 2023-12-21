@@ -33,7 +33,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../repositories/user/user_repository_impl.dart';
 import '../foreground_notifications/local_notifications_impl.dart';
 import '../streaming/socket_client_impl.dart';
-import '../location/location_manager.dart';
+import '../location/location_manager_impl.dart';
 
 class InjectManager {
   static Future<void> firebaseMessagingBackgroundHandler(
