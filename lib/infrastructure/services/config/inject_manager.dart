@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
@@ -26,6 +27,7 @@ import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
 import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import '../../../application/BLoC/trendings/trendings_bloc.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
+import '../../../application/use_cases/user/log_in_guest_use_case.dart';
 import '../../../application/use_cases/user/log_in_use_case.dart';
 import '../../presentation/config/router/app_router.dart';
 import '../../repositories/playlist/playlist_repository_impl.dart';
@@ -54,23 +56,15 @@ class InjectManager {
     //services
     final socketClient = SocketClientImpl();
     socketClient.inicializeSocket();
-
     final apiConnectionManagerImpl = ApiConnectionManagerImpl(
       baseUrl: dotenv.env['API_URL']!,
     );
-
     final localNotifications = LocalNotificationsImpl(
         flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin(),
         messaging: FirebaseMessaging.instance)
       ..inicializeLocalNotifications();
-
     final sharedPreferences = await SharedPreferences.getInstance();
     final localStorage = LocalStorageImpl(prefs: sharedPreferences);
-
-    // final firebaseToken = await localNotifications.getToken();
-    // firebaseToken ??
-    // final authToken = localStorage.getValue('appToken');
-
     final locationManager = LocationManagerImpl();
     //repositories
     final userRepository =
@@ -85,16 +79,13 @@ class InjectManager {
         ArtistRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
     final songRepository =
         SongRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
-
-    print(await localNotifications.getToken());
-    // await localStorage.setKeyValue('appToken', '1');
-    // await localStorage.setKeyValue('notificationsToken', '1');
-    // await localStorage.setKeyValue('role', 'subscriber');
     //usecases
     final LogInUseCase logInUseCase = LogInUseCase(
         userRepository: userRepository,
         localStorage: localStorage,
         localNotifications: localNotifications);
+    final LogInGuestUseCase logInGuestUseCase = LogInGuestUseCase(
+        userRepository: userRepository, localStorage: localStorage);
     final SubscribeUseCase subscribeUseCase = SubscribeUseCase(
         userRepository: userRepository,
         localStorage: localStorage,
@@ -112,9 +103,9 @@ class InjectManager {
         GetTrendingSongsUseCase(songRepository: songRepository);
     final GetUserLocalDataUseCase getUserLocalDataUseCase =
         GetUserLocalDataUseCase(localStorage: localStorage);
-    //blocs
-    final getIt = GetIt.instance;
 
+    final getIt = GetIt.instance;
+    //blocs
     getIt.registerSingleton<TrendingsBloc>(TrendingsBloc(
         getTrendingArtistsUseCase: getTrendingArtistsUseCase,
         getTrendingAlbumsUseCase: getTrendingAlbumsUseCase,
@@ -126,6 +117,8 @@ class InjectManager {
     getIt.registerSingleton<PlayerBloc>(PlayerBloc());
     getIt.registerSingleton<LogInSubscriberBloc>(LogInSubscriberBloc(
         logInUseCase: logInUseCase, subscribeUseCase: subscribeUseCase));
+    getIt.registerSingleton<LogInGuestBloc>(
+        LogInGuestBloc(logInGuestUseCase: logInGuestUseCase));
     //check if user has a session
     final userPermissionsBloc = getIt.get<UserPermissionsBloc>()
       ..add(UserPermissionsRequested());
@@ -137,11 +130,10 @@ class InjectManager {
     getIt.registerSingleton<GpsBloc>(GpsBloc(
         locationManager: locationManager,
         userPermissionsBloc: userPermissionsBloc));
-
+    //router config
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);
     final subscriptionGuard =
         SubscriptionRouteGuard(userPermissionsBloc: userPermissionsBloc);
-
     getIt.registerSingleton<AppNavigator>(AppNavigator(
         authRouteGuard: authGuard, subscriptionRouteGuard: subscriptionGuard));
   }

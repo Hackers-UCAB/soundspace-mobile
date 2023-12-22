@@ -73,7 +73,7 @@ class _RegisterForm extends StatelessWidget {
     return BlocListener<UserPermissionsBloc, UserPermissionsState>(
         listener: (context, state) {
       if (state.isAuthenticated) {
-        appNavigator.replaceWith('/home');
+        appNavigator.go('/home');
       }
     }, child: BlocBuilder<LogInSubscriberBloc, LogInSubscriberState>(
       builder: (context, state) {
@@ -91,11 +91,11 @@ class _RegisterForm extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            if (state.formStatus == FormStatus.invalid)
-              const ErrorSquare(
+            if (state is LogInSubscriberInvalid)
+              ErrorSquare(
                 invalidData: true,
-                mensaje:
-                    'Datos inválidos, intenta nuevamente.', //TODO: este mensaje puede ser de la api, hacerlo dinamico
+                mensaje: state
+                    .errorMessage, //TODO: este mensaje puede ser de la api, hacerlo dinamico
               ),
 
             if (state.formStatus == FormStatus.posting)
@@ -143,11 +143,10 @@ class _RegisterForm extends StatelessWidget {
               child: ImageContainer(
                   imagePath: 'images/digitel_blanco.png',
                   onTap: () {
-                    //TODO: Poner una entity de operadora en el dominio para manejar mejor esto, maybe usar el local storage para guardar los codigos
                     registerBloc.add(OperatorSubmittedEvent(
-                        phone: state.phone.value,
-                        selectedOperator:
-                            'd850ca20-cd91-4c53-95f4-7091ff46defe'));
+                      phone: state.phone.value,
+                      selectedOperator: 'digitel',
+                    ));
                   }),
             ),
             //Boton digitel
@@ -158,8 +157,7 @@ class _RegisterForm extends StatelessWidget {
                   onTap: () {
                     registerBloc.add(OperatorSubmittedEvent(
                         phone: state.phone.value,
-                        selectedOperator:
-                            '0cf45d3b-187e-49c2-b24f-18e6da8245e9'));
+                        selectedOperator: 'movistar'));
                   }),
             ),
           ],

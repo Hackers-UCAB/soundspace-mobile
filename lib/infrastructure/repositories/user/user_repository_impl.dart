@@ -14,16 +14,17 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<Result<User>> logInUser(
       String number, String notificationsToken) async {
-    _apiConnectionManager.setHeaders('firebaseToken', notificationsToken);
+    _apiConnectionManager.setHeaders('token', notificationsToken);
 
     final response = await _apiConnectionManager
-        .request('auth/login', 'POST', body: {'number': number});
+        .request('auth/log-in', 'POST', body: {'phone': number});
 
     if (response.hasValue()) {
       _apiConnectionManager.setHeaders(
           'Authorization', 'Bearer ${response.value.data['data']['token']}');
 
-      return Result<User>(value: UserMapper.fromJson(response.value.data));
+      return Result<User>(
+          value: UserMapper.fromJson(response.value.data['data']));
     } else {
       return Result<User>(failure: response.failure);
     }
@@ -32,16 +33,33 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<Result<User>> signUpUser(
       String number, String notificationsToken, String operator) async {
-    _apiConnectionManager.setHeaders('firebaseToken', notificationsToken);
+    _apiConnectionManager.setHeaders('token', notificationsToken);
 
-    final response = await _apiConnectionManager.request('auth/sign-up', 'POST',
-        body: {'value': number, 'chanelId': operator});
+    final response = await _apiConnectionManager
+        .request('auth/sign-up/$operator', 'POST', body: {'phone': number});
 
     if (response.hasValue()) {
-      final token = response.value.data['data'];
+      final token = response.value.data['data']['token'];
       _apiConnectionManager.setHeaders('Authorization', 'Bearer $token');
 
-      return Result<User>(value: UserMapper.fromJson(response.value.data));
+      return Result<User>(
+          value: UserMapper.fromJson(response.value.data['data']));
+    } else {
+      return Result<User>(failure: response.failure);
+    }
+  }
+
+  @override
+  Future<Result<User>> logInGuest() async {
+    final response =
+        await _apiConnectionManager.request('auth/log-in/guest', 'POST');
+
+    if (response.hasValue()) {
+      final token = response.value.data['data']['token'];
+      _apiConnectionManager.setHeaders('Authorization', 'Bearer $token');
+
+      return Result<User>(
+          value: UserMapper.fromJson(response.value.data['data']));
     } else {
       return Result<User>(failure: response.failure);
     }

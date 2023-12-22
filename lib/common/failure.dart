@@ -19,7 +19,7 @@ class ServerFailure extends Failure {
 }
 
 class NoAuthorizeFailure extends Failure {
-  const NoAuthorizeFailure({String message = 'No autorizado'}) : super(message);
+  const NoAuthorizeFailure({required String message}) : super(message);
 }
 
 class NoInternetFailure extends Failure {

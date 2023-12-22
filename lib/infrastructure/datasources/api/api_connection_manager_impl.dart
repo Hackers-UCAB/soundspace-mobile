@@ -30,14 +30,9 @@ class ApiConnectionManagerImpl extends IApiConnectionManager {
             DioExceptionType.sendTimeout ||
             DioExceptionType.receiveTimeout:
         return const NoInternetFailure();
-      case DioExceptionType.badResponse: //TODO: Pedirle los codigos al back
-        final statusCode = e.response?.statusCode;
-        if (statusCode == 404) {
-          //TODO: Decirle al back que cambie el codigo de no autorizado, 404 ya es usado cuando la ruta no existe
-          return const NoAuthorizeFailure();
-        } else {
-          return UnknownFailure(message: e.toString());
-        }
+      case DioExceptionType
+            .badResponse: //TODO: Esto no siempre es porque no este autorizado, definir el resto de Failures
+        return NoAuthorizeFailure(message: e.response?.data['message']);
       default:
         return UnknownFailure(message: e.toString());
     }

@@ -6,6 +6,7 @@ import '../../../domain/user/repository/user_repository.dart';
 import '../../datasources/local/local_storage.dart';
 
 class LogInUseCase {
+  //TODO: Poner todas estas propiedades privadas
   final UserRepository userRepository;
   final LocalStorage localStorage;
   final LocalNotifications localNotifications;

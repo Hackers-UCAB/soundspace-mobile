@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/connectivity/connectivity_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
@@ -53,9 +54,10 @@ class MyApp extends StatelessWidget {
               create: (context) => getIt.get<ConnectivityBloc>(),
             ),
             BlocProvider(
-              create: (context) {
-                return getIt.get<LogInSubscriberBloc>();
-              },
+              create: (context) => getIt.get<LogInSubscriberBloc>(),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<LogInGuestBloc>(),
             ),
             BlocProvider(
               create: (context) => getIt.get<NotificationsBloc>(),

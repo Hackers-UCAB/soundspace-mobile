@@ -43,9 +43,10 @@ class LogInSubscriberBloc
             UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
         emit(state.copyWith(formStatus: FormStatus.success));
       } else if (logInResult.failure! is NoAuthorizeFailure) {
-        emit(state.copyWith(formStatus: FormStatus.invalid));
+        emit(
+            LogInSubscriberInvalid(errorMessage: logInResult.failure!.message));
       } else {
-        emit(state.copyWith(formStatus: FormStatus.failure));
+        emit(LogInSubscriberFailure(failure: logInResult.failure!));
       }
     }
   }
@@ -58,8 +59,7 @@ class LogInSubscriberBloc
       state.copyWith(
           formStatus: FormStatus.validating,
           phone: Phone.dirty(state.phone.value),
-          isValid: isValid,
-          operator: event.selectedOperator),
+          isValid: isValid),
     );
 
     if (isValid) {
@@ -72,9 +72,10 @@ class LogInSubscriberBloc
 
         emit(state.copyWith(formStatus: FormStatus.success));
       } else if (signUpResult.failure! is NoAuthorizeFailure) {
-        emit(state.copyWith(formStatus: FormStatus.invalid));
+        emit(LogInSubscriberInvalid(
+            errorMessage: signUpResult.failure!.message));
       } else {
-        emit(state.copyWith(formStatus: FormStatus.failure));
+        emit(LogInSubscriberFailure(failure: signUpResult.failure!));
       }
     }
   }

@@ -13,5 +13,11 @@ class SubscriptionRouteGuard {
 
   SubscriptionRouteGuard({required this.userPermissionsBloc});
 
-  bool canNavigate() => userPermissionsBloc.state.isSubscribed == true;
+  bool canNavigate(String route) {
+    if (route != '/logIn') {
+      return userPermissionsBloc.state.isSubscribed == true;
+    } else {
+      return true;
+    }
+  }
 }

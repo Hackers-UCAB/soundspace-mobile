@@ -13,9 +13,8 @@ class GetUserLocalDataUseCase {
   Result<User> execute() {
     try {
       final appToken = localStorage.getValue('appToken');
-      final notificationsToken = localStorage.getValue('notificationsToken');
       final userRol = localStorage.getValue('role');
-      if (appToken != null && notificationsToken != null) {
+      if (appToken != null && userRol != null) {
         return Result<User>(
             value: User(
                 id: IdUser(id: appToken),

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/home_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/pages/landing/landing_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
 import '../../pages/album/album_detail.dart';
 import '../../pages/artist/artist_detail.dart';
@@ -21,6 +22,11 @@ class AppNavigator {
       routes: [
         GoRoute(
           path: '/',
+          builder: (context, state) => const LandingPage(),
+          redirect: _authProtectedNavigation,
+        ),
+        GoRoute(
+          path: '/logIn',
           builder: (context, state) => const RegisterScreen(),
           redirect: _authProtectedNavigation,
         ),
@@ -66,8 +72,12 @@ class AppNavigator {
     _routes.canPop() ? _routes.pop() : _routes.go('/');
   }
 
+  void go(String routeName) {
+    _routes.go(routeName);
+  }
+
   void navigateTo(String routeName) {
-    if (subscriptionRouteGuard.canNavigate()) {
+    if (subscriptionRouteGuard.canNavigate(routeName)) {
       _routes.push(routeName);
     }
   }
