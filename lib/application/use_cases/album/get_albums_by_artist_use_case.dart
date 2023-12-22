@@ -5,12 +5,10 @@ import '../../../domain/artist/artist.dart';
 
 class GetAlbumsByArtistUseCase {
   final AlbumRepository albumRepository;
-  final Artist artist;
 
-  GetAlbumsByArtistUseCase(
-      {required this.albumRepository, required this.artist});
+  GetAlbumsByArtistUseCase({required this.albumRepository});
 
-  Future<Result<List<Album>>> execute() async {
-    return await albumRepository.getAlbumsByArtist(artist);
+  Future<Result<List<Album>>> execute(Artist artist) async {
+    return await albumRepository.getAlbumsByArtistId(artist.id);
   }
 }

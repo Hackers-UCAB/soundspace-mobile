@@ -7,7 +7,8 @@ class GetArtistDataUseCase {
 
   GetArtistDataUseCase({required this.artistRepository});
 
-  Future<Result<Artist>> execute() async {
-    return await artistRepository.getArtistData();
+  Future<Result<Artist>> execute(Artist artist) async {
+    final id = artist.id;
+    return await artistRepository.getArtistById(id);
   }
 }

@@ -1,16 +1,15 @@
-import 'package:sign_in_bloc/domain/song/song.dart';
+import 'package:sign_in_bloc/domain/album/album.dart';
 
-import '../../../domain/album/album.dart';
 import '../../../common/result.dart';
 import '../../../domain/song/repository/song_repository.dart';
+import '../../../domain/song/song.dart';
 
 class GetSongsByAlbumUseCase {
   final SongRepository songRepository;
-  final Album album;
 
-  GetSongsByAlbumUseCase({required this.songRepository, required this.album});
+  GetSongsByAlbumUseCase({required this.songRepository});
 
-  Future<Result<List<Song>>> execute() async {
-    return await songRepository.getSongsByAlbum(album);
+  Future<Result<List<Song>>> execute(Album album) async {
+    return await songRepository.getSongsByAlbumId(album.id);
   }
 }

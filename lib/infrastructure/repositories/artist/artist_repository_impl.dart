@@ -24,9 +24,9 @@ class ArtistRepositoryImpl extends ArtistRepository {
   }
 
   @override
-  Future<Result<Artist>> getArtistData() async {
-    final result =
-        await _apiConnectionManager.request('artists/artists', 'GET'); //TODO
+  Future<Result<Artist>> getArtistById(String artistId) async {
+    final result = await _apiConnectionManager.request(
+        'artists/$artistId', 'GET'); //TODO: Preguntar al back
     if (result.hasValue()) {
       return Result<Artist>(
         value: ArtistMapper.fromJson(result.value.data['data']),

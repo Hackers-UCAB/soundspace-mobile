@@ -13,15 +13,15 @@ class ArtistDetailLoading extends ArtistDetailState {}
 class ArtistDetailLoaded extends ArtistDetailState {
   final Artist artistData;
   final List<Album> artistAlbums;
-  final List<Song> artistAlbumSongs;
+  final List<Song> artistSongs;
 
   const ArtistDetailLoaded(
       {required this.artistData,
       required this.artistAlbums,
-      required this.artistAlbumSongs});
+      required this.artistSongs});
 
   @override
-  List<Object?> get props => [artistData, artistAlbums, artistAlbumSongs];
+  List<Object?> get props => [artistData, artistAlbums, artistSongs];
 }
 
 class ArtistDetailFailed extends ArtistDetailState {
