@@ -17,34 +17,28 @@ class LogInSubscriberBloc
   final SubscribeUseCase subscribeUseCase;
   LogInSubscriberBloc(
       {required this.logInUseCase, required this.subscribeUseCase})
-      : super(const LogInSubscriberState()) {
-    on<LogInSubscriberSubmitted>(_onSubmited);
+      : super(LogInSubscriberInitial()) {
+    on<LogInSubscriberSubmitted>(_onSubmitted);
     on<LogInSubscriberPhoneChanged>(_phoneChanged);
     on<OperatorSubmittedEvent>(_onSubscribe);
   }
 
-  Future<void> _onSubmited(
-      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
-    final isValid = Formz.validate([state.phone]);
+  Future<void> _onSubmitted(
+      LogInSubscriberSubmitted event, Emitter<LogInSubscriberState> emit) async {
+    final isValid = Formz.validate([Phone.dirty(event.phone)]);
 
-    emit(
-      state.copyWith(
-        formStatus: FormStatus.validating,
-        phone: Phone.dirty(state.phone.value),
-        isValid: isValid,
-      ),
-    );
+    emit(LogInSubscriberValidating());
 
     if (isValid) {
-      emit(state.copyWith(formStatus: FormStatus.posting));
-      final logInResult = await logInUseCase.execute(state.phone.value);
+      emit(LogInSubscriberPosting());
+      final logInResult = await logInUseCase.execute(event.phone);
       if (logInResult.hasValue()) {
         GetIt.instance.get<UserPermissionsBloc>().add(
             UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
-        emit(state.copyWith(formStatus: FormStatus.success));
-      } else if (logInResult.failure! is NoAuthorizeFailure) {
-        emit(
-            LogInSubscriberInvalid(errorMessage: logInResult.failure!.message));
+        emit(LogInSubscriberSuccess());
+      } else if (logInResult.failure is NoAuthorizeFailure) {
+        emit(LogInSubscriberInvalid(
+            errorMessage: logInResult.failure!.message));
       } else {
         emit(LogInSubscriberFailure(failure: logInResult.failure!));
       }
@@ -53,25 +47,20 @@ class LogInSubscriberBloc
 
   Future<void> _onSubscribe(
       OperatorSubmittedEvent event, Emitter<LogInSubscriberState> emit) async {
-    final isValid = Formz.validate([state.phone]);
+        final phone = Phone.dirty(event.phone);
+        final isValid = Formz.validate([Phone.dirty(event.phone)]);
 
-    emit(
-      state.copyWith(
-          formStatus: FormStatus.validating,
-          phone: Phone.dirty(state.phone.value),
-          isValid: isValid),
-    );
+    emit(LogInSubscriberValidating());
 
     if (isValid) {
-      emit(state.copyWith(formStatus: FormStatus.posting));
-      final signUpResult = await subscribeUseCase.execute(
-          state.phone.value, event.selectedOperator);
+      emit(LogInSubscriberPosting());
+      final signUpResult =
+          await subscribeUseCase.execute(phone.value, event.selectedOperator);
       if (signUpResult.hasValue()) {
         GetIt.instance.get<UserPermissionsBloc>().add(
             UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
-
-        emit(state.copyWith(formStatus: FormStatus.success));
-      } else if (signUpResult.failure! is NoAuthorizeFailure) {
+        emit(LogInSubscriberSuccess());
+      } else if (signUpResult.failure is NoAuthorizeFailure) {
         emit(LogInSubscriberInvalid(
             errorMessage: signUpResult.failure!.message));
       } else {
@@ -80,13 +69,16 @@ class LogInSubscriberBloc
     }
   }
 
-  Future<void> _phoneChanged(
-      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
+  void _phoneChanged(
+      LogInSubscriberPhoneChanged event, Emitter<LogInSubscriberState> emit) {
     final phone = Phone.dirty(event.phone);
-    emit(state.copyWith(
-        formStatus: FormStatus.valid,
-        phone: phone,
-        isValid: Formz.validate([phone])));
+    bool isValid = Formz.validate([phone]);
+    if (isValid){
+      emit(LogInSubscriberValid(phone: phone));
+    }
+    else{
+      emit(LogInSubscriberInvalid(errorMessage: phone.error.toString()));
+    }
   }
 
   void onPhoneChanged(String value) {

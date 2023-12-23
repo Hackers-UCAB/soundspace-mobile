@@ -84,7 +84,7 @@ class _RegisterForm extends StatelessWidget {
               label: 'Nombre de usuario',
               onChanged: registerBloc.onPhoneChanged,
               errorMessage:
-                  state.phone.error != null ? state.phone.errorMessage : null,
+                  state is LogInSubscriberInvalid ? state.errorMessage : null,
               hint: 'Ej. 584241232323 o 4121232323',
               icon: Icons.info_outlined,
             ),
@@ -98,15 +98,16 @@ class _RegisterForm extends StatelessWidget {
                     .errorMessage, //TODO: este mensaje puede ser de la api, hacerlo dinamico
               ),
 
-            if (state.formStatus == FormStatus.posting)
+            if (state is LogInSubscriberPosting)
               const CircularProgressIndicator(),
             const SizedBox(height: 15),
 
-            if (state.formStatus != FormStatus.posting)
+            if (state is! LogInSubscriberPosting)
               MyButton(onTap: () {
-                registerBloc
-                    .add(LogInSubscriberSubmitted(phone: state.phone.value));
-              }), //TODO: hacer el boton dinamico
+                if (state is LogInSubscriberValid) {
+                      registerBloc.add(LogInSubscriberSubmitted(phone: state.phone.value));
+                    }
+              }), 
             // Suscríbete text
             const SizedBox(height: 65),
             const Row(
@@ -143,11 +144,16 @@ class _RegisterForm extends StatelessWidget {
               child: ImageContainer(
                   imagePath: 'images/digitel_blanco.png',
                   onTap: () {
-                    registerBloc.add(OperatorSubmittedEvent(
-                      phone: state.phone.value,
-                      selectedOperator: 'digitel',
-                    ));
-                  }),
+                    if (state is LogInSubscriberValid) {
+                      registerBloc.add(
+                        OperatorSubmittedEvent(
+                          phone: state.phone.value,
+                          selectedOperator: 'digitel',
+                        ),
+                      );
+                    }
+                  }
+              ),
             ),
             //Boton digitel
             const SizedBox(height: 25),
@@ -155,10 +161,16 @@ class _RegisterForm extends StatelessWidget {
               child: ImageContainer(
                   imagePath: 'images/movistar_blanco.png',
                   onTap: () {
-                    registerBloc.add(OperatorSubmittedEvent(
-                        phone: state.phone.value,
-                        selectedOperator: 'movistar'));
-                  }),
+                    if (state is LogInSubscriberValid) {
+                      registerBloc.add(
+                        OperatorSubmittedEvent(
+                          phone: state.phone.value,
+                          selectedOperator: 'movistar',
+                        ),
+                      );
+                    }
+                  }
+              ),
             ),
           ],
         ));
