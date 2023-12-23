@@ -11,13 +11,15 @@ import '../user_permissions/user_permissions_bloc.dart';
 part 'log_in_subscriber_event.dart';
 part 'log_in_subscriber_state.dart';
 
+enum PhoneError { empty, length, format, non }
+
 class LogInSubscriberBloc
     extends Bloc<LogInSubscriberEvent, LogInSubscriberState> {
   final LogInUseCase logInUseCase;
   final SubscribeUseCase subscribeUseCase;
   LogInSubscriberBloc(
       {required this.logInUseCase, required this.subscribeUseCase})
-      : super(const LogInSubscriberState()) {
+      : super(LogInSubscriberInitial()) {
     on<LogInSubscriberSubmitted>(_onSubmited);
     on<LogInSubscriberPhoneChanged>(_phoneChanged);
     on<OperatorSubmittedEvent>(_onSubscribe);
@@ -25,35 +27,32 @@ class LogInSubscriberBloc
 
   Future<void> _onSubmited(
       LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
-    final isValid = Formz.validate([state.phone]);
+    final phoneError = _validate(event.phone);
 
     emit(
-      state.copyWith(
-        formStatus: FormStatus.validating,
-        phone: Phone.dirty(state.phone.value),
-        isValid: isValid,
-      ),
+      LogInSubscriberValidating(),
     );
 
-    if (isValid) {
-      emit(state.copyWith(formStatus: FormStatus.posting));
-      final logInResult = await logInUseCase.execute(state.phone.value);
+    if (phoneError == PhoneError.non) {
+      emit(LogInSubscriberPosting());
+      final logInResult = await logInUseCase.execute(event.phone);
       if (logInResult.hasValue()) {
         GetIt.instance.get<UserPermissionsBloc>().add(
             UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
-        emit(state.copyWith(formStatus: FormStatus.success));
       } else if (logInResult.failure! is NoAuthorizeFailure) {
-        emit(
-            LogInSubscriberInvalid(errorMessage: logInResult.failure!.message));
+        emit(LogInSubscriberNoAuthorize(
+            errorMessage: logInResult.failure!.message));
       } else {
         emit(LogInSubscriberFailure(failure: logInResult.failure!));
       }
+    } else {
+      emit(LogInSubscriberInvalid(displayError: phoneError));
     }
   }
 
   Future<void> _onSubscribe(
       OperatorSubmittedEvent event, Emitter<LogInSubscriberState> emit) async {
-    final isValid = Formz.validate([state.phone]);
+    final isValid = _validate(event.phone);
 
     emit(
       state.copyWith(
@@ -91,5 +90,14 @@ class LogInSubscriberBloc
 
   void onPhoneChanged(String value) {
     add(LogInSubscriberPhoneChanged(phone: value));
+  }
+
+  PhoneError _validate(String value) {
+    if (value.isEmpty || value.trim().isEmpty) return PhoneError.empty;
+    if (value.length != 10 && value.length != 12) return PhoneError.length;
+    final phoneNumberPattern = RegExp(r'^(58424|58414|58424|414|424|412)\d+$');
+    if (!phoneNumberPattern.hasMatch(value)) return PhoneError.format;
+
+    return PhoneError.non;
   }
 }

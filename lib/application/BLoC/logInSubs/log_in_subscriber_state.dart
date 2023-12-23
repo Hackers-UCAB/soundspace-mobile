@@ -1,43 +1,43 @@
 part of 'log_in_subscriber_bloc.dart';
 
-enum FormStatus { invalid, valid, validating, posting, success, failure }
+abstract class LogInSubscriberState {}
 
-class LogInSubscriberState extends Equatable {
-  final FormStatus formStatus;
-  final bool isValid;
-  final Phone phone;
+class LogInSubscriberInitial extends LogInSubscriberState {}
 
-  const LogInSubscriberState(
-      {this.formStatus = FormStatus.validating,
-      this.isValid = false,
-      this.phone = const Phone.pure()});
+class LogInSubscriberValid extends LogInSubscriberState {
+  final String phone;
 
-  LogInSubscriberState copyWith(
-          {FormStatus? formStatus, bool? isValid, Phone? phone}) =>
-      LogInSubscriberState(
-          formStatus: formStatus ?? this.formStatus,
-          isValid: isValid ?? this.isValid,
-          phone: phone ?? this.phone);
-  @override
-  List<Object> get props => [formStatus, isValid, phone];
+  LogInSubscriberValid({required this.phone});
+}
+
+class LogInSubscriberPosting extends LogInSubscriberState {}
+
+class LogInSubscriberNoAuthorize extends LogInSubscriberState {
+  final String errorMessage;
+
+  LogInSubscriberNoAuthorize({required this.errorMessage});
 }
 
 class LogInSubscriberInvalid extends LogInSubscriberState {
-  final String errorMessage;
+  late final String errorMessage;
 
-  const LogInSubscriberInvalid({required this.errorMessage})
-      : super(formStatus: FormStatus.failure);
+  LogInSubscriberInvalid({required PhoneError displayError}) {
+    errorMessage = getErrorMessage(displayError);
+  }
 
-  @override
-  List<Object> get props => [errorMessage];
+  String getErrorMessage(PhoneError displayError) {
+    if (displayError == PhoneError.empty) {
+      return 'Ingresa tu número de teléfono.';
+    } else if (displayError == PhoneError.length) {
+      return 'El numero debe tener 10 o 12 caracteres.';
+    } else {
+      return 'Siga el formato de ejemplo: 584241232323 o 4121232323';
+    }
+  }
 }
 
 class LogInSubscriberFailure extends LogInSubscriberState {
   final Failure failure;
 
-  const LogInSubscriberFailure({required this.failure})
-      : super(formStatus: FormStatus.failure);
-
-  @override
-  List<Object> get props => [failure];
+  LogInSubscriberFailure({required this.failure});
 }

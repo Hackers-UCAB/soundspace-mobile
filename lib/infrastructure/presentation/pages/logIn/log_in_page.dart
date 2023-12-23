@@ -84,7 +84,7 @@ class _RegisterForm extends StatelessWidget {
               label: 'Nombre de usuario',
               onChanged: registerBloc.onPhoneChanged,
               errorMessage:
-                  state.phone.error != null ? state.phone.errorMessage : null,
+                  (state is LogInSubscriberInvalid) ? state.errorMessage : null,
               hint: 'Ej. 584241232323 o 4121232323',
               icon: Icons.info_outlined,
             ),
@@ -94,15 +94,14 @@ class _RegisterForm extends StatelessWidget {
             if (state is LogInSubscriberInvalid)
               ErrorSquare(
                 invalidData: true,
-                mensaje: state
-                    .errorMessage, //TODO: este mensaje puede ser de la api, hacerlo dinamico
+                mensaje: state.errorMessage,
               ),
 
-            if (state.formStatus == FormStatus.posting)
+            if (state is LogInSubscriberPosting)
               const CircularProgressIndicator(),
             const SizedBox(height: 15),
 
-            if (state.formStatus != FormStatus.posting)
+            if (state is! LogInSubscriberPosting)
               MyButton(onTap: () {
                 registerBloc
                     .add(LogInSubscriberSubmitted(phone: state.phone.value));
