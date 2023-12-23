@@ -8,12 +8,17 @@ class SocketConnected extends SocketEvent {}
 
 class SocketDisconnected extends SocketEvent {}
 
-class SocketReceive extends SocketEvent {
+class SocketReceiveChunk extends SocketEvent {
   final SocketChunck chunck;
-  const SocketReceive(this.chunck);
+  const SocketReceiveChunk(this.chunck);
 }
 
-class SocketSend extends SocketEvent {
+class SocketSendIdSong extends SocketEvent {
   final String idSong;
-  const SocketSend(this.idSong);
+  const SocketSendIdSong(this.idSong);
+}
+
+class SocketReceiveStreamInfo extends SocketEvent {
+  final bufferSize;
+  const SocketReceiveStreamInfo(this.bufferSize);
 }

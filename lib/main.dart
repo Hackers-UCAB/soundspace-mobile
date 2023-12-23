@@ -5,6 +5,7 @@ import 'package:sign_in_bloc/application/BLoC/connectivity/connectivity_bloc.dar
 import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/socket/socket_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/theme/app_theme.dart';
@@ -29,7 +30,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final getIt = GetIt.instance;
     final appNavigator = getIt.get<AppNavigator>();
-
     return MaterialApp.router(
       title: dotenv.env['APP_NAME']!,
       debugShowCheckedModeBanner: false,
@@ -71,6 +71,40 @@ class MyApp extends StatelessWidget {
           ], child: child!),
         );
       },
+
+    //TODO: poner esto en un widget privado
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt.get<PlayerBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt.get<UserPermissionsBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt.get<TrendingsBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt.get<ConnectivityBloc>(),
+        ),
+        BlocProvider(
+          create: (context) {
+            return getIt.get<LogInSubscriberBloc>();
+          },
+        ),
+        BlocProvider(
+          create: (context) => getIt.get<NotificationsBloc>(),
+        ),
+        BlocProvider(create: (context) => getIt.get<SocketBloc>())
+      ],
+      child: MaterialApp.router(
+        title: 'SoundSpace', //TODO: mejorar con las .env
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme().getTheme(),
+        routerDelegate: appNavigator.routerDelegate,
+        routeInformationParser: appNavigator.routeInformationParser,
+        routeInformationProvider: appNavigator.routeInformationProvider,
+      ),
     );
   }
 }

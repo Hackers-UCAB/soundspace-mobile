@@ -8,6 +8,7 @@ import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/socket/socket_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
@@ -131,6 +132,17 @@ class InjectManager {
         locationManager: locationManager,
         userPermissionsBloc: userPermissionsBloc));
     //router config
+
+
+    // REGISTRO DEL BLOC DE SOCKETS
+    getIt.registerSingleton<SocketBloc>(SocketBloc(socketClient: socketClient));
+
+    // getIt.registerSingleton<GpsBloc>(GpsBloc(
+    //     locationManager: locationManager,
+    //     locationPermission: locationPermission));
+    //check if user has a session
+    userPermissionsBloc.add(UserPermissionsRequested());
+
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);
     final subscriptionGuard =
         SubscriptionRouteGuard(userPermissionsBloc: userPermissionsBloc);
