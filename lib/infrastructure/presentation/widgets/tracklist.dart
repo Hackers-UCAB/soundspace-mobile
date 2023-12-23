@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/socket/socket_bloc.dart';
 import '../../../application/BLoC/player/player_bloc.dart';
 import '../../../domain/song/song.dart';
 
@@ -25,6 +26,7 @@ class Tracklist extends StatelessWidget {
 class _TracklistItem extends StatelessWidget {
   final Song song;
   final playerBloc = GetIt.instance.get<PlayerBloc>();
+  final socketBloc = GetIt.instance.get<SocketBloc>();
 
   _TracklistItem({required this.song});
 
@@ -70,8 +72,10 @@ class _TracklistItem extends StatelessWidget {
                   Text(song.duration), //duracion total de la cancion
                   const SizedBox(width: 6),
                   IconButton(
-                    onPressed: () =>
-                        playerBloc.add(PlayingStartedEvent(song: song)),
+                    onPressed: () => {
+                      playerBloc.add(PlayingStartedEvent(song: song)),
+                      socketBloc.add(SocketSendIdSong(song.id))
+                    },
                     icon: const Icon(
                       Icons.play_arrow_sharp,
                       color: Color(0xff1de1ee),

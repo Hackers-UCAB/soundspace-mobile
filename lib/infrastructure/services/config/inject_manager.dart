@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/socket/socket_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
@@ -55,6 +56,7 @@ class InjectManager {
     await dotenv.load(fileName: ".env");
     //services
 
+    //SOCKET INIT
     final socketClient = SocketClientImpl();
     socketClient.inicializeSocket();
 
@@ -117,6 +119,10 @@ class InjectManager {
         ConnectivityBloc(connectionManager: ConnectionManagerImpl()));
     getIt.registerSingleton<NotificationsBloc>(
         NotificationsBloc(localNotifications: localNotifications));
+
+    // REGISTRO DEL BLOC DE SOCKETS
+    getIt.registerSingleton<SocketBloc>(SocketBloc(socketClient: socketClient));
+
     // getIt.registerSingleton<GpsBloc>(GpsBloc(
     //     locationManager: locationManager,
     //     locationPermission: locationPermission));

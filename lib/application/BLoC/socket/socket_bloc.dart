@@ -8,32 +8,32 @@ part 'socket_state.dart';
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
   SocketClient socketClient;
+  List<SocketChunck> buffer = [];
+  int bufferSize = 0;
 
   SocketBloc({required this.socketClient}) : super(const SocketState()) {
-    on<SocketSend>(_sendIdSong);
-    on<SocketReceive>(_receiveChunck);
+    on<SocketSendIdSong>(_sendIdSong);
+    on<SocketReceiveChunk>(_receiveChunck);
+    on<SocketReceiveStreamInfo>(_receiveInfo);
     _receiveBackgroundChunck();
   }
 
-  void _sendIdSong(SocketSend event, Emitter<SocketState> emit) {
-    socketClient.sendMessage(event.idSong);
+  void _sendIdSong(SocketSendIdSong event, Emitter<SocketState> emit) async {
+    socketClient.sendIdSong(event.idSong);
+    socketClient.receiveInfo(this);
   }
 
   Future<void> _receiveChunck(
-      SocketReceive event, Emitter<SocketState> emit) async {
-    emit(state.copyWith(buffer: [...state.buffer, event.chunck]));
-    state.buffer;
+      SocketReceiveChunk event, Emitter<SocketState> emit) async {
+    emit(state.copyWith(buffer: [event.chunck, ...state.buffer]));
+  }
+
+  Future<void> _receiveInfo(
+      SocketReceiveStreamInfo event, Emitter<SocketState> emit) async {
+    emit(state.copyWith(bufferSize: event.bufferSize));
   }
 
   Future<void> _receiveBackgroundChunck() async {
-    SocketChunck chunck = SocketChunck(secuence: '', data: 'data');
-    socketClient.getSocket().on(
-        'chunck',
-        (data) => {
-              print(data['secuence']),
-              chunck.secuence = data['secuence'],
-              chunck.data = data['payload'],
-              if (chunck.secuence != '') add(SocketReceive(chunck)),
-            });
+    socketClient.receiveChunk(this);
   }
 }

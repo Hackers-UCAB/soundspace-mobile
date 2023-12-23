@@ -1,6 +1,8 @@
+import 'dart:typed_data';
+
 class SocketChunck {
   dynamic secuence;
-  dynamic data;
+  Uint8List data;
 
   SocketChunck({required this.secuence, required this.data});
 }

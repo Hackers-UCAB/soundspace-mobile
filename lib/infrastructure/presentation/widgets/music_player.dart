@@ -1,11 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
+import 'dart:typed_data';
+
+import '../../../application/BLoC/socket/socket_bloc.dart';
+
+class MyCustomSource extends StreamAudioSource {
+  final Uint8List bytes;
+  MyCustomSource(this.bytes);
+
+  @override
+  Future<StreamAudioResponse> request([int? start, int? end]) async {
+    start ??= 0;
+    end ??= bytes.length;
+    return StreamAudioResponse(
+      sourceLength: bytes.length,
+      contentLength: end - start,
+      offset: start,
+      stream: Stream.fromIterable([bytes.sublist(start, end)]),
+      contentType: 'audio/mp3',
+    );
+  }
+}
 
 class MusicPlayer extends StatelessWidget {
-  const MusicPlayer({super.key});
+  MusicPlayer({super.key});
+  final player = AudioPlayer();
+
+  void load(dynamic test) async {
+    final source = await player.setAudioSource(MyCustomSource(test));
+    player.play();
+  }
+
+  Future<void> copy(BytesBuilder bytes) async {
+    await bytes.toBytes();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final buffer =
+        context.select((SocketBloc socketBloc) => socketBloc.state.buffer);
+    final bufferSize =
+        context.select((SocketBloc socketBloc) => socketBloc.state.bufferSize);
+
+    if (buffer.length >= bufferSize && buffer.isNotEmpty) {
+      var bytesBuilder = BytesBuilder();
+      for (var chunk in buffer) {
+        bytesBuilder.add(chunk.data);
+      }
+
+      load(bytesBuilder.toBytes());
+    }
+
     return Container(
+      // ?
       height: 60,
       width: double.infinity,
       decoration: const BoxDecoration(color: Color.fromARGB(255, 24, 15, 35)),
@@ -30,7 +79,7 @@ class MusicPlayer extends StatelessWidget {
                   padding: const EdgeInsets.all(14),
                   child: Column(children: [
                     Text(
-                      'Artist',
+                      buffer.length.toString(),
                       style: Theme.of(context).textTheme.bodyMedium,
                     )
                   ]),
