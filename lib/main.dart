@@ -44,12 +44,6 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) => getIt.get<ArtistDetailBloc>(),
-            ),
-            BlocProvider(
-              create: (context) => getIt.get<AlbumDetailBloc>(),
-            ),
-            BlocProvider(
               create: (context) => getIt.get<PlayerBloc>(),
             ),
             BlocProvider(
@@ -57,6 +51,12 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => getIt.get<TrendingsBloc>(),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<ArtistDetailBloc>(),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<AlbumDetailBloc>(),
             ),
             BlocProvider(
               create: (context) => getIt.get<ConnectivityBloc>(),
@@ -75,9 +75,6 @@ class MyApp extends StatelessWidget {
                 ..add(
                   GpsInitializedEvent(),
                 ),
-            ),
-            BlocProvider(
-              create: (context) => getIt.get<ArtistDetailBloc>(),
             ),
           ],
           child: MultiBlocListener(listeners: [

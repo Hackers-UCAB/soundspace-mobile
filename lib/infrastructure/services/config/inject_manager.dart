@@ -110,6 +110,16 @@ class InjectManager {
         GetTrendingSongsUseCase(songRepository: songRepository);
     final GetUserLocalDataUseCase getUserLocalDataUseCase =
         GetUserLocalDataUseCase(localStorage: localStorage);
+    final GetArtistDataUseCase getArtistDataUseCase =
+        GetArtistDataUseCase(artistRepository: artistRepository);
+    final GetAlbumDataUseCase getAlbumDataUseCase =
+        GetAlbumDataUseCase(albumRepository: albumRepository);
+    final GetAlbumsByArtistUseCase getAlbumsByArtistUseCase =
+        GetAlbumsByArtistUseCase(albumRepository: albumRepository);
+    final GetSongsByArtistUseCase getSongsByArtistUseCase =
+        GetSongsByArtistUseCase(songRepository: songRepository);
+    final GetSongsByAlbumUseCase getSongsByAlbumUseCase =
+        GetSongsByAlbumUseCase(songRepository: songRepository);
     //blocs
     final getIt = GetIt.instance;
     //blocs
