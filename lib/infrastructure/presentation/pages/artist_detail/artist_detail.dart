@@ -8,7 +8,6 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/albums_carousel
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/tracklist.dart';
-
 import '../../widgets/error_page.dart';
 
 class ArtistDetail extends IPage {

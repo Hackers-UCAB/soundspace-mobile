@@ -20,9 +20,9 @@ class AlbumDetailBloc extends Bloc<AlbumDetailEvent, AlbumDetailState> {
 
   void _fetchAlbumDetailEventHandler(
       FetchAlbumDetailEvent event, Emitter<AlbumDetailState> emit) async {
-    final albumDataResult = await getAlbumDataUseCase.execute(event.album);
+    final albumDataResult = await getAlbumDataUseCase.execute(event.albumId);
     final songsByAlbumResult =
-        await getSongsByAlbumUseCase.execute(event.album);
+        await getSongsByAlbumUseCase.execute(event.albumId);
 
     if ([
       albumDataResult,

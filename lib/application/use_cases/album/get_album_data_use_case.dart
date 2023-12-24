@@ -7,7 +7,7 @@ class GetAlbumDataUseCase {
 
   GetAlbumDataUseCase({required this.albumRepository});
 
-  Future<Result<Album>> execute(Album album) async {
-    return await albumRepository.getAlbumById(album.id);
+  Future<Result<Album>> execute(String albumId) async {
+    return await albumRepository.getAlbumById(albumId);
   }
 }
