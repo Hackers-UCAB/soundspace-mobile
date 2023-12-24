@@ -6,6 +6,7 @@ import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.d
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/theme/app_theme.dart';
 import 'package:sign_in_bloc/infrastructure/services/inject_manager.dart';
+
 import 'application/BLoC/auth/auth_bloc.dart';
 import 'application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import 'application/BLoC/player/player_bloc.dart';

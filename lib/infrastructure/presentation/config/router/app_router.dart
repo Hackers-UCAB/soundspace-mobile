@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sign_in_bloc/application/BLoC/auth/auth_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/homePage/home_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
+
 import '../../pages/artistDetail/artist_detail.dart';
 
 part 'route_guard.dart';
@@ -31,6 +32,10 @@ class AppNavigator {
           path: '/artist',
           builder: (context, state) => const ArtistDetail(),
         ),
+        /*GoRoute(
+          path: '/search',
+          builder: (context, state) => const SearchPage(),
+        ),*/
       ],
     );
   }
