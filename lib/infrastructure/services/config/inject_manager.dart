@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_bloc/application/BLoC/album_detail/album_detail_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/artist_detail/artist_detail_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
+import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlists_use_case.dart';
@@ -26,7 +29,11 @@ import 'package:sign_in_bloc/infrastructure/datasources/local/local_storage_impl
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
 import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import '../../../application/BLoC/trendings/trendings_bloc.dart';
+import '../../../application/use_cases/album/get_albums_by_artist_use_case.dart';
+import '../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
+import '../../../application/use_cases/song/get_songs_by_album_use_case.dart';
+import '../../../application/use_cases/song/get_songs_by_artist_use_case.dart';
 import '../../../application/use_cases/user/log_in_guest_use_case.dart';
 import '../../../application/use_cases/user/log_in_use_case.dart';
 import '../../presentation/config/router/app_router.dart';
@@ -103,7 +110,7 @@ class InjectManager {
         GetTrendingSongsUseCase(songRepository: songRepository);
     final GetUserLocalDataUseCase getUserLocalDataUseCase =
         GetUserLocalDataUseCase(localStorage: localStorage);
-
+    //blocs
     final getIt = GetIt.instance;
     //blocs
     getIt.registerSingleton<TrendingsBloc>(TrendingsBloc(
@@ -112,6 +119,13 @@ class InjectManager {
         getPromotionalBannerUseCase: getPromotionalBannerUseCase,
         getTrendingPlaylistsUseCase: getTrendingPlaylistsUseCase,
         getTrendingSongsUseCase: getTrendingSongsUseCase));
+    getIt.registerSingleton<ArtistDetailBloc>(ArtistDetailBloc(
+        getArtistDataUseCase: getArtistDataUseCase,
+        getAlbumsByArtistUseCase: getAlbumsByArtistUseCase,
+        getSongsByArtistUseCase: getSongsByArtistUseCase));
+    getIt.registerSingleton<AlbumDetailBloc>(AlbumDetailBloc(
+        getAlbumDataUseCase: getAlbumDataUseCase,
+        getSongsByAlbumUseCase: getSongsByAlbumUseCase));
     getIt.registerSingleton<UserPermissionsBloc>(
         UserPermissionsBloc(getUserLocalDataUseCase: getUserLocalDataUseCase));
     getIt.registerSingleton<PlayerBloc>(PlayerBloc());

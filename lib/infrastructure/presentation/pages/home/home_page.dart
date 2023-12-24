@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/widgets/promotional_banner_widget.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/tracklist.dart';
@@ -89,12 +90,7 @@ class HomePage extends IPage {
                     ],
                   );
                 } else if (trendingsState is TrendingsLoading) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
+                  return const CustomCircularProgressIndicator();
                 } else {
                   return ErrorPage(failure: trendingsState.failure!);
                 }

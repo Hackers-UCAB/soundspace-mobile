@@ -5,8 +5,8 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/home_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/landing/landing_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
-import '../../pages/album/album_detail.dart';
-import '../../pages/artist/artist_detail.dart';
+import '../../pages/album_detail/album_detail.dart';
+import '../../pages/artist_detail/artist_detail.dart';
 
 part 'route_guard.dart';
 
@@ -38,18 +38,14 @@ class AppNavigator {
           path: '/artist/:id',
           builder: (context, state) {
             final artistId = state.pathParameters['id']!;
-            return ArtistDetail(
-              artistId: artistId,
-            );
+            return ArtistDetail(artistId: artistId);
           },
         ),
         GoRoute(
           path: '/album/:id',
           builder: (context, state) {
             final albumId = state.pathParameters['id']!;
-            return AlbumDetail(
-              albumId: albumId,
-            );
+            return AlbumDetail(albumId: albumId);
           },
         ),
       ],

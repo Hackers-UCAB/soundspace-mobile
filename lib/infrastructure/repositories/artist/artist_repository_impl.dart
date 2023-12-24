@@ -22,4 +22,17 @@ class ArtistRepositoryImpl extends ArtistRepository {
       return Result<List<Artist>>(failure: result.failure);
     }
   }
+
+  @override
+  Future<Result<Artist>> getArtistById(String artistId) async {
+    final result = await _apiConnectionManager.request(
+        'artists/$artistId', 'GET'); //TODO: Preguntar al back
+    if (result.hasValue()) {
+      return Result<Artist>(
+        value: ArtistMapper.fromJson(result.value.data['data']),
+      );
+    } else {
+      return Result<Artist>(failure: result.failure);
+    }
+  }
 }

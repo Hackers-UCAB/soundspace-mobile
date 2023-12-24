@@ -9,7 +9,6 @@ class PlaylistRepositoryImpl extends PlaylistRepository {
 
   PlaylistRepositoryImpl({required IApiConnectionManager apiConnectionManager})
       : _apiConnectionManager = apiConnectionManager;
-  //mejorar esto
 
   @override
   Future<Result<List<Playlist>>> getPlayList() async {

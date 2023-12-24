@@ -9,6 +9,8 @@ import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/theme/app_theme.dart';
 import 'package:sign_in_bloc/infrastructure/services/config/inject_manager.dart';
+import 'application/BLoC/album_detail/album_detail_bloc.dart';
+import 'application/BLoC/artist_detail/artist_detail_bloc.dart';
 import 'application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import 'application/BLoC/player/player_bloc.dart';
 import 'infrastructure/presentation/config/router/app_router.dart';
@@ -42,6 +44,12 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(
+              create: (context) => getIt.get<ArtistDetailBloc>(),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<AlbumDetailBloc>(),
+            ),
+            BlocProvider(
               create: (context) => getIt.get<PlayerBloc>(),
             ),
             BlocProvider(
@@ -63,8 +71,14 @@ class MyApp extends StatelessWidget {
               create: (context) => getIt.get<NotificationsBloc>(),
             ),
             BlocProvider(
-                create: (context) =>
-                    getIt.get<GpsBloc>()..add(GpsInitializedEvent())),
+              create: (context) => getIt.get<GpsBloc>()
+                ..add(
+                  GpsInitializedEvent(),
+                ),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<ArtistDetailBloc>(),
+            ),
           ],
           child: MultiBlocListener(listeners: [
             ConnectionListener(),
