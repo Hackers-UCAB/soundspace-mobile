@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../domain/album/album.dart';
+import '../../../../../domain/album/album.dart';
 
 class AlbumClipRRect extends StatelessWidget {
   final Album album;
