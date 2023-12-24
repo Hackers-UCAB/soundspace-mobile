@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 class AlbumDetail extends StatelessWidget {
   final String albumId;
-  const AlbumDetail({Key? key, required this.albumId}) : super(key: key);
+
+  const AlbumDetail({super.key, required this.albumId});
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const Placeholder();
   }
 }

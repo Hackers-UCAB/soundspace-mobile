@@ -2,10 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/pages/album_detail/album_detail.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/home_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
-import '../../pages/album/album_detail.dart';
-import '../../pages/artist/artist_detail.dart';
+import '../../pages/artist_detail/artist_detail.dart';
 
 part 'route_guard.dart';
 
@@ -17,7 +17,7 @@ class AppNavigator {
   AppNavigator(
       {required this.authRouteGuard, required this.subscriptionRouteGuard}) {
     _routes = GoRouter(
-      initialLocation: '/',
+      initialLocation: '/artist/1',
       routes: [
         GoRoute(
           path: '/',
@@ -32,18 +32,14 @@ class AppNavigator {
           path: '/artist/:id',
           builder: (context, state) {
             final artistId = state.pathParameters['id']!;
-            return ArtistDetail(
-              artistId: artistId,
-            );
+            return ArtistDetail(artistId: artistId);
           },
         ),
         GoRoute(
           path: '/album/:id',
           builder: (context, state) {
             final albumId = state.pathParameters['id']!;
-            return AlbumDetail(
-              albumId: albumId,
-            );
+            return AlbumDetail(albumId: albumId);
           },
         ),
       ],
@@ -78,7 +74,7 @@ class AppNavigator {
 
   String? _authProtectedNavigation(BuildContext context, GoRouterState state) {
     if (authRouteGuard.canNavigate()) {
-      return '/artist/1';
+      return '/home';
     }
     return null;
   }

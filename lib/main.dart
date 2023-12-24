@@ -69,8 +69,14 @@ class MyApp extends StatelessWidget {
               create: (context) => getIt.get<NotificationsBloc>(),
             ),
             BlocProvider(
-                create: (context) =>
-                    getIt.get<GpsBloc>()..add(GpsInitializedEvent())),
+              create: (context) => getIt.get<GpsBloc>()
+                ..add(
+                  GpsInitializedEvent(),
+                ),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<ArtistDetailBloc>(),
+            ),
           ],
           child: MultiBlocListener(listeners: [
             ConnectionListener(),

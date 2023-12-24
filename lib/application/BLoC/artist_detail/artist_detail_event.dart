@@ -3,7 +3,7 @@ part of 'artist_detail_bloc.dart';
 abstract class ArtistDetailEvent {}
 
 class FetchArtistDetailEvent extends ArtistDetailEvent {
-  final Artist artist;
+  final String artistId;
 
-  FetchArtistDetailEvent({required this.artist});
+  FetchArtistDetailEvent({required this.artistId});
 }

@@ -9,7 +9,6 @@ class AlbumRepositoryImpl extends AlbumRepository {
 
   AlbumRepositoryImpl({required IApiConnectionManager apiConnectionManager})
       : _apiConnectionManager = apiConnectionManager;
-//mejorar esto
 
   @override
   Future<Result<List<Album>>> getTrendingAlbums() async {

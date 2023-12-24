@@ -25,11 +25,11 @@ class ArtistDetailBloc extends Bloc<ArtistDetailEvent, ArtistDetailState> {
 
   void _fetchArtistDetailsEventHandler(
       FetchArtistDetailEvent event, Emitter<ArtistDetailState> emit) async {
-    final artistDataResult = await getArtistDataUseCase.execute(event.artist);
+    final artistDataResult = await getArtistDataUseCase.execute(event.artistId);
     final albumsByArtistResult =
-        await getAlbumsByArtistUseCase.execute(event.artist);
+        await getAlbumsByArtistUseCase.execute(event.artistId);
     final songByAlbumResult =
-        await getSongsByArtistUseCase.execute(event.artist);
+        await getSongsByArtistUseCase.execute(event.artistId);
 
     if ([artistDataResult, albumsByArtistResult, songByAlbumResult]
         .every((result) => result.hasValue())) {
