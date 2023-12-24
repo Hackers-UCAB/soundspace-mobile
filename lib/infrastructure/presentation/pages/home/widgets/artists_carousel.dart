@@ -5,7 +5,7 @@ import '../../../config/router/app_router.dart';
 
 class ArtistsCarousel extends StatelessWidget {
   final List<Artist> artists;
-  const ArtistsCarousel({Key? key, required this.artists}) : super(key: key);
+  const ArtistsCarousel({super.key, required this.artists});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _ArtistCard extends StatelessWidget {
     return Column(children: [
       GestureDetector(
         onTap: () {
-          appNavigator.navigateTo('/artist');
+          appNavigator.navigateTo('/artist/${artist.id}');
         },
         child: Material(
           elevation: 5.0,

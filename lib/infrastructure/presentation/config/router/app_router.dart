@@ -18,7 +18,7 @@ class AppNavigator {
   AppNavigator(
       {required this.authRouteGuard, required this.subscriptionRouteGuard}) {
     _routes = GoRouter(
-      initialLocation: '/',
+      initialLocation: '/artist/11f760c6-1c3d-46ff-a295-48eb0d0134a9',
       routes: [
         GoRoute(
           path: '/',
@@ -73,9 +73,9 @@ class AppNavigator {
   }
 
   void navigateTo(String routeName) {
-    if (subscriptionRouteGuard.canNavigate(routeName)) {
-      _routes.push(routeName);
-    }
+    // if (subscriptionRouteGuard.canNavigate(routeName)) {
+    _routes.push(routeName);
+    // }
   }
 
   void replaceWith(String routeName) {

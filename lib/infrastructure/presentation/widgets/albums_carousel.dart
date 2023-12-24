@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gallery_3d/gallery3d.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/config/router/app_router.dart';
 import '../../../domain/album/album.dart';
 
 class AlbumsCarousel extends StatefulWidget {
@@ -25,6 +27,9 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
           Gallery3DController(itemCount: widget.albums.length, autoLoop: false),
       width: size.width,
       height: 150,
+      onClickItem: (index) => GetIt.instance
+          .get<AppNavigator>()
+          .navigateTo('/album/${widget.albums[index].id}'),
       onItemChanged: (index) {
         setState(() {
           currentIndex = index;
