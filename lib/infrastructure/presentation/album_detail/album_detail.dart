@@ -29,9 +29,7 @@ class AlbumDetail extends StatelessWidget {
             builder: (context, playerState) {
               return BlocBuilder<AlbumDetailBloc, AlbumDetailState>(
                 builder: (context, albumState) {
-                  if (albumState is AlbumDetailLoading) {
-                    return const CustomCircularProgressIndicator();
-                  } else if (albumState is AlbumDetailLoaded) {
+                  if (albumState is AlbumDetailLoaded) {
                     return Stack(
                       children: [
                         SingleChildScrollView(
@@ -51,8 +49,10 @@ class AlbumDetail extends StatelessWidget {
                         ),
                       ],
                     );
+                  } else if (albumState is AlbumDetailFailed) {
+                    return ErrorPage(failure: albumState.failure);
                   } else {
-                    return ErrorPage(failure: albumState.failure!);
+                    return const CustomCircularProgressIndicator();
                   }
                 },
               );
