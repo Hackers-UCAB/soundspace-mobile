@@ -88,7 +88,7 @@ class AppNavigator {
 
   String? _authProtectedNavigation(BuildContext context, GoRouterState state) {
     if (authRouteGuard.canNavigate()) {
-      return '/artist/1';
+      return '/home';
     }
     return null;
   }

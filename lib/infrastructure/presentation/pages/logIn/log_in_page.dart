@@ -91,7 +91,7 @@ class _RegisterForm extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            if (state is LogInSubscriberInvalid)
+            if (state is LogInSubscriberNoAuthorize)
               ErrorSquare(
                 invalidData: true,
                 mensaje: state.errorMessage,
@@ -103,8 +103,10 @@ class _RegisterForm extends StatelessWidget {
 
             if (state is! LogInSubscriberPosting)
               MyButton(onTap: () {
-                registerBloc
-                    .add(LogInSubscriberSubmitted(phone: state.phone.value));
+                if (state is LogInSubscriberValid) {
+                  registerBloc
+                      .add(LogInSubscriberSubmitted(phone: state.phone));
+                }
               }), //TODO: hacer el boton dinamico
             // Suscríbete text
             const SizedBox(height: 65),
@@ -142,21 +144,21 @@ class _RegisterForm extends StatelessWidget {
               child: ImageContainer(
                   imagePath: 'images/digitel_blanco.png',
                   onTap: () {
-                    registerBloc.add(OperatorSubmittedEvent(
-                      phone: state.phone.value,
-                      selectedOperator: 'digitel',
-                    ));
+                    if (state is LogInSubscriberValid) {
+                      registerBloc.add(OperatorSubmittedEvent(
+                          phone: state.phone, selectedOperator: 'digitel'));
+                    }
                   }),
             ),
-            //Boton digitel
             const SizedBox(height: 25),
             Center(
               child: ImageContainer(
                   imagePath: 'images/movistar_blanco.png',
                   onTap: () {
-                    registerBloc.add(OperatorSubmittedEvent(
-                        phone: state.phone.value,
-                        selectedOperator: 'movistar'));
+                    if (state is LogInSubscriberValid) {
+                      registerBloc.add(OperatorSubmittedEvent(
+                          phone: state.phone, selectedOperator: 'movistar'));
+                    }
                   }),
             ),
           ],

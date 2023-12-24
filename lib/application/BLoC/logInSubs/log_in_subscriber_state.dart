@@ -19,25 +19,19 @@ class LogInSubscriberNoAuthorize extends LogInSubscriberState {
 }
 
 class LogInSubscriberInvalid extends LogInSubscriberState {
-  late final String errorMessage;
+  final String errorMessage;
 
-  LogInSubscriberInvalid({required PhoneError displayError}) {
-    errorMessage = getErrorMessage(displayError);
-  }
-
-  String getErrorMessage(PhoneError displayError) {
-    if (displayError == PhoneError.empty) {
-      return 'Ingresa tu número de teléfono.';
-    } else if (displayError == PhoneError.length) {
-      return 'El numero debe tener 10 o 12 caracteres.';
-    } else {
-      return 'Siga el formato de ejemplo: 584241232323 o 4121232323';
-    }
-  }
+  LogInSubscriberInvalid({required this.errorMessage});
 }
 
 class LogInSubscriberFailure extends LogInSubscriberState {
   final Failure failure;
 
   LogInSubscriberFailure({required this.failure});
+}
+
+class LogInSubscriberSuccess extends LogInSubscriberState {
+  final String phone;
+
+  LogInSubscriberSuccess({this.phone = ''});
 }
