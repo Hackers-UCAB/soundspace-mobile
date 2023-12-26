@@ -1,11 +1,12 @@
 import 'package:sign_in_bloc/common/failure.dart';
 import 'package:sign_in_bloc/common/result.dart';
+import '../../../common/use_case.dart';
 import '../../../domain/user/user.dart';
 import '../../../domain/user/valueObjects/id_user_value_object.dart';
 import '../../../domain/user/valueObjects/user_role_value_object.dart';
 import '../../datasources/local/local_storage.dart';
 
-class GetUserLocalDataUseCase {
+class GetUserLocalDataUseCase extends IUseCaseInput {
   final LocalStorage localStorage;
 
   GetUserLocalDataUseCase({required this.localStorage});

@@ -10,13 +10,12 @@ abstract class LogInSubscriberEvent extends Equatable {
 
 //Evento al hacer clic en iniciar sesion
 class LogInSubscriberSubmitted extends LogInSubscriberEvent {
-  const LogInSubscriberSubmitted({required String phone}) : super(phone: phone);
+  const LogInSubscriberSubmitted({required super.phone});
 }
 
 //Evento al cambiar el telefono
 class LogInSubscriberPhoneChanged extends LogInSubscriberEvent {
-  const LogInSubscriberPhoneChanged({required String phone})
-      : super(phone: phone);
+  const LogInSubscriberPhoneChanged({required super.phone});
 }
 
 // evento para cambiar la operadora
@@ -24,8 +23,7 @@ class OperatorSubmittedEvent extends LogInSubscriberEvent {
   final String selectedOperator;
 
   const OperatorSubmittedEvent(
-      {required String phone, required this.selectedOperator})
-      : super(phone: phone);
+      {required super.phone, required this.selectedOperator});
 
   @override
   List<Object> get props => [phone, selectedOperator];

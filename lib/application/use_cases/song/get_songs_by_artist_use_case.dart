@@ -1,13 +1,23 @@
 import 'package:sign_in_bloc/domain/song/song.dart';
 import '../../../common/result.dart';
+import '../../../common/use_case.dart';
 import '../../../domain/song/repository/song_repository.dart';
 
-class GetSongsByArtistUseCase {
+class GetSongsByArtistUseCaseInput extends IUseCaseInput {
+  final String artistId;
+
+  GetSongsByArtistUseCaseInput({required this.artistId});
+}
+
+class GetSongsByArtistUseCase
+    extends IUseCase<GetSongsByArtistUseCaseInput, List<Song>> {
   final SongRepository songRepository;
 
   GetSongsByArtistUseCase({required this.songRepository});
 
-  Future<Result<List<Song>>> execute(String artistId) async {
-    return await songRepository.getSongsByArtistId(artistId);
+  @override
+  Future<Result<List<Song>>> execute(
+      GetSongsByArtistUseCaseInput params) async {
+    return await songRepository.getSongsByArtistId(params.artistId);
   }
 }

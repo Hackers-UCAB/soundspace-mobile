@@ -6,6 +6,7 @@ import 'package:sign_in_bloc/application/use_cases/song/get_songs_by_artist_use_
 import 'package:sign_in_bloc/domain/artist/artist.dart';
 import 'package:sign_in_bloc/domain/album/album.dart';
 import '../../../common/failure.dart';
+import '../../../common/result.dart';
 import '../../../domain/song/song.dart';
 part 'artist_detail_event.dart';
 part 'artist_detail_state.dart';
@@ -22,25 +23,39 @@ class ArtistDetailBloc extends Bloc<ArtistDetailEvent, ArtistDetailState> {
       : super(ArtistDetailLoading()) {
     on<FetchArtistDetailEvent>(_fetchArtistDetailsEventHandler);
   }
-
+  //Esto es asi casi para el 99.9% de los fetchs handlers, puede optimizarse
   void _fetchArtistDetailsEventHandler(
       FetchArtistDetailEvent event, Emitter<ArtistDetailState> emit) async {
-    final artistDataResult = await getArtistDataUseCase.execute(event.artistId);
-    final albumsByArtistResult =
-        await getAlbumsByArtistUseCase.execute(event.artistId);
-    final songByAlbumResult =
-        await getSongsByArtistUseCase.execute(event.artistId);
+    final useCases = <Map<String, dynamic>>[
+      {
+        'input': GetArtistDataUseCaseInput(artistId: event.artistId),
+        'useCase': getArtistDataUseCase
+      },
+      {
+        'input': GetAlbumsByArtistUseCaseInput(artistId: event.artistId),
+        'useCase': getAlbumsByArtistUseCase
+      },
+      {
+        'input': GetSongsByArtistUseCaseInput(artistId: event.artistId),
+        'useCase': getSongsByArtistUseCase
+      }
+    ];
 
-    if ([artistDataResult, albumsByArtistResult, songByAlbumResult]
-        .every((result) => result.hasValue())) {
-      emit(ArtistDetailLoaded(
-          artistData: artistDataResult.value!,
-          artistAlbums: albumsByArtistResult.value!,
-          artistSongs: songByAlbumResult.value!));
-    } else {
-      emit(ArtistDetailFailed(
-          failure: artistDataResult
-              .failure!)); //TODO: Esto tengo que arreglarlo cuando terminemos de unir todo
+    List<Result> results = [];
+
+    for (final useCase in useCases) {
+      final result = await useCase['useCase']!.execute(useCase['input']!);
+      if (result.hasFailure()) {
+        emit(ArtistDetailFailed(failure: result.failure!));
+        return;
+      } else {
+        results.add(result);
+      }
     }
+
+    emit(ArtistDetailLoaded(
+        artistData: results[0].value as Artist,
+        artistAlbums: results[1].value as List<Album>,
+        artistSongs: results[2].value as List<Song>));
   }
 }

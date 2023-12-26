@@ -25,7 +25,8 @@ class LogInSubscriberBloc
       LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
     emit(LogInSubscriberPosting());
 
-    final logInResult = await logInUseCase.execute(event.phone);
+    final logInResult =
+        await logInUseCase.execute(LogInUseCaseInput(number: event.phone));
     if (logInResult.hasValue()) {
       GetIt.instance.get<UserPermissionsBloc>().add(
           UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
@@ -40,8 +41,10 @@ class LogInSubscriberBloc
 
   Future<void> _onSubscribe(
       OperatorSubmittedEvent event, Emitter<LogInSubscriberState> emit) async {
-    final signUpResult =
-        await subscribeUseCase.execute(event.phone, event.selectedOperator);
+    emit(LogInSubscriberPosting());
+
+    final signUpResult = await subscribeUseCase.execute(SubscribeUseCaseInput(
+        number: event.phone, operator: event.selectedOperator));
     if (signUpResult.hasValue()) {
       GetIt.instance.get<UserPermissionsBloc>().add(
           UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));

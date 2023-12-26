@@ -1,9 +1,12 @@
 import '../../../common/result.dart';
+import '../../../common/use_case.dart';
 import '../../../domain/user/repository/user_repository.dart';
 import '../../../domain/user/user.dart';
 import '../../datasources/local/local_storage.dart';
 
-class LogInGuestUseCase {
+class LogInGuestUseCaseInput extends IUseCaseInput {}
+
+class LogInGuestUseCase extends IUseCase<LogInGuestUseCaseInput, User> {
   final UserRepository _userRepository;
   final LocalStorage _localStorage;
 
@@ -13,7 +16,8 @@ class LogInGuestUseCase {
       : _userRepository = userRepository,
         _localStorage = localStorage;
 
-  Future<Result<User>> execute() async {
+  @override
+  Future<Result<User>> execute(LogInGuestUseCaseInput params) async {
     final result = await _userRepository.logInGuest();
     if (result.hasValue()) {
       await _localStorage.setKeyValue('appToken', result.value!.id!.id);

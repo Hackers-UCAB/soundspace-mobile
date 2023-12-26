@@ -3,6 +3,7 @@ import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlis
 import 'package:sign_in_bloc/application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sign_in_bloc/common/result.dart';
 import 'package:sign_in_bloc/domain/artist/artist.dart';
 import 'package:sign_in_bloc/domain/album/album.dart';
 import 'package:sign_in_bloc/domain/promotional_banner/promotional_banner.dart';
@@ -36,30 +37,47 @@ class TrendingsBloc extends Bloc<TrendingsEvent, TrendingsState> {
 
   void _fetchTrendingsEventHandler(
       FetchTrendingsEvent event, Emitter<TrendingsState> emit) async {
-    final trendingArtistsResult = await getTrendingArtistsUseCase.execute();
-    final promotionalBannerResult = await getPromotionalBannerUseCase.execute();
-    final trendingAlbumsResult = await getTrendingAlbumsUseCase.execute();
-    final trendingPlaylistsResult = await getTrendingPlaylistsUseCase.execute();
-    final trendingSongsResult = await getTrendingSongsUseCase.execute();
+    final useCases = <Map<String, dynamic>>[
+      {
+        'input': GetTrendingArtistsUseCaseInput(),
+        'useCase': getTrendingArtistsUseCase,
+      },
+      {
+        'input': GetTrendingAlbumsUseCaseInput(),
+        'useCase': getTrendingAlbumsUseCase,
+      },
+      {
+        'input': GetPromotionalBannerUseCaseInput(),
+        'useCase': getPromotionalBannerUseCase,
+      },
+      {
+        'input': GetTrendingPlaylistsUseCaseInput(),
+        'useCase': getTrendingPlaylistsUseCase,
+      },
+      {
+        'input': GetTrendingSongsUseCaseInput(),
+        'useCase': getTrendingSongsUseCase,
+      },
+    ];
 
-    if ([
-      trendingArtistsResult,
-      promotionalBannerResult,
-      trendingAlbumsResult,
-      trendingPlaylistsResult,
-      trendingSongsResult
-    ].every((result) => result.hasValue())) {
-      emit(TrendingsLoaded(
-        trendingArtists: trendingArtistsResult.value!,
-        trendingAlbums: trendingAlbumsResult.value!,
-        promotionalBanner: promotionalBannerResult.value!,
-        trendingPlaylists: trendingPlaylistsResult.value!,
-        trendingSongs: trendingSongsResult.value!,
-      ));
-    } else {
-      emit(TrendingsFailed(
-          failure: trendingArtistsResult
-              .failure!)); //TODO: Esto tengo que arreglarlo cuando terminemos de unir todo
+    List<Result> results = [];
+
+    for (final useCase in useCases) {
+      final result = await useCase['useCase']!.execute(useCase['input']!);
+      if (result.hasFailure()) {
+        emit(TrendingsFailed(failure: result.failure!));
+        return;
+      } else {
+        results.add(result);
+      }
     }
+
+    emit(TrendingsLoaded(
+      trendingArtists: results[0].value as List<Artist>,
+      trendingAlbums: results[1].value as List<Album>,
+      promotionalBanner: results[2].value as PromotionalBanner,
+      trendingPlaylists: results[3].value as List<Playlist>,
+      trendingSongs: results[4].value as List<Song>,
+    ));
   }
 }
