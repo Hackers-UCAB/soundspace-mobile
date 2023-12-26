@@ -15,7 +15,7 @@ import 'application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import 'application/BLoC/player/player_bloc.dart';
 import 'infrastructure/presentation/config/router/app_router.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'infrastructure/presentation/widgets/bloc_listeners/connection_listener.dart';
+import 'infrastructure/presentation/widgets/bloc_listeners/connection_listener.dart'; 
 
 Future<void> main() async {
   //TODO: en vez de tener el main como Future hace un splash screen con future builder
@@ -60,9 +60,6 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => getIt.get<ConnectivityBloc>(),
-            ),
-            BlocProvider(
-              create: (context) => getIt.get<LogInSubscriberBloc>(),
             ),
             BlocProvider(
               create: (context) => getIt.get<LogInGuestBloc>(),

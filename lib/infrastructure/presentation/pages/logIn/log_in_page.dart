@@ -13,8 +13,22 @@ import 'Widgets/operators_button.dart';
 class RegisterScreen extends IPage {
   const RegisterScreen({super.key});
 
-  @override
+@override
   Widget child(BuildContext context) {
+    final logInSubscriberBloc = GetIt.instance.get<LogInSubscriberBloc>();
+
+    return BlocProvider<LogInSubscriberBloc>(
+      create: (context) => logInSubscriberBloc,
+      child: const _RegisterScreenContent(),
+    );
+  }
+}
+
+class _RegisterScreenContent extends StatelessWidget {
+  const _RegisterScreenContent({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return const SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -107,7 +121,7 @@ class _RegisterForm extends StatelessWidget {
                   registerBloc
                       .add(LogInSubscriberSubmitted(phone: state.phone));
                 }
-              }), //TODO: hacer el boton dinamico
+              }), 
             // Suscríbete text
             const SizedBox(height: 65),
             const Row(
@@ -125,7 +139,6 @@ class _RegisterForm extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Otros widgets aquí si los hay
               ],
             ),
             const SizedBox(height: 10),

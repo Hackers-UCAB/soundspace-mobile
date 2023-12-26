@@ -18,7 +18,7 @@ class AppNavigator {
   AppNavigator(
       {required this.authRouteGuard, required this.subscriptionRouteGuard}) {
     _routes = GoRouter(
-      initialLocation: '/artist/11f760c6-1c3d-46ff-a295-48eb0d0134a9',
+      initialLocation: '/',
       routes: [
         GoRoute(
           path: '/',
