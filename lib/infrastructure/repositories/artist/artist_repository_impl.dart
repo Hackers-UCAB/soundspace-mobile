@@ -35,4 +35,10 @@ class ArtistRepositoryImpl extends ArtistRepository {
       return Result<Artist>(failure: result.failure);
     }
   }
+
+  @override
+  Future<Result<List<Artist>>> getArtistByName(String name) {
+    // TODO: implement getArtistByName
+    throw UnimplementedError();
+  }
 }

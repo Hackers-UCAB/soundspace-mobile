@@ -34,7 +34,7 @@ class CustomTextFormField extends StatelessWidget {
           Color(0xFF372F47),
           Color(0xFF462F64),
           Color(0xFF462F64),
-          ],
+        ],
       ),
     );
 
@@ -58,7 +58,8 @@ class CustomTextFormField extends StatelessWidget {
             //isDense: true,
             //label: label != null ? Text(label!) : null,
             hintText: hint,
-            hintStyle: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+            hintStyle:
+                const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
             suffixIcon: icon != null ? Icon(icon, color: Colors.white) : null,
             // icon: Icon( Icons.supervised_user_circle_outlined, color: colors.primary, )
           ),

@@ -63,8 +63,9 @@ class TrendingsBloc extends Bloc<TrendingsEvent, TrendingsState> {
     List<Result> results = [];
 
     for (final useCase in useCases) {
-      final result = await useCase['useCase']!.execute(useCase['input']!);
-      if (result.hasFailure()) {
+      final result =
+          await useCase['useCase']!.execute(useCase['input']!) as Result;
+      if (!result.hasValue()) {
         emit(TrendingsFailed(failure: result.failure!));
         return;
       } else {

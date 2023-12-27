@@ -44,8 +44,9 @@ class ArtistDetailBloc extends Bloc<ArtistDetailEvent, ArtistDetailState> {
     List<Result> results = [];
 
     for (final useCase in useCases) {
-      final result = await useCase['useCase']!.execute(useCase['input']!);
-      if (result.hasFailure()) {
+      final result =
+          await useCase['useCase']!.execute(useCase['input']!) as Result;
+      if (!result.hasValue()) {
         emit(ArtistDetailFailed(failure: result.failure!));
         return;
       } else {

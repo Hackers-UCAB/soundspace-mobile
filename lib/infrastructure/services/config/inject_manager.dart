@@ -10,6 +10,7 @@ import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
@@ -29,7 +30,9 @@ import 'package:sign_in_bloc/infrastructure/datasources/local/local_storage_impl
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
 import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import '../../../application/BLoC/trendings/trendings_bloc.dart';
+import '../../../application/use_cases/album/get_album_by_name_use_case.dart';
 import '../../../application/use_cases/album/get_albums_by_artist_use_case.dart';
+import '../../../application/use_cases/artist/get_artist_by_name_use_case.dart';
 import '../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
 import '../../../application/use_cases/song/get_songs_by_album_use_case.dart';
@@ -120,6 +123,10 @@ class InjectManager {
         GetSongsByArtistUseCase(songRepository: songRepository);
     final GetSongsByAlbumUseCase getSongsByAlbumUseCase =
         GetSongsByAlbumUseCase(songRepository: songRepository);
+    final GetArtistByNameUseCase getArtistByNameUseCase =
+        GetArtistByNameUseCase(artistRepository: artistRepository);
+    final GetAlbumByNameUseCase getAlbumByNameUseCase =
+        GetAlbumByNameUseCase(albumRepository: albumRepository);
     //blocs
     final getIt = GetIt.instance;
     //blocs
@@ -136,6 +143,9 @@ class InjectManager {
     getIt.registerSingleton<AlbumDetailBloc>(AlbumDetailBloc(
         getAlbumDataUseCase: getAlbumDataUseCase,
         getSongsByAlbumUseCase: getSongsByAlbumUseCase));
+    getIt.registerSingleton<SearchBloc>(SearchBloc(
+        getArtistByNameUseCase: getArtistByNameUseCase,
+        getAlbumByNameUseCase: getAlbumByNameUseCase));
     getIt.registerSingleton<UserPermissionsBloc>(
         UserPermissionsBloc(getUserLocalDataUseCase: getUserLocalDataUseCase));
     getIt.registerSingleton<PlayerBloc>(PlayerBloc());

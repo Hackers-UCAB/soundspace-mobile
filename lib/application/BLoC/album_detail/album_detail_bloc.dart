@@ -35,8 +35,9 @@ class AlbumDetailBloc extends Bloc<AlbumDetailEvent, AlbumDetailState> {
     List<Result> results = [];
 
     for (final useCase in useCases) {
-      final result = await useCase['useCase']!.execute(useCase['input']!);
-      if (result.hasFailure()) {
+      final result =
+          await useCase['useCase']!.execute(useCase['input']!) as Result;
+      if (!result.hasValue()) {
         emit(AlbumDetailFailed(failure: result.failure!));
         return;
       } else {

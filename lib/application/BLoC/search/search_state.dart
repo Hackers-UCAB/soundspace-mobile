@@ -1,27 +1,45 @@
 part of 'search_bloc.dart';
 
-abstract class SearchState extends Equatable {
-  final bool filterSelected;
+class SearchState extends Equatable {
+  final String filter;
+  final String data;
 
-  const SearchState({required this.filterSelected});
+  const SearchState({required this.filter, required this.data});
 
-  @override
-  List<Object?> get props => [filterSelected];
-}
-
-class SearchInitialState extends SearchState {
-  const SearchInitialState({super.filterSelected = false});
-}
-
-class SearchLoaded<T> extends SearchState {
-  final List<T> entity;
-
-  const SearchLoaded({required this.entity, required super.filterSelected});
+  SearchState copyWith({
+    String? filter,
+    String? data,
+  }) =>
+      SearchState(
+        filter: filter ?? this.filter,
+        data: data ?? this.data,
+      );
 
   @override
-  List<T> get props => artists;
+  List<Object> get props => [filter, data];
 }
 
-class EmptyState extends SearchState {}
+class SearchInitial extends SearchState {
+  const SearchInitial({super.filter = '', super.data = ''});
+}
 
-class WrittingState extends SearchState {}
+class SearchLoading extends SearchState {
+  const SearchLoading({required super.filter, required super.data});
+}
+
+//FIXME: Esto de pana que puede mejorar
+class SearchLoaded extends SearchState {
+  final List<Map<String, String>> searchData;
+
+  const SearchLoaded(
+      {required super.filter, required super.data, required this.searchData});
+}
+
+class SearchFailed extends SearchState {
+  final Failure failure;
+  const SearchFailed({
+    required super.filter,
+    required super.data,
+    required this.failure,
+  });
+}

@@ -1,15 +1,17 @@
 part of 'search_bloc.dart';
 
-abstract class SearchEvent {
-  const SearchEvent();
+abstract class SearchEvent {}
+
+class SearchFilterChanged extends SearchEvent {
+  final String filter;
+
+  SearchFilterChanged({required this.filter});
 }
 
-class SearchInputedEvent extends SearchEvent {
-  SearchInputedEvent(this.artists);
-  List<Artist> artists;
+class SearchDataChanged extends SearchEvent {
+  final String data;
+
+  SearchDataChanged({required this.data});
 }
 
-class SearchEmptiedEvent extends SearchEvent {
-  SearchEmptiedEvent(this.artists);
-  List<Artist> artists;
-}
+class FetchSearchedData extends SearchEvent {}

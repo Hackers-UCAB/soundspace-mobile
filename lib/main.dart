@@ -13,6 +13,7 @@ import 'application/BLoC/album_detail/album_detail_bloc.dart';
 import 'application/BLoC/artist_detail/artist_detail_bloc.dart';
 import 'application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import 'application/BLoC/player/player_bloc.dart';
+import 'application/BLoC/search/search_bloc.dart';
 import 'infrastructure/presentation/config/router/app_router.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'infrastructure/presentation/widgets/bloc_listeners/connection_listener.dart';
@@ -59,6 +60,9 @@ class MyApp extends StatelessWidget {
               create: (context) => getIt.get<AlbumDetailBloc>(),
             ),
             BlocProvider(
+              create: (context) => getIt.get<SearchBloc>(),
+            ),
+            BlocProvider(
               create: (context) => getIt.get<ConnectivityBloc>(),
             ),
             BlocProvider(
@@ -71,11 +75,8 @@ class MyApp extends StatelessWidget {
               create: (context) => getIt.get<NotificationsBloc>(),
             ),
             BlocProvider(
-              create: (context) => getIt.get<GpsBloc>()
-                ..add(
-                  GpsInitializedEvent(),
-                ),
-            ),
+                create: (context) =>
+                    getIt.get<GpsBloc>()..add(GpsInitializedEvent())),
           ],
           child: MultiBlocListener(listeners: [
             ConnectionListener(),

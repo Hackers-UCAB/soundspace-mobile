@@ -46,4 +46,10 @@ class AlbumRepositoryImpl extends AlbumRepository {
       return Result<List<Album>>(failure: result.failure);
     }
   }
+
+  @override
+  Future<Result<List<Album>>> getAlbumByName(String name) {
+    // TODO: implement getAlbumByName
+    throw UnimplementedError();
+  }
 }

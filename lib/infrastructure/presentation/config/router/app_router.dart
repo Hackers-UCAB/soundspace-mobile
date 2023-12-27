@@ -7,6 +7,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/pages/landing/landing_p
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
 import '../../pages/album_detail/album_detail.dart';
 import '../../pages/artist_detail/artist_detail.dart';
+import '../../pages/search/search_page.dart';
 
 part 'route_guard.dart';
 
@@ -47,6 +48,10 @@ class AppNavigator {
             final albumId = state.pathParameters['id']!;
             return AlbumDetail(albumId: albumId);
           },
+        ),
+        GoRoute(
+          path: '/search',
+          builder: (context, state) => const SearchPage(),
         ),
       ],
     );
