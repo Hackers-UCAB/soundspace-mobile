@@ -64,4 +64,18 @@ class UserRepositoryImpl extends UserRepository {
       return Result<User>(failure: response.failure);
     }
   }
+
+  //! arreglar
+  @override
+  Future<Result<User>> fetchUserProfileData() async {
+    final response =
+        await _apiConnectionManager.request('user/profileData', 'GET');
+
+    if (response.hasValue()) {
+      return Result<User>(
+          value: UserMapper.fromJson(response.value.data['data']));
+    } else {
+      return Result<User>(failure: response.failure);
+    }
+  }
 }

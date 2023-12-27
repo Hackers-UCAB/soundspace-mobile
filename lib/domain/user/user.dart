@@ -4,6 +4,7 @@ import 'valueObjects/id_user_value_object.dart';
 import 'valueObjects/name_value_object.dart';
 import 'valueObjects/phone_value_object.dart';
 import 'valueObjects/user_role_value_object.dart';
+import 'valueObjects/gender_value_object.dart';
 
 class User {
   final IdUser? _id;
@@ -12,6 +13,7 @@ class User {
   final PhoneNumber? _phone;
   final UserRole? _role;
   final BirthDate? _birthdate;
+  final Gender? gender;
   final String? _appToken;
   final String? _notificationsToken;
 
@@ -22,6 +24,8 @@ class User {
       PhoneNumber? phone,
       UserRole? role,
       BirthDate? birthdate,
+      //! change
+      this.gender,
       String? appToken,
       String? notificationsToken})
       : _id = id,
