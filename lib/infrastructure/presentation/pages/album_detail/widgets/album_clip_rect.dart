@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import '../../../../../domain/album/album.dart';
 
@@ -10,8 +12,8 @@ class AlbumClipRRect extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
-      child: Image.network(
-        album.imageURL,
+      child: Image.memory(
+        Uint8List.fromList(album.image),
         fit: BoxFit.fill,
         width: 180,
       ),

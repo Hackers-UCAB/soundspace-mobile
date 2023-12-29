@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../../../../../domain/playlist/playlist.dart';
 
@@ -12,7 +13,7 @@ class PlaylistWrap extends StatelessWidget {
         .map((playlist) => _PlaylistCard(
               id: playlist.id,
               name: playlist.name,
-              imgUrl: playlist.iconPath,
+              img: playlist.image,
             ))
         .toList();
 
@@ -49,10 +50,10 @@ class PlaylistWrap extends StatelessWidget {
 class _PlaylistCard extends StatelessWidget {
   final String id;
   final String name;
-  final String imgUrl;
+  final List<int> img;
 
   const _PlaylistCard(
-      {required this.id, required this.name, required this.imgUrl});
+      {required this.id, required this.name, required this.img});
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +64,8 @@ class _PlaylistCard extends StatelessWidget {
           height: size.width * 0.26,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              imgUrl,
+            child: Image.memory(
+              Uint8List.fromList(img),
               fit: BoxFit.cover,
             ),
           )),

@@ -1,7 +1,5 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-
 import '../../../../../domain/promotional_banner/promotional_banner.dart';
 
 class PromotionalBannerWidget extends StatelessWidget {

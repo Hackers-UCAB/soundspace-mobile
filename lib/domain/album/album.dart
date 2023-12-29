@@ -1,11 +1,11 @@
 class Album {
   final String id;
   final String name;
-  final String imageURL;
+  final List<int> image;
 
   Album({
     required this.id,
     required this.name,
-    required this.imageURL,
+    required this.image,
   });
 }

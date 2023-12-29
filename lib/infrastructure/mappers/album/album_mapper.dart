@@ -1,3 +1,4 @@
+import 'package:sign_in_bloc/infrastructure/helpers/image_convertert.dart';
 import '../../../domain/album/album.dart';
 
 class AlbumMapper {
@@ -5,7 +6,7 @@ class AlbumMapper {
     return Album(
       id: json['codigo_playlist'],
       name: json['nombre'],
-      imageURL: json['referencia_imagen'],
+      image: ImageConverter.convert(json['referencia_imagen']),
     );
   }
 
@@ -13,7 +14,7 @@ class AlbumMapper {
     return {
       'codigo_playlist': album.id,
       'nombre': album.name,
-      'referencia_imagen': album.imageURL,
+      'referencia_imagen': album.image,
     };
   }
 

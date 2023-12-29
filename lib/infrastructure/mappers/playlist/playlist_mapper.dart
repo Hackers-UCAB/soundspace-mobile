@@ -1,3 +1,5 @@
+import 'package:sign_in_bloc/infrastructure/helpers/image_convertert.dart';
+
 import '../../../domain/playlist/playlist.dart';
 
 class PlaylistMapper {
@@ -5,7 +7,7 @@ class PlaylistMapper {
     return Playlist(
       id: json['codigo_playlist'],
       name: json['nombre'],
-      iconPath: json['referencia_imagen'],
+      image: ImageConverter.convert(json['referencia_imagen']),
     );
   }
 
@@ -13,7 +15,7 @@ class PlaylistMapper {
     return {
       'codigo_playlist': playlist.id,
       'nombre': playlist.name,
-      'referencia_imagen': playlist.iconPath,
+      'referencia_imagen': playlist.image,
     };
   }
 

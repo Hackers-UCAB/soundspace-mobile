@@ -20,8 +20,9 @@ class GetAlbumByNameUseCase
   @override
   Future<Result<List<Album>>> execute(GetAlbumByNameUseCaseInput params) async {
     //FIXME: Hardcodeadisimo
-    return await Future.sync(() => Result<List<Album>>(
-        value: [Album(id: 'id', name: 'name', imageURL: 'imageURL')])); //
+    return await Future.sync(() => Result<List<Album>>(value: [
+          Album(id: 'id', name: 'name', image: [1])
+        ])); //
     // return await _albumRepository.getAlbumByName(params.name);
   }
 }

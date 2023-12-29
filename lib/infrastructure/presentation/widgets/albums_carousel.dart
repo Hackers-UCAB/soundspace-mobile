@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gallery_3d/gallery3d.dart';
 import 'package:get_it/get_it.dart';
@@ -56,20 +58,11 @@ class _AlbumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool imageMethod = false;
-
-    if (album.id == 'id') imageMethod = true;
-
     return ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
-        child: imageMethod
-            ? Image(
-                image: AssetImage(album.imageURL),
-                fit: BoxFit.cover,
-              )
-            : Image.network(
-                album.imageURL,
-                fit: BoxFit.cover,
-              ));
+        child: Image.memory(
+          Uint8List.fromList(album.image),
+          fit: BoxFit.cover,
+        ));
   }
 }

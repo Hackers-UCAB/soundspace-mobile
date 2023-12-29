@@ -1,11 +1,11 @@
 class Playlist {
   final String id;
   final String name;
-  final String iconPath;
+  final List<int> image;
 
   Playlist({
     required this.id,
     required this.name,
-    required this.iconPath,
+    required this.image,
   });
 }
