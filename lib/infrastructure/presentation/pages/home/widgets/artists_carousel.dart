@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../../../../../domain/artist/artist.dart';
@@ -52,8 +54,8 @@ class _ArtistCard extends StatelessWidget {
             width: size.width * 0.3,
             height: size.width * 0.3,
             child: ClipOval(
-                child: Image.network(
-              artist.imageURL,
+                child: Image.memory(
+              Uint8List.fromList(artist.image),
               fit: BoxFit.cover,
             )),
           ),

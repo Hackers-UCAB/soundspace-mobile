@@ -1,44 +1,65 @@
-import 'valueObjects/birth_day_value_object.dart';
-import 'valueObjects/email_address_value_object.dart';
-import 'valueObjects/id_user_value_object.dart';
-import 'valueObjects/name_value_object.dart';
-import 'valueObjects/phone_value_object.dart';
-import 'valueObjects/user_role_value_object.dart';
+// ignore_for_file: prefer_final_fields
+import '../../application/services/internet_connection/connection_manager.dart';
+import '../services/location_checker.dart';
+
+enum UserRoles { guest, subscriber }
 
 class User {
-  final IdUser? _id;
-  final UserName? _name;
-  final EmailAddress? _email;
-  final PhoneNumber? _phone;
-  final UserRole? _role;
-  final BirthDate? _birthdate;
-  final String? _appToken;
-  final String? _notificationsToken;
+  String _id;
+  String? _name;
+  String? _email;
+  String? _phone;
+  UserRoles _role;
+  DateTime? _birthdate;
+  String? _token;
+  late String _country;
 
-  User(
-      {IdUser? id,
-      UserName? name,
-      EmailAddress? email,
-      PhoneNumber? phone,
-      UserRole? role,
-      BirthDate? birthdate,
-      String? appToken,
-      String? notificationsToken})
-      : _id = id,
+  User({
+    required String id,
+    String? name,
+    String? email,
+    String? phone,
+    required UserRoles role,
+    DateTime? birthdate,
+    String? token,
+    String? country,
+  })  : _id = id,
         _name = name,
         _email = email,
         _phone = phone,
         _role = role,
         _birthdate = birthdate,
-        _appToken = appToken,
-        _notificationsToken = notificationsToken;
+        _token = token;
 
-  IdUser? get id => _id;
-  UserName? get name => _name;
-  EmailAddress? get email => _email;
-  PhoneNumber? get phone => _phone;
-  UserRole? get role => _role;
-  BirthDate? get birthdate => _birthdate;
-  String? get appToken => _appToken;
-  String? get notificationsToken => _notificationsToken;
+  String get id => _id;
+  String? get name => _name;
+  String? get email => _email;
+  String? get phone => _phone;
+  UserRoles get role => _role;
+  DateTime? get birthdate => _birthdate;
+  String? get token => _token;
+  String get country => _country;
+
+  Future<void> checkLocation(ILocationChecker locationChecker,
+      IConnectionManager connectionManager) async {
+    if (_role == UserRoles.subscriber) {
+      try {
+        await connectionManager
+            .checkConnectionStream()
+            .firstWhere((isConnected) => isConnected);
+
+        final country = await locationChecker.getCountry();
+        if (country == 'Venezuela') {
+          _role = UserRoles.guest;
+        }
+        _country = country;
+      } catch (e) {
+        rethrow;
+      }
+    }
+  }
+
+  bool validLocation() {
+    return _country != 'Venezuela';
+  }
 }

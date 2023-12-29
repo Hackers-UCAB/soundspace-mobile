@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/bloc_listeners/gps_listener.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/bloc_listeners/user_permissions_listener.dart';
 
 abstract class IPage extends StatelessWidget {
   const IPage({super.key});
@@ -11,7 +11,7 @@ abstract class IPage extends StatelessWidget {
     return Scaffold(
       body: Stack(children: [
         _GradientBackground(),
-        GpsListener(child: child(context))
+        UserPermissionsListener(child: child(context)),
       ]),
     );
   }

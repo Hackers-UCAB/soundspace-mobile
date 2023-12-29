@@ -19,8 +19,9 @@ class GetArtistByNameUseCase
   @override
   Future<Result<List<Artist>>> execute(
       GetArtistByNameUseCaseInput params) async {
-    return await Future.sync(() => Result<List<Artist>>(
-        value: [Artist(id: 'id', name: 'name', imageURL: 'imageURL')]));
+    return await Future.sync(() => Result<List<Artist>>(value: [
+          Artist(id: 'id', name: 'name', image: [0, 0, 0, 0])
+        ]));
     // return await _artistRepository.getArtistByName(params.name);
   }
 }

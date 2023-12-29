@@ -78,9 +78,9 @@ class AppNavigator {
   }
 
   void navigateTo(String routeName) {
-    // if (subscriptionRouteGuard.canNavigate(routeName)) {
-    _routes.push(routeName);
-    // }
+    if (subscriptionRouteGuard.canNavigate(routeName)) {
+      _routes.push(routeName);
+    }
   }
 
   void replaceWith(String routeName) {

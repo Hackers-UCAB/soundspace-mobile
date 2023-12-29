@@ -28,7 +28,8 @@ class ApiConnectionManagerImpl extends IApiConnectionManager {
       case DioExceptionType
                 .connectionTimeout || //TODO: Ver si todo esto se relaciona a fallas de internet
             DioExceptionType.sendTimeout ||
-            DioExceptionType.receiveTimeout:
+            DioExceptionType.receiveTimeout ||
+            DioExceptionType.connectionError:
         return const NoInternetFailure();
       case DioExceptionType
             .badResponse: //TODO: Esto no siempre es porque no este autorizado, definir el resto de Failures

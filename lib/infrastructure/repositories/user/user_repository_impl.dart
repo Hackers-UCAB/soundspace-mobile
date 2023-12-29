@@ -22,9 +22,10 @@ class UserRepositoryImpl extends UserRepository {
     if (response.hasValue()) {
       _apiConnectionManager.setHeaders(
           'Authorization', 'Bearer ${response.value.data['data']['token']}');
-
-      return Result<User>(
-          value: UserMapper.fromJson(response.value.data['data']));
+      final json = response.value.data['data'];
+      json['role'] = 'subscriber';
+      json['phone'] = number;
+      return Result<User>(value: UserMapper.fromJson(json));
     } else {
       return Result<User>(failure: response.failure);
     }
@@ -41,9 +42,10 @@ class UserRepositoryImpl extends UserRepository {
     if (response.hasValue()) {
       final token = response.value.data['data']['token'];
       _apiConnectionManager.setHeaders('Authorization', 'Bearer $token');
-
-      return Result<User>(
-          value: UserMapper.fromJson(response.value.data['data']));
+      final json = response.value.data['data'];
+      json['role'] = 'subscriber';
+      json['phone'] = number;
+      return Result<User>(value: UserMapper.fromJson(json));
     } else {
       return Result<User>(failure: response.failure);
     }
@@ -57,9 +59,9 @@ class UserRepositoryImpl extends UserRepository {
     if (response.hasValue()) {
       final token = response.value.data['data']['token'];
       _apiConnectionManager.setHeaders('Authorization', 'Bearer $token');
-
-      return Result<User>(
-          value: UserMapper.fromJson(response.value.data['data']));
+      final json = response.value.data['data'];
+      json['role'] = 'guest';
+      return Result<User>(value: UserMapper.fromJson(json));
     } else {
       return Result<User>(failure: response.failure);
     }

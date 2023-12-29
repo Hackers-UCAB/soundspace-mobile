@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,6 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_bloc/application/BLoC/album_detail/album_detail_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/artist_detail/artist_detail_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
@@ -27,6 +27,7 @@ import 'package:sign_in_bloc/infrastructure/datasources/api/api_connection_manag
 import 'package:sign_in_bloc/infrastructure/services/internet_connection/connection_manager_impl.dart';
 import 'package:sign_in_bloc/infrastructure/services/config/firebase/firebase_options.dart';
 import 'package:sign_in_bloc/infrastructure/datasources/local/local_storage_impl.dart';
+import 'package:sign_in_bloc/infrastructure/services/location/location_checker_impl.dart';
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
 import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import '../../../application/BLoC/trendings/trendings_bloc.dart';
@@ -45,7 +46,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../repositories/user/user_repository_impl.dart';
 import '../foreground_notifications/local_notifications_impl.dart';
 import '../streaming/socket_client_impl.dart';
-import '../location/location_manager_impl.dart';
 
 class InjectManager {
   static Future<void> firebaseMessagingBackgroundHandler(
@@ -75,7 +75,14 @@ class InjectManager {
       ..inicializeLocalNotifications();
     final sharedPreferences = await SharedPreferences.getInstance();
     final localStorage = LocalStorageImpl(prefs: sharedPreferences);
-    final locationManager = LocationManagerImpl();
+    final locationChecker = LocationCheckerImpl();
+    final connectionManager =
+        ConnectionManagerImpl(connectivity: Connectivity());
+
+    final token = localStorage.getValue('appToken');
+    if (token != null) {
+      apiConnectionManagerImpl.setHeaders('Authorization', 'Bearer $token');
+    }
     //repositories
     final userRepository =
         UserRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
@@ -146,8 +153,10 @@ class InjectManager {
     getIt.registerSingleton<SearchBloc>(SearchBloc(
         getArtistByNameUseCase: getArtistByNameUseCase,
         getAlbumByNameUseCase: getAlbumByNameUseCase));
-    getIt.registerSingleton<UserPermissionsBloc>(
-        UserPermissionsBloc(getUserLocalDataUseCase: getUserLocalDataUseCase));
+    getIt.registerSingleton<UserPermissionsBloc>(UserPermissionsBloc(
+        getUserLocalDataUseCase: getUserLocalDataUseCase,
+        connectionManager: connectionManager,
+        locationChecker: locationChecker));
     getIt.registerSingleton<PlayerBloc>(PlayerBloc());
     getIt.registerSingleton<LogInSubscriberBloc>(LogInSubscriberBloc(
         logInUseCase: logInUseCase, subscribeUseCase: subscribeUseCase));
@@ -156,14 +165,10 @@ class InjectManager {
     //check if user has a session
     final userPermissionsBloc = getIt.get<UserPermissionsBloc>()
       ..add(UserPermissionsRequested());
-    final connectionManager = ConnectionManagerImpl();
     getIt.registerSingleton<ConnectivityBloc>(
         ConnectivityBloc(connectionManager: connectionManager));
     getIt.registerSingleton<NotificationsBloc>(
         NotificationsBloc(localNotifications: localNotifications));
-    getIt.registerSingleton<GpsBloc>(GpsBloc(
-        locationManager: locationManager,
-        userPermissionsBloc: userPermissionsBloc));
     //router config
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);
     final subscriptionGuard =

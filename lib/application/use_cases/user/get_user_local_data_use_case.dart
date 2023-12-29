@@ -2,32 +2,31 @@ import 'package:sign_in_bloc/common/failure.dart';
 import 'package:sign_in_bloc/common/result.dart';
 import '../../../common/use_case.dart';
 import '../../../domain/user/user.dart';
-import '../../../domain/user/valueObjects/id_user_value_object.dart';
-import '../../../domain/user/valueObjects/user_role_value_object.dart';
 import '../../datasources/local/local_storage.dart';
 
-class GetUserLocalDataUseCase extends IUseCaseInput {
-  final LocalStorage localStorage;
+class GetUserLocalDataUseCaseInput extends IUseCaseInput {}
 
-  GetUserLocalDataUseCase({required this.localStorage});
+class GetUserLocalDataUseCase
+    extends IUseCase<GetUserLocalDataUseCaseInput, User> {
+  final LocalStorage _localStorage;
 
-  Result<User> execute() {
-    try {
-      final appToken = localStorage.getValue('appToken');
-      final userRol = localStorage.getValue('role');
-      if (appToken != null && userRol != null) {
-        return Result<User>(
-            value: User(
-                id: IdUser(id: appToken),
-                role: UserRole(
-                    role: (userRol == 'guest')
-                        ? UserRoles.guest
-                        : UserRoles.subscriber)));
-      } else {
-        return Result<User>(failure: const NoSessionFailure());
-      }
-    } catch (e) {
-      return Result<User>(failure: const NoSessionFailure());
+  GetUserLocalDataUseCase({required LocalStorage localStorage})
+      : _localStorage = localStorage;
+
+  @override
+  Future<Result<User>> execute(GetUserLocalDataUseCaseInput params) async {
+    final appToken = _localStorage.getValue('appToken');
+    final userRol = _localStorage.getValue('role');
+    if (appToken != null && userRol != null) {
+      final user = User(
+        id: appToken,
+        role: userRol == 'UserRoles.subscriber'
+            ? UserRoles.subscriber
+            : UserRoles.guest,
+      );
+      return Future.value(Result(value: user));
+    } else {
+      return Future.value(Result(failure: const NoSessionFailure()));
     }
   }
 }

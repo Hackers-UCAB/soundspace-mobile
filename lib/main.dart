@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/connectivity/connectivity_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
@@ -74,9 +73,6 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => getIt.get<NotificationsBloc>(),
             ),
-            BlocProvider(
-                create: (context) =>
-                    getIt.get<GpsBloc>()..add(GpsInitializedEvent())),
           ],
           child: MultiBlocListener(listeners: [
             ConnectionListener(),

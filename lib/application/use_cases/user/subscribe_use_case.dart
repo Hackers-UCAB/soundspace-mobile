@@ -30,11 +30,11 @@ class SubscribeUseCase extends IUseCase<SubscribeUseCaseInput, User> {
       final result = await userRepository.signUpUser(
           params.number, notificationsToken, params.operator);
       if (result.hasValue()) {
-        //TODO: Hay una forma de mejorar esto un pelin fumada
-        await localStorage.setKeyValue('appToken', result.value!.id!.id);
+        final user = result.value!;
+        await localStorage.setKeyValue('appToken', user.id);
         await localStorage.setKeyValue(
             'notificationsToken', notificationsToken);
-        await localStorage.setKeyValue('role', 'subscriber');
+        await localStorage.setKeyValue('role', user.role.toString());
       }
 
       return result;

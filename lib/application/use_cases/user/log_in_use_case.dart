@@ -29,11 +29,11 @@ class LogInUseCase extends IUseCase<LogInUseCaseInput, User> {
       final result =
           await userRepository.logInUser(params.number, notificationsToken);
       if (result.hasValue()) {
-        //TODO: Hay una forma de mejorar esto un pelin fumada
-        await localStorage.setKeyValue('appToken', result.value!.id!.id);
+        final user = result.value!;
+        await localStorage.setKeyValue('appToken', user.id);
         await localStorage.setKeyValue(
             'notificationsToken', notificationsToken);
-        await localStorage.setKeyValue('role', 'subscriber');
+        await localStorage.setKeyValue('role', user.role.toString());
       }
       return result;
     } else {

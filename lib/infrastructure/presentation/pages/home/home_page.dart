@@ -54,29 +54,29 @@ class HomePage extends IPage {
                               banner: trendingsState.promotionalBanner,
                             ),
                             //TODO: Hacer el banner de suscripcion
-                            _Collapse(name: 'Playlist', child: [
-                              PlaylistWrap(
-                                  playlists: trendingsState.trendingPlaylists)
-                            ]),
-                            _Collapse(name: 'Aqustico Experience', child: [
-                              AlbumsCarousel(
-                                  albums: trendingsState.trendingAlbums)
-                            ]),
-                            _Collapse(name: 'Artistas Trending', child: [
-                              ArtistsCarousel(
-                                  artists: trendingsState.trendingArtists)
-                            ]),
-                            const Divider(
-                              color: Color.fromARGB(18, 142, 139, 139),
-                              height: 40, //TODO: poner responsive
-                              thickness: 2,
-                              indent: 20,
-                              endIndent: 20,
-                            ),
-                            _Collapse(name: 'Tracklist', child: [
-                              Tracklist(songs: trendingsState.trendingSongs)
-                            ]),
-                            const SizedBox(height: 100)
+                            // _Collapse(name: 'Playlist', child: [
+                            //   PlaylistWrap(
+                            //       playlists: trendingsState.trendingPlaylists)
+                            // ]),
+                            // _Collapse(name: 'Aqustico Experience', child: [
+                            //   AlbumsCarousel(
+                            //       albums: trendingsState.trendingAlbums)
+                            // ]),
+                            // _Collapse(name: 'Artistas Trending', child: [
+                            //   ArtistsCarousel(
+                            //       artists: trendingsState.trendingArtists)
+                            // ]),
+                            // const Divider(
+                            //   color: Color.fromARGB(18, 142, 139, 139),
+                            //   height: 40, //TODO: poner responsive
+                            //   thickness: 2,
+                            //   indent: 20,
+                            //   endIndent: 20,
+                            // ),
+                            // _Collapse(name: 'Tracklist', child: [
+                            //   Tracklist(songs: trendingsState.trendingSongs)
+                            // ]),
+                            // const SizedBox(height: 100)
                           ],
                         ),
                       ),

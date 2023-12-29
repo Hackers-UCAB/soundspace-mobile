@@ -38,26 +38,26 @@ class TrendingsBloc extends Bloc<TrendingsEvent, TrendingsState> {
   void _fetchTrendingsEventHandler(
       FetchTrendingsEvent event, Emitter<TrendingsState> emit) async {
     final useCases = <Map<String, dynamic>>[
-      {
-        'input': GetTrendingArtistsUseCaseInput(),
-        'useCase': getTrendingArtistsUseCase,
-      },
-      {
-        'input': GetTrendingAlbumsUseCaseInput(),
-        'useCase': getTrendingAlbumsUseCase,
-      },
+      // {
+      //   'input': GetTrendingArtistsUseCaseInput(),
+      //   'useCase': getTrendingArtistsUseCase,
+      // },
+      // {
+      //   'input': GetTrendingAlbumsUseCaseInput(),
+      //   'useCase': getTrendingAlbumsUseCase,
+      // },
       {
         'input': GetPromotionalBannerUseCaseInput(),
         'useCase': getPromotionalBannerUseCase,
       },
-      {
-        'input': GetTrendingPlaylistsUseCaseInput(),
-        'useCase': getTrendingPlaylistsUseCase,
-      },
-      {
-        'input': GetTrendingSongsUseCaseInput(),
-        'useCase': getTrendingSongsUseCase,
-      },
+      // {
+      //   'input': GetTrendingPlaylistsUseCaseInput(),
+      //   'useCase': getTrendingPlaylistsUseCase,
+      // },
+      // {
+      //   'input': GetTrendingSongsUseCaseInput(),
+      //   'useCase': getTrendingSongsUseCase,
+      // },
     ];
 
     List<Result> results = [];
@@ -74,11 +74,11 @@ class TrendingsBloc extends Bloc<TrendingsEvent, TrendingsState> {
     }
 
     emit(TrendingsLoaded(
-      trendingArtists: results[0].value as List<Artist>,
-      trendingAlbums: results[1].value as List<Album>,
-      promotionalBanner: results[2].value as PromotionalBanner,
-      trendingPlaylists: results[3].value as List<Playlist>,
-      trendingSongs: results[4].value as List<Song>,
+      // trendingArtists: results[0].value as List<Artist>,
+      // trendingAlbums: results[1].value as List<Album>,
+      promotionalBanner: results[0].value as PromotionalBanner,
+      // trendingPlaylists: results[3].value as List<Playlist>,
+      // trendingSongs: results[4].value as List<Song>,
     ));
   }
 }

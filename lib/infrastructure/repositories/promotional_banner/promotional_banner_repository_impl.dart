@@ -13,7 +13,7 @@ class PromotionalBannerRepositoryImpl extends PromotionalBannerRepository {
 
   @override
   Future<Result<PromotionalBanner>> getPromotionalBanner() async {
-    final result = await apiconnectionManager.request('publicidad', 'GET');
+    final result = await apiconnectionManager.request('promotion', 'GET');
     if (result.hasValue()) {
       return Result(
         value: PromotionalBannerMapper.fromJson(result.value.data['data']),

@@ -2,7 +2,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:sign_in_bloc/application/services/internet_connection/connection_manager.dart';
 
 class ConnectionManagerImpl extends IConnectionManager {
-  Connectivity connectivity = Connectivity();
+  final Connectivity connectivity;
+
+  ConnectionManagerImpl({required this.connectivity});
 
   @override
   Stream<bool> checkConnectionStream() {

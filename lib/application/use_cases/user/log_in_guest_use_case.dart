@@ -20,8 +20,9 @@ class LogInGuestUseCase extends IUseCase<LogInGuestUseCaseInput, User> {
   Future<Result<User>> execute(LogInGuestUseCaseInput params) async {
     final result = await _userRepository.logInGuest();
     if (result.hasValue()) {
-      await _localStorage.setKeyValue('appToken', result.value!.id!.id);
-      await _localStorage.setKeyValue('role', 'guest');
+      final user = result.value!;
+      await _localStorage.setKeyValue('appToken', user.id);
+      await _localStorage.setKeyValue('role', user.role.toString());
     }
     return result;
   }

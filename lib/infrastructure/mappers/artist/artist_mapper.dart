@@ -5,7 +5,7 @@ class ArtistMapper {
     return Artist(
       id: json['codigo_artista'],
       name: json['nombre_artista'],
-      imageURL: json['referencia_imagen'],
+      image: json['referencia_imagen'],
     );
   }
 
@@ -13,7 +13,7 @@ class ArtistMapper {
     return {
       'codigo_artista': artist.id,
       'nombre_artista': artist.name,
-      'referencia_imagen': artist.imageURL,
+      'referencia_imagen': artist.image,
     };
   }
 

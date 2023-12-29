@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sign_in_bloc/domain/artist/artist.dart';
 
 class ArtistInfo extends StatelessWidget {
@@ -10,8 +11,8 @@ class ArtistInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.network(
-          artist.imageURL,
+        Image.memory(
+          Uint8List.fromList(artist.image),
           width: 200,
           height: 200,
           fit: BoxFit.cover,
