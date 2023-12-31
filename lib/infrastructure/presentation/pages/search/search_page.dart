@@ -21,7 +21,9 @@ class SearchPage extends IPage {
     final SearchBloc searchBloc = getIt.get<SearchBloc>();
     final AppNavigator appNavigator = getIt.get<AppNavigator>();
     return RefreshIndicator(
-      onRefresh: () async {},
+      onRefresh: () async {
+        //TODO:
+      },
       child: ListView(
         children: [
           BlocBuilder<PlayerBloc, PlayerState>(
@@ -44,8 +46,9 @@ class SearchPage extends IPage {
                           onChanged: searchBloc.onChangeData,
                         ),
                         CustomChoiceChips(),
-                        if (searchState is SearchInitial)
-                          const Text('Selecciona un filtro de busqueda'),
+                        if (searchState.filter.isEmpty)
+                          const Center(
+                              child: Text('Selecciona un filtro de busqueda')),
                         if (searchState is SearchLoading)
                           const CustomCircularProgressIndicator(),
                         if (searchState is SearchLoaded)

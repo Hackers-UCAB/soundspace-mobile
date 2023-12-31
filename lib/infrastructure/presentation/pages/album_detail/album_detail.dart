@@ -40,10 +40,10 @@ class AlbumDetail extends StatelessWidget {
                                   Navigator.pop(context);
                                 },
                               ),
-                              AlbumImage(album: albumState.albumData),
-                              AlbumInfo(album: albumState.albumData),
+                              AlbumImage(album: albumState.album),
+                              AlbumInfo(album: albumState.album),
                               //TODO: Player ()
-                              Tracklist(songs: albumState.songsByAlbum),
+                              Tracklist(songs: albumState.album.songs!),
                             ],
                           ),
                         ),

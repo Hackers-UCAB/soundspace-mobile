@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/common/failure.dart';
 import '../../use_cases/user/log_in_use_case.dart';
+import '../../use_cases/user/log_out_user_use_case.dart';
 import '../../use_cases/user/subscribe_use_case.dart';
 import '../user_permissions/user_permissions_bloc.dart';
 
@@ -13,8 +14,13 @@ class LogInSubscriberBloc
     extends Bloc<LogInSubscriberEvent, LogInSubscriberState> {
   final LogInUseCase logInUseCase;
   final SubscribeUseCase subscribeUseCase;
+  final LogOutUserUseCase logOutUseCase;
+  final UserPermissionsBloc _userPermissionsBloc =
+      GetIt.instance.get<UserPermissionsBloc>();
   LogInSubscriberBloc(
-      {required this.logInUseCase, required this.subscribeUseCase})
+      {required this.logInUseCase,
+      required this.subscribeUseCase,
+      required this.logOutUseCase})
       : super(LogInSubscriberInitial()) {
     on<LogInSubscriberSubmitted>(_onSubmited);
     on<LogInSubscriberPhoneChanged>(_phoneChanged);
@@ -28,7 +34,7 @@ class LogInSubscriberBloc
     final logInResult =
         await logInUseCase.execute(LogInUseCaseInput(number: event.phone));
     if (logInResult.hasValue()) {
-      GetIt.instance.get<UserPermissionsBloc>().add(
+      _userPermissionsBloc.add(
           UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
       emit(LogInSubscriberSuccess());
     } else if (logInResult.failure! is NoAuthorizeFailure) {
@@ -46,7 +52,7 @@ class LogInSubscriberBloc
     final signUpResult = await subscribeUseCase.execute(SubscribeUseCaseInput(
         number: event.phone, operator: event.selectedOperator));
     if (signUpResult.hasValue()) {
-      GetIt.instance.get<UserPermissionsBloc>().add(
+      _userPermissionsBloc.add(
           UserPermissionsChanged(isAuthenticated: true, isSubscribed: true));
       emit(LogInSubscriberSuccess());
     } else if (signUpResult.failure! is NoAuthorizeFailure) {
@@ -54,6 +60,18 @@ class LogInSubscriberBloc
           errorMessage: signUpResult.failure!.message));
     } else {
       emit(LogInSubscriberFailure(failure: signUpResult.failure!));
+    }
+  }
+
+  Future<void> _logOut(
+      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
+    final result = await logOutUseCase.execute(LogOutUserUseCaseInput());
+    if (result.hasValue()) {
+      _userPermissionsBloc.add(
+          UserPermissionsChanged(isAuthenticated: false, isSubscribed: false));
+      emit(LogInSubscriberInitial());
+    } else {
+      emit(LogInSubscriberFailure(failure: result.failure!));
     }
   }
 

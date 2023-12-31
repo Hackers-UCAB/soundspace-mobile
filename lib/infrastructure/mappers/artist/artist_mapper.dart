@@ -1,11 +1,16 @@
+import 'package:sign_in_bloc/infrastructure/mappers/song/song_mapper.dart';
+
 import '../../../domain/artist/artist.dart';
+import '../album/album_mapper.dart';
 
 class ArtistMapper {
   static Artist fromJson(Map<String, dynamic> json) {
     return Artist(
-      id: json['codigo_artista'],
-      name: json['nombre_artista'],
-      image: json['referencia_imagen'],
+      id: json['id'],
+      name: json['name'],
+      image: json['image'],
+      albums: json['albums'] ?? AlbumMapper.fromJsonList(json['albums']),
+      songs: json['songs'] ?? SongMapper.fromJsonList(json['songs']),
     );
   }
 

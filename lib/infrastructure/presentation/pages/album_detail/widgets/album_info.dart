@@ -16,7 +16,7 @@ class AlbumInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              album.name,
+              album.name!,
               style: const TextStyle(
                 fontSize: 22,
                 color: Colors.white,

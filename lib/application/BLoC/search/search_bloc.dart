@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sign_in_bloc/common/use_case.dart';
+import 'package:sign_in_bloc/infrastructure/mappers/artist/artist_mapper.dart';
 import '../../../common/failure.dart';
 import '../../../common/result.dart';
 import '../../../domain/album/album.dart';
@@ -8,6 +10,7 @@ import '../../../domain/artist/artist.dart';
 import '../../../domain/playlist/playlist.dart';
 import '../../use_cases/album/get_album_by_name_use_case.dart';
 import '../../use_cases/artist/get_artist_by_name_use_case.dart';
+import '../../use_cases/playlist/get_playlist_by_name_use_case.dart';
 
 part 'search_event.dart';
 part 'search_state.dart';
@@ -15,15 +18,36 @@ part 'search_state.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final GetArtistByNameUseCase getArtistByNameUseCase;
   final GetAlbumByNameUseCase getAlbumByNameUseCase;
-  //TODO: UseCase de Playlist
+  final GetPlaylistByNameUseCase getPlaylistByNameUseCase;
+  late final List<Map<String, dynamic>> _useCases;
+  Timer? _debounce;
 
   SearchBloc({
     required this.getArtistByNameUseCase,
     required this.getAlbumByNameUseCase,
+    required this.getPlaylistByNameUseCase,
   }) : super(const SearchInitial()) {
     on<SearchFilterChanged>(_searchFilterChanged);
     on<SearchDataChanged>(_searchDataChanged);
     on<FetchSearchedData>(_fetchSearchedData);
+
+    _useCases = <Map<String, dynamic>>[
+      {
+        'input': GetArtistByNameUseCaseInput(name: state.data),
+        'useCase': getArtistByNameUseCase,
+        'filter': 'Artist',
+      },
+      {
+        'input': GetAlbumByNameUseCaseInput(name: state.data),
+        'useCase': getAlbumByNameUseCase,
+        'filter': 'Album',
+      },
+      {
+        'input': GetAlbumByNameUseCaseInput(name: state.data),
+        'useCase': getAlbumByNameUseCase,
+        'filter': 'Playlist',
+      },
+    ];
   }
 
   //cada vez que cambia la seleccion del CustomChoiceChip
@@ -42,45 +66,53 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> _fetchSearchedData<T>(
       FetchSearchedData event, Emitter<SearchState> emit) async {
-    //siempre y cuando el filtro y la hayan sido seleccionados
     if (state.filter.isNotEmpty && state.data.isNotEmpty) {
       emit(SearchLoading(filter: state.filter, data: state.data));
+      final useCase =
+          _useCases.firstWhere((element) => element['filter'] == state.filter);
 
-      //TODO: Dependiendo del filtro ejecutar un useCase u otro y retornar la lista tipo Map<String,String>
+      final result = await useCase['useCase'].execute(useCase['input'])
+          as Result<List<dynamic>>;
 
-      // emit(SearchLoaded(
-      //       filter: state.filter, data: state.data, searchData: searchData));
-      // } else {
-      //   emit(SearchFailed(
-      //       filter: state.filter, data: state.data, failure: result.failure!));
-      // }
+      if (result.hasValue()) {
+        final data = result.value!;
+        emit(SearchLoaded(
+            filter: state.filter,
+            data: state.data,
+            searchData: _fromDynamicListToMap(data)));
+      } else {
+        emit(SearchFailed(
+            filter: state.filter, data: state.data, failure: result.failure!));
+      }
     }
   }
 
   //La funcion onChange que recibe el TextField
   void onChangeData(String value) {
-    //TODO: Hacer lo del timer,  si se cumple, emitimos el evento
-    add(SearchDataChanged(data: value));
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 900), () {
+      add(SearchDataChanged(data: value));
+    });
   }
 
-  // List<Map<String, String>> mapToMapList<T>(List<T> list) {
-  //   return list.map<Map<String, String>>((item) {
-  //     if (item is Artist) {
-  //       return {
-  //         'id': item.id,
-  //         'name': item.name,
-  //       };
-  //     } else if (item is Album) {
-  //       return {
-  //         'id': item.id,
-  //         'name': item.name,
-  //       };
-  //     } else if (item is Playlist) {
-  //       return {
-  //         'id': item.id,
-  //         'name': item.name,
-  //       };
-  //     }
-  //   }).toList();
-  // }
+  @override
+  Future<void> close() {
+    _debounce?.cancel();
+    return super.close();
+  }
+
+  //Esto es horrible pero bueno
+  List<Map<String, String>> _fromDynamicListToMap(List<dynamic> list) {
+    return list.map<Map<String, String>>((e) {
+      if (e is Artist) {
+        return {'id': e.id, 'name': e.name};
+      } else if (e is Album) {
+        return {'id': e.id, 'name': e.name!};
+      } else if (e is Playlist) {
+        return {'id': e.id, 'name': e.name!};
+      } else {
+        return {}; // return an empty map if e is not an Artist
+      }
+    }).toList();
+  }
 }

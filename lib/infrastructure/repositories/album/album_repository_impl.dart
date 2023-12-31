@@ -12,44 +12,25 @@ class AlbumRepositoryImpl extends AlbumRepository {
 
   @override
   Future<Result<List<Album>>> getTrendingAlbums() async {
-    final result = await _apiConnectionManager.request(
-        'playlist/top_playlists?type=album',
-        'GET'); //TODO: el type seria un query param? hacer prueba
-    if (result.hasValue()) {
-      return Result<List<Album>>(
-          value: AlbumMapper.fromJsonList(result.value.data['data']));
-    } else {
-      return Result<List<Album>>(failure: result.failure);
-    }
+    final result = await _apiConnectionManager.request<List<Album>>(
+        'playlist/top_playlists?type=album', //TODO: el type es un query param
+        'GET',
+        (data) => AlbumMapper.fromJsonList(data['data']));
+    return result;
   }
 
   @override
   Future<Result<Album>> getAlbumById(String albumId) async {
-    final result = await _apiConnectionManager.request(
-        'albums/$albumId', 'GET'); //TODO: Preguntar al back
-    if (result.hasValue()) {
-      return Result<Album>(
-          value: AlbumMapper.fromJson(result.value.data['data']));
-    } else {
-      return Result<Album>(failure: result.failure);
-    }
+    return await _apiConnectionManager.request<Album>(
+      'albums/$albumId',
+      'GET',
+      (data) => AlbumMapper.fromJson(data['data']),
+    );
   }
 
   @override
-  Future<Result<List<Album>>> getAlbumsByArtistId(String artistId) async {
-    final result = await _apiConnectionManager.request(
-        'albums/$artistId', 'GET'); //TODO: Preguntar al back
-    if (result.hasValue()) {
-      return Result<List<Album>>(
-          value: AlbumMapper.fromJsonList(result.value.data['data']));
-    } else {
-      return Result<List<Album>>(failure: result.failure);
-    }
-  }
-
-  @override
-  Future<Result<List<Album>>> getAlbumByName(String name) {
-    // TODO: implement getAlbumByName
+  Future<Result<List<Album>>> getAlbumsByName(String name) {
+    // TODO: implement getAlbumsByCoincidenceName
     throw UnimplementedError();
   }
 }

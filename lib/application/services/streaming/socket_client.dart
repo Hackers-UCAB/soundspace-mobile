@@ -1,7 +1,8 @@
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:sign_in_bloc/application/BLoC/socket/socket_bloc.dart';
 
 abstract class SocketClient {
   void inicializeSocket();
-  void sendMessage(String message);
-  IO.Socket getSocket();
+  void sendIdSong(String message);
+  void receiveChunk(SocketBloc socketBloc);
+  void receiveInfo(SocketBloc socketBloc);
 }

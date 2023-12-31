@@ -7,6 +7,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/tracklist.dart';
+import '../../config/router/app_router.dart';
 import '../../widgets/albums_carousel.dart';
 import 'widgets/artists_carousel.dart';
 import 'widgets/playlist_wrap.dart';
@@ -18,7 +19,9 @@ class HomePage extends IPage {
 
   @override
   Widget child(BuildContext context) {
-    final trendingsBloc = GetIt.instance.get<TrendingsBloc>();
+    final getIt = GetIt.instance;
+    final trendingsBloc = getIt.get<TrendingsBloc>();
+    final navigator = getIt.get<AppNavigator>();
     trendingsBloc.add(FetchTrendingsEvent());
     return RefreshIndicator(
       onRefresh: () async {
@@ -37,17 +40,20 @@ class HomePage extends IPage {
                           children: [
                             AppBar(
                               backgroundColor: Colors.transparent,
-                              actions: const [
-                                Icon(
-                                  Icons.search,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(width: 10),
-                                Icon(
+                              actions: [
+                                IconButton(
+                                    onPressed: () =>
+                                        navigator.navigateTo('/search'),
+                                    icon: const Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                    )),
+                                const SizedBox(width: 10),
+                                const Icon(
                                   Icons.more_vert,
                                   color: Colors.white,
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                               ],
                             ),
                             PromotionalBannerWidget(
@@ -81,7 +87,7 @@ class HomePage extends IPage {
                         ),
                       ),
                       Visibility(
-                        visible: playerState is PlayingState,
+                        visible: true,
                         child: Align(
                           alignment: Alignment.bottomLeft,
                           child: MusicPlayer(key: key),

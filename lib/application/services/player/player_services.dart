@@ -3,6 +3,9 @@ abstract class PlayerService {
   Future<void> setAudioSource(List<int> source);
   Future<void> play();
   Future<void> pause();
-  Duration currentPosition();
-  void seek();
+  void trackingPosition();
+  void trackingDuration();
+  void trackingState();
+  void reset();
+  void seek(Duration duration);
 }

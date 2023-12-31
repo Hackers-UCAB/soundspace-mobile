@@ -105,6 +105,7 @@ class LocalNotificationsImpl extends LocalNotifications {
   @override
   void onForegroundMessage() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      //TODO: aqui cae la data del message
       if (message.notification == null) return;
 
       showLocalNotifications(

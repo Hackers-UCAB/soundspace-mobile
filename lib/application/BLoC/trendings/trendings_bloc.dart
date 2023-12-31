@@ -4,12 +4,8 @@ import 'package:sign_in_bloc/application/use_cases/promotional_banner/get_promot
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sign_in_bloc/common/result.dart';
-import 'package:sign_in_bloc/domain/artist/artist.dart';
-import 'package:sign_in_bloc/domain/album/album.dart';
 import 'package:sign_in_bloc/domain/promotional_banner/promotional_banner.dart';
-import 'package:sign_in_bloc/domain/playlist/playlist.dart';
 import '../../../common/failure.dart';
-import '../../../domain/song/song.dart';
 import '../../use_cases/album/get_trending_albums_use_case.dart';
 import '../../use_cases/artist/get_trending_artists_use_case.dart';
 part 'trendings_event.dart';

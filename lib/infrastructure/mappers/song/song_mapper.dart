@@ -1,12 +1,15 @@
 import '../../../domain/song/song.dart';
+import '../../helpers/image_convertert.dart';
 
 class SongMapper {
   static Song fromJson(Map<String, dynamic> json) {
     return Song(
-      id: json['codigo'],
-      name: json['nombre'],
-      duration: json['duracion'],
-      imageURL: json['referencia'],
+      id: json['id'],
+      name: json['name'],
+      duration: json['duration'],
+      image: ImageConverter.convert(json['image']),
+      artistsName: json['artists'] ??
+          json['artists'].map<String>((e) => e.name).toList(),
     );
   }
 
@@ -15,7 +18,7 @@ class SongMapper {
       'codigo_cancion': song.id,
       'nombre': song.name,
       'duracion': song.duration,
-      'referencia_imagen': song.imageURL,
+      'referencia_imagen': song.image,
     };
   }
 

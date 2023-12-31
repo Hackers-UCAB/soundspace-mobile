@@ -14,6 +14,6 @@ class GetTrendingSongsUseCase
   @override
   Future<Result<List<Song>>> execute(
       GetTrendingSongsUseCaseInput params) async {
-    return await songRepository.getSongs();
+    return await songRepository.getTracklist();
   }
 }

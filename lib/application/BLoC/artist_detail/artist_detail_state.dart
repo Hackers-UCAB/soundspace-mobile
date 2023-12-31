@@ -11,17 +11,12 @@ abstract class ArtistDetailState extends Equatable {
 class ArtistDetailLoading extends ArtistDetailState {}
 
 class ArtistDetailLoaded extends ArtistDetailState {
-  final Artist artistData;
-  final List<Album> artistAlbums;
-  final List<Song> artistSongs;
+  final Artist artist;
 
-  const ArtistDetailLoaded(
-      {required this.artistData,
-      required this.artistAlbums,
-      required this.artistSongs});
+  const ArtistDetailLoaded({required this.artist});
 
   @override
-  List<Object?> get props => [artistData, artistAlbums, artistSongs];
+  List<Object?> get props => [artist];
 }
 
 class ArtistDetailFailed extends ArtistDetailState {

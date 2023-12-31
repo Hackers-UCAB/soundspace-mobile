@@ -12,6 +12,6 @@ class SearchList extends StatelessWidget {
     final getIt = GetIt.instance;
     final appNavigator = getIt.get<AppNavigator>();
     // TODO: implement build
-    throw UnimplementedError();
+    return const Placeholder();
   }
 }

@@ -8,13 +8,12 @@ abstract class AlbumDetailState extends Equatable {
 class AlbumDetailLoading extends AlbumDetailState {}
 
 class AlbumDetailLoaded extends AlbumDetailState {
-  final Album albumData;
-  final List<Song> songsByAlbum;
+  final Album album;
 
-  AlbumDetailLoaded({required this.albumData, required this.songsByAlbum});
+  AlbumDetailLoaded({required this.album});
 
   @override
-  List<Object?> get props => [albumData, songsByAlbum];
+  List<Object?> get props => [album];
 }
 
 class AlbumDetailFailed extends AlbumDetailState {

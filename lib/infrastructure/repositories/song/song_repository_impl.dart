@@ -11,41 +11,11 @@ class SongRepositoryImpl extends SongRepository {
       : _apiConnectionManager = apiConnectionManager;
 
   @override
-  Future<Result<List<Song>>> getSongs() async {
-    final result =
-        await _apiConnectionManager.request('songs/tracklist', 'GET');
-    if (result.hasValue()) {
-      return Result(
-        value: SongMapper.fromJsonList(result.value.data['data']),
-      );
-    } else {
-      return Result(failure: result.failure);
-    }
-  }
-
-  @override
-  Future<Result<List<Song>>> getSongsByAlbumId(String albumId) async {
-    final result = await _apiConnectionManager.request(
-        'songs/$albumId', 'GET'); //TODO: Preguntar al back
-    if (result.hasValue()) {
-      return Result(
-        value: SongMapper.fromJsonList(result.value.data['data']),
-      );
-    } else {
-      return Result(failure: result.failure);
-    }
-  }
-
-  @override
-  Future<Result<List<Song>>> getSongsByArtistId(String artistId) async {
-    final result = await _apiConnectionManager.request(
-        'songs/$artistId', 'GET'); //TODO: Preguntar al back
-    if (result.hasValue()) {
-      return Result(
-        value: SongMapper.fromJsonList(result.value.data['data']),
-      );
-    } else {
-      return Result(failure: result.failure);
-    }
+  Future<Result<List<Song>>> getTracklist() async {
+    return await _apiConnectionManager.request(
+      'songs/tracklist',
+      'GET',
+      (data) => SongMapper.fromJsonList(data['data']),
+    );
   }
 }

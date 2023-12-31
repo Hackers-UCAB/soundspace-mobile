@@ -5,6 +5,7 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/home_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/landing/landing_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/profile_page.dart';
 import '../../pages/album_detail/album_detail.dart';
 import '../../pages/artist_detail/artist_detail.dart';
 import '../../pages/search/search_page.dart';
@@ -53,6 +54,10 @@ class AppNavigator {
           path: '/search',
           builder: (context, state) => const SearchPage(),
         ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) => const ProfilePage(),
+        ),
       ],
     );
   }
@@ -78,13 +83,18 @@ class AppNavigator {
   }
 
   void navigateTo(String routeName) {
-    if (subscriptionRouteGuard.canNavigate(routeName)) {
-      _routes.push(routeName);
-    }
+    // if (subscriptionRouteGuard.canNavigate(routeName)) {
+    _routes.push(routeName);
+    // }
   }
 
   void replaceWith(String routeName) {
     _routes.replace(routeName);
+  }
+
+  String currentLocation() {
+    Uri uri = _routes.routeInformationProvider.value.uri;
+    return uri.path;
   }
 
   String? _authProtectedNavigation(BuildContext context, GoRouterState state) {

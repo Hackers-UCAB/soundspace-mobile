@@ -52,10 +52,10 @@ class ArtistDetail extends IPage {
                                     SizedBox(width: 10),
                                   ],
                                 ), // TODO: implementar ArtistInfo
-                                ArtistInfo(artist: artistState.artistData),
+                                ArtistInfo(artist: artistState.artist),
                                 AlbumsCarousel(
-                                    albums: artistState.artistAlbums),
-                                Tracklist(songs: artistState.artistSongs),
+                                    albums: artistState.artist.albums!),
+                                Tracklist(songs: artistState.artist.songs!),
                                 const Divider(
                                   color: Color.fromARGB(18, 142, 139, 139),
                                   height: 40, //TODO: poner responsive

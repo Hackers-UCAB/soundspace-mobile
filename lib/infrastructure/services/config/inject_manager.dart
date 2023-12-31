@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,9 +17,11 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_by_name_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_local_data_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/user/log_out_user_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/subscribe_use_case.dart';
 import 'package:sign_in_bloc/infrastructure/repositories/album/album_repository_impl.dart';
 import 'package:sign_in_bloc/infrastructure/repositories/artist/artist_repository_impl.dart';
@@ -30,14 +34,12 @@ import 'package:sign_in_bloc/infrastructure/datasources/local/local_storage_impl
 import 'package:sign_in_bloc/infrastructure/services/location/location_checker_impl.dart';
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
 import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
+import '../../../application/BLoC/socket/socket_bloc.dart';
 import '../../../application/BLoC/trendings/trendings_bloc.dart';
 import '../../../application/use_cases/album/get_album_by_name_use_case.dart';
-import '../../../application/use_cases/album/get_albums_by_artist_use_case.dart';
 import '../../../application/use_cases/artist/get_artist_by_name_use_case.dart';
 import '../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
-import '../../../application/use_cases/song/get_songs_by_album_use_case.dart';
-import '../../../application/use_cases/song/get_songs_by_artist_use_case.dart';
 import '../../../application/use_cases/user/log_in_guest_use_case.dart';
 import '../../../application/use_cases/user/log_in_use_case.dart';
 import '../../presentation/config/router/app_router.dart';
@@ -45,6 +47,7 @@ import '../../repositories/playlist/playlist_repository_impl.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../repositories/user/user_repository_impl.dart';
 import '../foreground_notifications/local_notifications_impl.dart';
+import '../player/player_service_impl.dart';
 import '../streaming/socket_client_impl.dart';
 
 class InjectManager {
@@ -64,8 +67,11 @@ class InjectManager {
     //env
     await dotenv.load(fileName: ".env");
     //services
-    final socketClient = SocketClientImpl();
-    socketClient.inicializeSocket();
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final localStorage = LocalStorageImpl(prefs: sharedPreferences);
+    final playerService = PlayerServiceImpl();
+    final socketClient = SocketClientImpl(localStorage: localStorage)
+      ..inicializeSocket();
     final apiConnectionManagerImpl = ApiConnectionManagerImpl(
       baseUrl: dotenv.env['API_URL']!,
     );
@@ -73,8 +79,7 @@ class InjectManager {
         flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin(),
         messaging: FirebaseMessaging.instance)
       ..inicializeLocalNotifications();
-    final sharedPreferences = await SharedPreferences.getInstance();
-    final localStorage = LocalStorageImpl(prefs: sharedPreferences);
+
     final locationChecker = LocationCheckerImpl();
     final connectionManager =
         ConnectionManagerImpl(connectivity: Connectivity());
@@ -83,6 +88,8 @@ class InjectManager {
     if (token != null) {
       apiConnectionManagerImpl.setHeaders('Authorization', 'Bearer $token');
     }
+    final firebaseToken = await localNotifications.getToken();
+    print(firebaseToken);
     //repositories
     final userRepository =
         UserRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
@@ -107,6 +114,8 @@ class InjectManager {
         userRepository: userRepository,
         localStorage: localStorage,
         localNotifications: localNotifications);
+    final LogOutUserUseCase logOutUserUseCase =
+        LogOutUserUseCase(localStorage: localStorage);
     final GetPromotionalBannerUseCase getPromotionalBannerUseCase =
         GetPromotionalBannerUseCase(
             promotionalBannerRepository: promotionalBannerRepository);
@@ -124,12 +133,8 @@ class InjectManager {
         GetArtistDataUseCase(artistRepository: artistRepository);
     final GetAlbumDataUseCase getAlbumDataUseCase =
         GetAlbumDataUseCase(albumRepository: albumRepository);
-    final GetAlbumsByArtistUseCase getAlbumsByArtistUseCase =
-        GetAlbumsByArtistUseCase(albumRepository: albumRepository);
-    final GetSongsByArtistUseCase getSongsByArtistUseCase =
-        GetSongsByArtistUseCase(songRepository: songRepository);
-    final GetSongsByAlbumUseCase getSongsByAlbumUseCase =
-        GetSongsByAlbumUseCase(songRepository: songRepository);
+    final GetPlaylistByNameUseCase getPlaylistByNameUseCase =
+        GetPlaylistByNameUseCase(playlistRepository: playlistRepository);
     final GetArtistByNameUseCase getArtistByNameUseCase =
         GetArtistByNameUseCase(artistRepository: artistRepository);
     final GetAlbumByNameUseCase getAlbumByNameUseCase =
@@ -143,23 +148,26 @@ class InjectManager {
         getPromotionalBannerUseCase: getPromotionalBannerUseCase,
         getTrendingPlaylistsUseCase: getTrendingPlaylistsUseCase,
         getTrendingSongsUseCase: getTrendingSongsUseCase));
-    getIt.registerSingleton<ArtistDetailBloc>(ArtistDetailBloc(
-        getArtistDataUseCase: getArtistDataUseCase,
-        getAlbumsByArtistUseCase: getAlbumsByArtistUseCase,
-        getSongsByArtistUseCase: getSongsByArtistUseCase));
-    getIt.registerSingleton<AlbumDetailBloc>(AlbumDetailBloc(
-        getAlbumDataUseCase: getAlbumDataUseCase,
-        getSongsByAlbumUseCase: getSongsByAlbumUseCase));
+    getIt.registerSingleton<ArtistDetailBloc>(
+        ArtistDetailBloc(getArtistDataUseCase: getArtistDataUseCase));
+    getIt.registerSingleton<AlbumDetailBloc>(
+        AlbumDetailBloc(getAlbumDataUseCase: getAlbumDataUseCase));
     getIt.registerSingleton<SearchBloc>(SearchBloc(
         getArtistByNameUseCase: getArtistByNameUseCase,
-        getAlbumByNameUseCase: getAlbumByNameUseCase));
+        getAlbumByNameUseCase: getAlbumByNameUseCase,
+        getPlaylistByNameUseCase: getPlaylistByNameUseCase));
     getIt.registerSingleton<UserPermissionsBloc>(UserPermissionsBloc(
         getUserLocalDataUseCase: getUserLocalDataUseCase,
         connectionManager: connectionManager,
         locationChecker: locationChecker));
-    getIt.registerSingleton<PlayerBloc>(PlayerBloc());
+    getIt.registerSingleton<PlayerBloc>(
+        PlayerBloc(playerService: playerService));
+    getIt.registerSingleton<SocketBloc>(SocketBloc(socketClient: socketClient));
+    playerService.initialize();
     getIt.registerSingleton<LogInSubscriberBloc>(LogInSubscriberBloc(
-        logInUseCase: logInUseCase, subscribeUseCase: subscribeUseCase));
+        logInUseCase: logInUseCase,
+        subscribeUseCase: subscribeUseCase,
+        logOutUseCase: logOutUserUseCase));
     getIt.registerSingleton<LogInGuestBloc>(
         LogInGuestBloc(logInGuestUseCase: logInGuestUseCase));
     //check if user has a session
@@ -175,5 +183,16 @@ class InjectManager {
         SubscriptionRouteGuard(userPermissionsBloc: userPermissionsBloc);
     getIt.registerSingleton<AppNavigator>(AppNavigator(
         authRouteGuard: authGuard, subscriptionRouteGuard: subscriptionGuard));
+
+    HttpOverrides.global = MyHttpOverrides();
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

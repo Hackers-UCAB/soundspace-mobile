@@ -13,12 +13,13 @@ import 'application/BLoC/artist_detail/artist_detail_bloc.dart';
 import 'application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import 'application/BLoC/player/player_bloc.dart';
 import 'application/BLoC/search/search_bloc.dart';
+import 'application/BLoC/socket/socket_bloc.dart';
 import 'infrastructure/presentation/config/router/app_router.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'infrastructure/presentation/widgets/bloc_listeners/connection_listener.dart';
 
 Future<void> main() async {
-  //TODO: en vez de tener el main como Future hace un splash screen con future builder
+  //TODO: en vez de tener el main como Future hacer un splash screen con future builder
   await InjectManager.setUpInjections();
 
   runApp(const MyApp());
@@ -45,6 +46,9 @@ class MyApp extends StatelessWidget {
           providers: [
             BlocProvider(
               create: (context) => getIt.get<PlayerBloc>(),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<SocketBloc>(),
             ),
             BlocProvider(
               create: (context) => getIt.get<UserPermissionsBloc>(),

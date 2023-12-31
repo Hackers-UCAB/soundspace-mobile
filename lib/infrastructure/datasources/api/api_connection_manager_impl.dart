@@ -11,11 +11,13 @@ class ApiConnectionManagerImpl extends IApiConnectionManager {
   }) : _dio = Dio(BaseOptions(baseUrl: baseUrl));
 
   @override
-  Future<Result> request(String path, String method, {dynamic body}) async {
+  Future<Result<T>> request<T>(
+      String path, String method, T Function(dynamic) mapper,
+      {dynamic body}) async {
     try {
       final response = await _dio.request(path,
           data: body, options: Options(method: method));
-      return Result(value: response);
+      return Result<T>(value: mapper(response.data['data']));
     } on DioException catch (e) {
       return Result(failure: handleException(e));
     } catch (e) {
