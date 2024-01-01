@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:sign_in_bloc/infrastructure/datasources/api/api_connection_manager.dart';
 
 import '../../../common/result.dart';
@@ -68,10 +69,15 @@ class UserRepositoryImpl extends UserRepository {
   //! arreglar
   @override
   Future<Result<User>> fetchUserProfileData() async {
-    final response =
-        await _apiConnectionManager.request('user/profileData', 'GET');
+    _apiConnectionManager.setHeaders('Authorization',
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
+    final response = await _apiConnectionManager.request('user', 'GET');
+    //print(response);
+    //print(response.value);
+    //print("userRepo");
 
     if (response.hasValue()) {
+      //print("sending shit");
       return Result<User>(
           value: UserMapper.fromJson(response.value.data['data']));
     } else {

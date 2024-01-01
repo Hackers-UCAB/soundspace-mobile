@@ -5,6 +5,7 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/home_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/landing/landing_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/pages/profilePage/user_profile_page.dart';
 import '../../pages/album/album_detail.dart';
 import '../../pages/artist/artist_detail.dart';
 
@@ -22,8 +23,8 @@ class AppNavigator {
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) => const LandingPage(),
-          redirect: _authProtectedNavigation,
+          builder: (context, state) => const UserProfilePage(),
+          //redirect: _authProtectedNavigation,
         ),
         GoRoute(
           path: '/logIn',
@@ -33,6 +34,10 @@ class AppNavigator {
         GoRoute(
           path: '/home',
           builder: (context, state) => const HomePage(),
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) => const UserProfilePage(),
         ),
         GoRoute(
           path: '/artist/:id',

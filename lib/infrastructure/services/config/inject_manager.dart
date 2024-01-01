@@ -8,6 +8,7 @@ import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
@@ -26,6 +27,7 @@ import 'package:sign_in_bloc/infrastructure/datasources/local/local_storage_impl
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
 import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import '../../../application/BLoC/trendings/trendings_bloc.dart';
+import '../../../application/use_cases/user/get_user_profile_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
 import '../../../application/use_cases/user/log_in_guest_use_case.dart';
 import '../../../application/use_cases/user/log_in_use_case.dart';
@@ -103,6 +105,9 @@ class InjectManager {
         GetTrendingSongsUseCase(songRepository: songRepository);
     final GetUserLocalDataUseCase getUserLocalDataUseCase =
         GetUserLocalDataUseCase(localStorage: localStorage);
+    final FetchUserProfileDataUseCase fetchUserProfileDataUseCase =
+        FetchUserProfileDataUseCase(
+            userRepository: userRepository, localStorage: localStorage);
 
     final getIt = GetIt.instance;
     //blocs
@@ -130,11 +135,17 @@ class InjectManager {
     getIt.registerSingleton<GpsBloc>(GpsBloc(
         locationManager: locationManager,
         userPermissionsBloc: userPermissionsBloc));
+    getIt.registerSingleton<UserBloc>(
+        UserBloc(fetchUserProfileDataUseCase: fetchUserProfileDataUseCase));
     //router config
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);
     final subscriptionGuard =
         SubscriptionRouteGuard(userPermissionsBloc: userPermissionsBloc);
     getIt.registerSingleton<AppNavigator>(AppNavigator(
         authRouteGuard: authGuard, subscriptionRouteGuard: subscriptionGuard));
+    if (userPermissionsBloc.state.isAuthenticated) {
+      final token = localStorage.getValue('appToken');
+      apiConnectionManagerImpl.setHeaders('Authorization', 'Bearer $token');
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:sign_in_bloc/application/BLoC/gps/gps_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/theme/app_theme.dart';
 import 'package:sign_in_bloc/infrastructure/services/config/inject_manager.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => getIt.get<NotificationsBloc>(),
             ),
+            BlocProvider(create: (context) => getIt.get<UserBloc>()),
             BlocProvider(
                 create: (context) =>
                     getIt.get<GpsBloc>()..add(GpsInitializedEvent())),

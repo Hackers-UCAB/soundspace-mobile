@@ -17,7 +17,7 @@ class User {
   final String? _appToken;
   final String? _notificationsToken;
 
-  User(
+  const User(
       {IdUser? id,
       UserName? name,
       EmailAddress? email,

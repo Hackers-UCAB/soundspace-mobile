@@ -1,3 +1,5 @@
+import 'package:sign_in_bloc/common/failure.dart';
+
 import '../../datasources/local/local_storage.dart';
 import '../../../common/result.dart';
 import '../../../domain/user/repository/user_repository.dart';
@@ -12,11 +14,16 @@ class FetchUserProfileDataUseCase {
 
   Future<Result<User>> execute() async {
     final result = await userRepository.fetchUserProfileData();
-
+    //print("usecase");
+    //print(result);
+    //print(result.value);
     if (result.hasValue()) {
-      await localStorage.setKeyValue('appToken', result.value!.id!.id);
+      return result;
+    } else {
+      return Result<User>(
+          failure: const UnknownFailure(
+              message:
+                  'No token')); //TODO: Personalizar este error en base al Failure que retorne getToken?
     }
-
-    return result;
   }
 }

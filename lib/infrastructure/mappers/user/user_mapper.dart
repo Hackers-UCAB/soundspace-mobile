@@ -10,13 +10,10 @@ import '../../../domain/user/valueObjects/user_role_value_object.dart';
 class UserMapper {
   static User fromJson(Map<String, dynamic> json) {
     return User(
-        id: IdUser(id: json['codigo_usuario']),
-        name: UserName(json['nombre']),
-        email: EmailAddress(json['correo']),
-        phone: PhoneNumber(json['telefono']),
-        role: UserRole(role: json['rol']),
-        birthdate: BirthDate(json['fecha_nac']),
-        gender: Gender(json['genero']));
+        id: IdUser(id: json['id']),
+        name: UserName(json['name']),
+        email: EmailAddress(json['email']),
+        gender: Gender(json['genre']));
   }
 
   static Map<String, dynamic> toJson(User user) {

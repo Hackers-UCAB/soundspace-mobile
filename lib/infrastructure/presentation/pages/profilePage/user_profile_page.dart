@@ -13,8 +13,7 @@ final _formKey = GlobalKey<FormState>();
 const List<String> generosList = <String>[
   'Masculino',
   'Femenino',
-  'Fluido',
-  'Sin especificar'
+  'Otro',
 ];
 
 class UserProfilePage extends IPage {
@@ -24,39 +23,39 @@ class UserProfilePage extends IPage {
   Widget child(BuildContext context) {
     final userBloc = GetIt.instance.get<UserBloc>();
     userBloc.add(FetchUserProfileDataEvent());
-    User user = userBloc.state.user;
+    //print("yo");
+
     return BlocBuilder<PlayerBloc, PlayerState>(
         builder: (context, playerState) {
       return BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
-        return const SafeArea(
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: SingleChildScrollView(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        ProfileForm(),
-                      ]),
-                )));
+        if (context.watch<UserBloc>().state.user.name != null) {
+          return const SafeArea(
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          ProfileForm(),
+                        ]),
+                  )));
+        } else {
+          return const ProfileForm();
+        }
       });
     });
   }
 }
 
-class ProfileForm extends StatefulWidget {
-  const ProfileForm({Key? key});
+class ProfileForm extends StatelessWidget {
+  const ProfileForm();
 
-  @override
-  State<ProfileForm> createState() => _ProfileFormState();
-}
+  //TextEditingController dateCtl = TextEditingController();
+  //final DateFormat formatter = DateFormat('dd/MM/yyyy');
+  //bool editProfileData = false;
+  //String dropDownValue = generosList.first;
 
-class _ProfileFormState extends State<ProfileForm> {
-  TextEditingController dateCtl = TextEditingController();
-  final DateFormat formatter = DateFormat('dd/MM/yyyy');
-  bool editProfileData = false;
-  String dropDownValue = generosList.first;
-
-  void _showDatePicker() {
+  /*void _showDatePicker() {
     showDatePicker(
             context: context,
             initialDate: DateTime.now(),
@@ -69,16 +68,15 @@ class _ProfileFormState extends State<ProfileForm> {
         });
       }
     });
-  }
+  }*/
 
-  void _changeEditState() {
-    setState(() {
-      editProfileData = !editProfileData;
-    });
-  }
+  /*void _changeEditState(BuildContext context) {
+    Provider.of<UserBloc>(context, listen: false);
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    print(context.watch<UserBloc>().state.editable);
     return Form(
         key: _formKey,
         child: Column(
@@ -90,7 +88,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 color: Colors.white,
                 iconSize: 25,
                 onPressed: () {
-                  setState(() {});
+                  //setState(() {});
                 },
                 icon: const Icon(Icons.more_vert),
               ),
@@ -112,11 +110,15 @@ class _ProfileFormState extends State<ProfileForm> {
                     ),
                   ),
                   Visibility(
-                    visible: !editProfileData,
+                    //visible: !context.watch<UserBloc>().state.editable,
                     child: IconButton(
                       color: Colors.white,
                       iconSize: 20,
-                      onPressed: _changeEditState,
+                      onPressed: () {
+                        context
+                            .read<UserBloc>()
+                            .add(ToggleProfileEditableEvent());
+                      },
                       icon: const Icon(Icons.edit_sharp),
                     ),
                   )
@@ -125,7 +127,7 @@ class _ProfileFormState extends State<ProfileForm> {
 
             //Nombre y apellido
             TextFormField(
-              enabled: editProfileData,
+              enabled: context.watch<UserBloc>().state.editable,
               initialValue: context.watch<UserBloc>().state.user.name?.name,
               style: TextStyle(color: Colors.white),
               decoration: const InputDecoration(
@@ -155,7 +157,7 @@ class _ProfileFormState extends State<ProfileForm> {
 
             // CORREO
             TextFormField(
-              enabled: editProfileData,
+              enabled: context.watch<UserBloc>().state.editable,
               initialValue: context.watch<UserBloc>().state.user.email?.email,
               style: TextStyle(color: Colors.white),
               decoration: const InputDecoration(
@@ -195,9 +197,9 @@ class _ProfileFormState extends State<ProfileForm> {
                         .birthdate
                         ?.date
                         .toString(),
-                    enabled: editProfileData,
+                    enabled: context.watch<UserBloc>().state.editable,
                     readOnly: true,
-                    onTap: _showDatePicker,
+                    //onTap: _showDatePicker,
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                         hintText: 'DD/MM/YYYY',
@@ -261,7 +263,7 @@ class _ProfileFormState extends State<ProfileForm> {
                         fillColor: Color.fromARGB(82, 129, 118, 160),
                         filled: true,
                       ),
-                      enabled: editProfileData,
+                      enabled: context.watch<UserBloc>().state.editable,
                       enableSearch: false,
                       textStyle:
                           const TextStyle(color: Colors.white, fontSize: 15),
@@ -272,9 +274,9 @@ class _ProfileFormState extends State<ProfileForm> {
                       initialSelection:
                           context.watch<UserBloc>().state.user.gender?.gender,
                       onSelected: (String? value) {
-                        setState(() {
+                        /*setState(() {
                           dropDownValue = value!;
-                        });
+                        });*/
                       },
                       dropdownMenuEntries: generosList
                           .map<DropdownMenuEntry<String>>((String value) {
@@ -290,9 +292,13 @@ class _ProfileFormState extends State<ProfileForm> {
               children: [
                 Expanded(
                     child: Visibility(
-                        visible: editProfileData,
+                        visible: context.watch<UserBloc>().state.editable,
                         child: ElevatedButton(
-                          onPressed: _changeEditState,
+                          onPressed: () {
+                            context
+                                .read<UserBloc>()
+                                .add(ToggleProfileEditableEvent());
+                          },
                           style: const ButtonStyle(
                             minimumSize:
                                 MaterialStatePropertyAll<Size>(Size(1, 50)),
@@ -321,7 +327,7 @@ class _ProfileFormState extends State<ProfileForm> {
             Align(
               alignment: Alignment.centerLeft,
               child: Visibility(
-                visible: !editProfileData,
+                visible: !context.watch<UserBloc>().state.editable,
                 child: const Text(
                   'Si deseas cancelar tu suscripción',
                   style: TextStyle(color: Colors.white, fontSize: 14),
@@ -333,7 +339,7 @@ class _ProfileFormState extends State<ProfileForm> {
             Align(
               alignment: Alignment.centerLeft,
               child: Visibility(
-                visible: !editProfileData,
+                visible: !context.watch<UserBloc>().state.editable,
                 child: const Text(
                   'Haz Click Aquí',
                   style: TextStyle(color: Colors.lightBlue, fontSize: 14),

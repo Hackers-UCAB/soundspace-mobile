@@ -1,13 +1,25 @@
 part of 'user_bloc.dart';
 
 class UserState extends Equatable {
-  const UserState();
+  final bool editable;
+  final User user;
+
+  const UserState({this.editable = false, this.user = const User()});
+
+  UserState copyWith({
+    bool? editable,
+    User? user,
+  }) =>
+      UserState(
+        editable: editable ?? this.editable,
+        user: user ?? this.user,
+      );
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [user];
 }
 
-class UserProfileLoaded extends UserState {
+/*class UserProfileLoaded extends UserState {
   final User user;
 
   const UserProfileLoaded({required this.user});
@@ -21,4 +33,4 @@ class UserProfileLoaded extends UserState {
 
   @override
   List<Object> get props => [user];
-}
+}*/

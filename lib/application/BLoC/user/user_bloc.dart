@@ -21,10 +21,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc({required this.fetchUserProfileDataUseCase})
       : super(const UserState()) {
     on<FetchUserProfileDataEvent>(_fetchUserProfileData);
+    on<ToggleProfileEditableEvent>(_toggleProfileEditable);
   }
 
   void _fetchUserProfileData(
       FetchUserProfileDataEvent event, Emitter<UserState> emit) async {
-    final user = await fetchUserProfileDataUseCase.execute();
+    Result<User> user = await fetchUserProfileDataUseCase.execute();
+    if (user.hasValue()) {
+      emit(state.copyWith(user: user.value));
+    }
+  }
+
+  void _toggleProfileEditable(
+      ToggleProfileEditableEvent event, Emitter<UserState> emit) {
+    emit(state.copyWith(editable: !(state.editable)));
   }
 }
