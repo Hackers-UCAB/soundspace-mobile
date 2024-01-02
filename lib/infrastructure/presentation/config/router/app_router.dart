@@ -20,7 +20,7 @@ class AppNavigator {
   AppNavigator(
       {required this.authRouteGuard, required this.subscriptionRouteGuard}) {
     _routes = GoRouter(
-      initialLocation: '/',
+      initialLocation: '/search',
       routes: [
         GoRoute(
           path: '/',
