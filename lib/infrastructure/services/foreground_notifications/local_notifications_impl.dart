@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/config/router/app_router.dart';
 import '../../../application/services/foreground_notifications/local_notifications.dart';
 
 class LocalNotificationsImpl extends LocalNotifications {
@@ -29,6 +33,17 @@ class LocalNotificationsImpl extends LocalNotifications {
 
   @override
   Future<void> inicializeLocalNotifications() async {
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('app_logo');
+
+    const initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    //TODO: despues
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: (response) =>
+            onDidReceiveNotificationResponse(response));
+
     await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
@@ -43,9 +58,9 @@ class LocalNotificationsImpl extends LocalNotifications {
         InitializationSettings(android: initializationSettingsAndroid);
 
     //TODO: despues
-    await _flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-    );
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: (response) =>
+            onDidReceiveNotificationResponse(response));
   }
 
   @override
@@ -116,5 +131,40 @@ class LocalNotificationsImpl extends LocalNotifications {
         title: message.notification!.title ?? '',
       );
     });
+  }
+
+  @override
+  Future<void> setupInteractedMessage() async {
+    await _messaging.getInitialMessage();
+
+    FirebaseMessaging.onMessageOpenedApp.listen(handleRemoteMessage);
+  }
+
+  void handleRemoteMessage(RemoteMessage message) {
+    handleInteractions(message.data);
+  }
+
+  void onDidReceiveNotificationResponse(NotificationResponse response) {
+    String str = response.payload!.replaceAll(RegExp(r'[\{\}\s]'), '');
+    Map<String, dynamic> map = {};
+
+    str.split(',').forEach((part) {
+      var parts = part.split(':');
+      map[parts[0]] = parts[1];
+    });
+
+    handleInteractions(map);
+  }
+
+  @override
+  void handleInteractions(dynamic data) {
+    switch (data['action']) {
+      case 'navigateTo':
+        GetIt.instance.get<AppNavigator>().navigateTo(data['navigateToRoute']);
+        break;
+      case 'changeUserRole':
+        break;
+      default:
+    }
   }
 }
