@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
+import 'package:sign_in_bloc/application/datasources/local/local_storage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/router/app_router.dart';
 import '../../../application/services/foreground_notifications/local_notifications.dart';
 
@@ -163,6 +165,9 @@ class LocalNotificationsImpl extends LocalNotifications {
         GetIt.instance.get<AppNavigator>().navigateTo(data['navigateToRoute']);
         break;
       case 'changeUserRole':
+        GetIt.instance.get<LocalStorage>().setKeyValue('role', 'guess');
+        GetIt.instance.get<UserPermissionsBloc>().add(
+            UserPermissionsChanged(isAuthenticated: true, isSubscribed: false));
         break;
       default:
     }

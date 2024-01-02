@@ -76,9 +76,9 @@ class InjectManager {
       baseUrl: dotenv.env['API_URL']!,
     );
     final localNotifications = LocalNotificationsImpl(
-        flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin(),
-        messaging: FirebaseMessaging.instance)
-      ..inicializeLocalNotifications();
+      flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin(),
+      messaging: FirebaseMessaging.instance,
+    )..inicializeLocalNotifications();
 
     final locationChecker = LocationCheckerImpl();
     final connectionManager =
