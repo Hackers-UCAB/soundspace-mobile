@@ -4,14 +4,6 @@ import '../../../application/use_cases/user/get_user_profile_data_use_case.dart'
 import '../../../common/result.dart';
 import '../../../domain/user/user.dart';
 
-import '../../../domain/user/valueObjects/birth_day_value_object.dart';
-import '../../../domain/user/valueObjects/email_address_value_object.dart';
-import '../../../domain/user/valueObjects/gender_value_object.dart';
-import '../../../domain/user/valueObjects/id_user_value_object.dart';
-import '../../../domain/user/valueObjects/name_value_object.dart';
-import '../../../domain/user/valueObjects/phone_value_object.dart';
-import '../../../domain/user/valueObjects/user_role_value_object.dart';
-
 part 'user_event.dart';
 part 'user_state.dart';
 
@@ -19,9 +11,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final FetchUserProfileDataUseCase fetchUserProfileDataUseCase;
 
   UserBloc({required this.fetchUserProfileDataUseCase})
-      : super(const UserState()) {
+      : super(UserState(fecha: DateTime.now())) {
     on<FetchUserProfileDataEvent>(_fetchUserProfileData);
     on<ToggleProfileEditableEvent>(_toggleProfileEditable);
+    on<EditingFechaEvent>(_editingFecha);
   }
 
   void _fetchUserProfileData(
@@ -34,6 +27,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void _toggleProfileEditable(
       ToggleProfileEditableEvent event, Emitter<UserState> emit) {
-    emit(state.copyWith(editable: !(state.editable)));
+    emit(state.copyWith(editable: !state.editable));
+  }
+
+  void _editingFecha(EditingFechaEvent event, Emitter<UserState> emit) {
+    emit(state.copyWith(fecha: event.fecha));
   }
 }

@@ -23,60 +23,40 @@ class UserProfilePage extends IPage {
   Widget child(BuildContext context) {
     final userBloc = GetIt.instance.get<UserBloc>();
     userBloc.add(FetchUserProfileDataEvent());
-    //print("yo");
 
     return BlocBuilder<PlayerBloc, PlayerState>(
         builder: (context, playerState) {
       return BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
-        if (context.watch<UserBloc>().state.user.name != null) {
-          return const SafeArea(
-              child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: SingleChildScrollView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          ProfileForm(),
-                        ]),
-                  )));
-        } else {
-          return const ProfileForm();
-        }
+        return SafeArea(
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: SingleChildScrollView(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        ProfileForm(userState, context),
+                      ]),
+                )));
       });
     });
   }
 }
 
 class ProfileForm extends StatelessWidget {
-  const ProfileForm();
+  final BuildContext context;
+  final UserState state;
+  final userBloc = GetIt.instance.get<UserBloc>();
+  final List<String> genderOptions = ['M', 'F', 'O'];
+  ProfileForm(this.state, this.context);
 
   //TextEditingController dateCtl = TextEditingController();
   //final DateFormat formatter = DateFormat('dd/MM/yyyy');
   //bool editProfileData = false;
   //String dropDownValue = generosList.first;
 
-  /*void _showDatePicker() {
-    showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(1900),
-            lastDate: DateTime.now())
-        .then((value) {
-      if (value != null) {
-        setState(() {
-          dateCtl.text = formatter.format(value).toString();
-        });
-      }
-    });
-  }*/
-
-  /*void _changeEditState(BuildContext context) {
-    Provider.of<UserBloc>(context, listen: false);
-  }*/
-
   @override
   Widget build(BuildContext context) {
-    print(context.watch<UserBloc>().state.editable);
+    String selectedOption = genderOptions[0];
     return Form(
         key: _formKey,
         child: Column(
@@ -110,14 +90,12 @@ class ProfileForm extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    //visible: !context.watch<UserBloc>().state.editable,
+                    visible: !state.editable,
                     child: IconButton(
                       color: Colors.white,
                       iconSize: 20,
                       onPressed: () {
-                        context
-                            .read<UserBloc>()
-                            .add(ToggleProfileEditableEvent());
+                        userBloc.add(ToggleProfileEditableEvent());
                       },
                       icon: const Icon(Icons.edit_sharp),
                     ),
@@ -157,7 +135,7 @@ class ProfileForm extends StatelessWidget {
 
             // CORREO
             TextFormField(
-              enabled: context.watch<UserBloc>().state.editable,
+              enabled: state.editable,
               initialValue: context.watch<UserBloc>().state.user.email?.email,
               style: TextStyle(color: Colors.white),
               decoration: const InputDecoration(
@@ -189,17 +167,27 @@ class ProfileForm extends StatelessWidget {
                   flex: 1,
                   //FECHA DE NACIMIENTO
                   child: TextFormField(
-                    //controller: dateCtl,
-                    initialValue: context
-                        .watch<UserBloc>()
-                        .state
-                        .user
-                        .birthdate
-                        ?.date
-                        .toString(),
-                    enabled: context.watch<UserBloc>().state.editable,
+                    enabled: state.editable,
+                    controller: TextEditingController(
+                        text: state.fecha.toString() ?? ''),
                     readOnly: true,
-                    //onTap: _showDatePicker,
+                    onTap: () {
+                      print(state.fecha);
+                      showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime.now())
+                          .then((value) {
+                        if (value != null) {
+                          userBloc.add(EditingFechaEvent(fecha: value));
+                        } else {
+                          userBloc
+                              .add(EditingFechaEvent(fecha: DateTime.now()));
+                        }
+                      });
+                      print(state.fecha);
+                    },
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                         hintText: 'DD/MM/YYYY',
@@ -236,8 +224,41 @@ class ProfileForm extends StatelessWidget {
 
                 //DROPDOWN
                 Expanded(
-                    flex: 1,
-                    child: DropdownMenu<String>(
+                  flex: 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      color: Color.fromARGB(82, 129, 118, 160),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: DropdownButton<String>(
+                      value: selectedOption,
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          selectedOption =
+                              newValue; // Update the selected option
+                          print('Selected option: $selectedOption');
+                        }
+                      },
+                      items: genderOptions
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(color: Colors.white),
+                            textAlign: TextAlign.right,
+                          ),
+                        );
+                      }).toList(),
+                      dropdownColor: Color.fromARGB(82, 129, 118, 160),
+                      underline: Container(), // Hides the default underline
+                      isExpanded: true,
+                      itemHeight: 65.0,
+                    ),
+                  ),
+                ),
+                /*child: DropdownMenu<String>(
                       inputDecorationTheme: const InputDecorationTheme(
                         border: OutlineInputBorder(
                             borderRadius:
@@ -283,7 +304,7 @@ class ProfileForm extends StatelessWidget {
                         return DropdownMenuEntry<String>(
                             value: value, label: value);
                       }).toList(),
-                    )),
+                    )),*/
                 const SizedBox(width: 25),
               ],
             ),
@@ -292,12 +313,11 @@ class ProfileForm extends StatelessWidget {
               children: [
                 Expanded(
                     child: Visibility(
-                        visible: context.watch<UserBloc>().state.editable,
+                        visible: state.editable,
                         child: ElevatedButton(
                           onPressed: () {
-                            context
-                                .read<UserBloc>()
-                                .add(ToggleProfileEditableEvent());
+                            userBloc.add(ToggleProfileEditableEvent());
+                            //print(state.editable);
                           },
                           style: const ButtonStyle(
                             minimumSize:
