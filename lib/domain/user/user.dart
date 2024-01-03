@@ -49,7 +49,7 @@ class User {
             .firstWhere((isConnected) => isConnected);
 
         final country = await locationChecker.getCountry();
-        if (country == 'Venezuela') {
+        if (country != 'Venezuela') {
           _role = UserRoles.guest;
         }
         _country = country;

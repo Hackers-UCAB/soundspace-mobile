@@ -6,6 +6,6 @@ abstract class IApiConnectionManager {
 
   Future<Result<T>> request<T>(
       String path, String method, T Function(dynamic) mapper,
-      {dynamic body});
+      {dynamic body, Map<String, dynamic>? queryParameters});
   void setHeaders(String key, dynamic value);
 }

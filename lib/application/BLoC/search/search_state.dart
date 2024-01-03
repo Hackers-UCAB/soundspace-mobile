@@ -1,13 +1,13 @@
 part of 'search_bloc.dart';
 
 class SearchState extends Equatable {
-  final String filter;
+  final List<String> filter;
   final String data;
 
   const SearchState({required this.filter, required this.data});
 
   SearchState copyWith({
-    String? filter,
+    List<String>? filter,
     String? data,
   }) =>
       SearchState(
@@ -20,19 +20,22 @@ class SearchState extends Equatable {
 }
 
 class SearchInitial extends SearchState {
-  const SearchInitial({super.filter = '', super.data = ''});
+  const SearchInitial({required super.filter, super.data = ''});
 }
 
 class SearchLoading extends SearchState {
   const SearchLoading({required super.filter, required super.data});
 }
 
-//FIXME: Esto de pana que puede mejorar
 class SearchLoaded extends SearchState {
-  final List<Map<String, String>> searchData;
+  final EntitiesByName entites;
 
   const SearchLoaded(
-      {required super.filter, required super.data, required this.searchData});
+      {required super.filter, required super.data, required this.entites});
+}
+
+class SearchEmpty extends SearchState {
+  const SearchEmpty({required super.filter, required super.data});
 }
 
 class SearchFailed extends SearchState {

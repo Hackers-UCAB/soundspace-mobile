@@ -1,59 +1,37 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:sign_in_bloc/common/use_case.dart';
-import 'package:sign_in_bloc/infrastructure/mappers/artist/artist_mapper.dart';
+import 'package:sign_in_bloc/domain/services/search_entities_by_name.dart';
 import '../../../common/failure.dart';
-import '../../../common/result.dart';
-import '../../../domain/album/album.dart';
-import '../../../domain/artist/artist.dart';
-import '../../../domain/playlist/playlist.dart';
-import '../../use_cases/album/get_album_by_name_use_case.dart';
-import '../../use_cases/artist/get_artist_by_name_use_case.dart';
-import '../../use_cases/playlist/get_playlist_by_name_use_case.dart';
-
 part 'search_event.dart';
 part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  final GetArtistByNameUseCase getArtistByNameUseCase;
-  final GetAlbumByNameUseCase getAlbumByNameUseCase;
-  final GetPlaylistByNameUseCase getPlaylistByNameUseCase;
-  late final List<Map<String, dynamic>> _useCases;
+  final SearchEntitiesByName _searchEntitiesByName;
+  int _currentPage = 1;
   Timer? _debounce;
 
-  SearchBloc({
-    required this.getArtistByNameUseCase,
-    required this.getAlbumByNameUseCase,
-    required this.getPlaylistByNameUseCase,
-  }) : super(const SearchInitial()) {
+  SearchBloc({required SearchEntitiesByName searchEntitiesByName})
+      : _searchEntitiesByName = searchEntitiesByName,
+        super(const SearchInitial(filter: [], data: '')) {
     on<SearchFilterChanged>(_searchFilterChanged);
     on<SearchDataChanged>(_searchDataChanged);
     on<FetchSearchedData>(_fetchSearchedData);
-
-    _useCases = <Map<String, dynamic>>[
-      {
-        'input': GetArtistByNameUseCaseInput(name: state.data),
-        'useCase': getArtistByNameUseCase,
-        'filter': 'Artist',
-      },
-      {
-        'input': GetAlbumByNameUseCaseInput(name: state.data),
-        'useCase': getAlbumByNameUseCase,
-        'filter': 'Album',
-      },
-      {
-        'input': GetAlbumByNameUseCaseInput(name: state.data),
-        'useCase': getAlbumByNameUseCase,
-        'filter': 'Playlist',
-      },
-    ];
+    on<FetchMoreSearchedData>(_fetchMoreSearchedData);
   }
 
   //cada vez que cambia la seleccion del CustomChoiceChip
   Future<void> _searchFilterChanged(
       SearchFilterChanged event, Emitter<SearchState> emit) async {
-    emit(state.copyWith(filter: event.filter));
+    List<String> filter = [];
+
+    state.filter.contains(event.filter)
+        ? filter =
+            state.filter.where((element) => element != event.filter).toList()
+        : filter = state.filter + [event.filter];
+
+    emit(state.copyWith(filter: filter));
     add(FetchSearchedData());
   }
 
@@ -66,20 +44,21 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> _fetchSearchedData<T>(
       FetchSearchedData event, Emitter<SearchState> emit) async {
-    if (state.filter.isNotEmpty && state.data.isNotEmpty) {
+    if (state.data.isNotEmpty) {
       emit(SearchLoading(filter: state.filter, data: state.data));
-      final useCase =
-          _useCases.firstWhere((element) => element['filter'] == state.filter);
-
-      final result = await useCase['useCase'].execute(useCase['input'])
-          as Result<List<dynamic>>;
+      final result = await _searchEntitiesByName.call(state.data, state.filter);
 
       if (result.hasValue()) {
-        final data = result.value!;
-        emit(SearchLoaded(
-            filter: state.filter,
-            data: state.data,
-            searchData: _fromDynamicListToMap(data)));
+        final entities = result.value!;
+        if (entities.albums == null &&
+            entities.artists == null &&
+            entities.playlists == null &&
+            entities.songs == null) {
+          emit(SearchEmpty(filter: state.filter, data: state.data));
+        } else {
+          emit(SearchLoaded(
+              filter: state.filter, data: state.data, entites: entities));
+        }
       } else {
         emit(SearchFailed(
             filter: state.filter, data: state.data, failure: result.failure!));
@@ -101,18 +80,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     return super.close();
   }
 
-  //Esto es horrible pero bueno
-  List<Map<String, String>> _fromDynamicListToMap(List<dynamic> list) {
-    return list.map<Map<String, String>>((e) {
-      if (e is Artist) {
-        return {'id': e.id, 'name': e.name};
-      } else if (e is Album) {
-        return {'id': e.id, 'name': e.name!};
-      } else if (e is Playlist) {
-        return {'id': e.id, 'name': e.name!};
-      } else {
-        return {}; // return an empty map if e is not an Artist
-      }
-    }).toList();
+  void _fetchMoreSearchedData(
+      FetchMoreSearchedData event, Emitter<SearchState> emit) {
+    _currentPage++;
+    final startIndex = (_currentPage - 1) * 8;
+    final endIndex = min(
+      _currentPage * 8,
+    );
+    final itemsToShow = state.items.sublist(startIndex, endIndex);
   }
 }

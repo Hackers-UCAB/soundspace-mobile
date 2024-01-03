@@ -13,7 +13,7 @@ class PlaylistWrap extends StatelessWidget {
         .map((playlist) => _PlaylistCard(
               id: playlist.id,
               name: playlist.name!,
-              img: playlist.image,
+              img: playlist.image!,
             ))
         .toList();
 

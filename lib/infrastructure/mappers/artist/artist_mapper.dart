@@ -9,8 +9,11 @@ class ArtistMapper {
       id: json['id'],
       name: json['name'],
       image: json['image'],
-      albums: json['albums'] ?? AlbumMapper.fromJsonList(json['albums']),
-      songs: json['songs'] ?? SongMapper.fromJsonList(json['songs']),
+      albums: json['albums'] != null
+          ? AlbumMapper.fromJsonList(json['albums'])
+          : null,
+      songs:
+          json['songs'] != null ? SongMapper.fromJsonList(json['songs']) : null,
     );
   }
 

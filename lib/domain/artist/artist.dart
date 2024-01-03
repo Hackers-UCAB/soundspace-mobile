@@ -4,14 +4,14 @@ import '../song/song.dart';
 class Artist {
   final String id;
   final String name;
-  final List<int> image;
+  final List<int>? image;
   final List<Album>? albums;
   final List<Song>? songs;
 
   Artist(
       {required this.id,
       required this.name,
-      required this.image,
+      this.image,
       this.albums,
       this.songs});
 }

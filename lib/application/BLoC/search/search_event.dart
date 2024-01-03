@@ -15,3 +15,5 @@ class SearchDataChanged extends SearchEvent {
 }
 
 class FetchSearchedData extends SearchEvent {}
+
+class FetchMoreSearchedData extends SearchEvent {}

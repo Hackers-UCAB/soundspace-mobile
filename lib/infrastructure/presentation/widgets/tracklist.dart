@@ -48,7 +48,7 @@ class _TracklistItem extends StatelessWidget {
                 width: size.width * 0.2,
                 height: size.width * 0.2,
                 child: Image.memory(
-                  Uint8List.fromList(song.image),
+                  Uint8List.fromList(song.image!),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -67,7 +67,7 @@ class _TracklistItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(song.duration), //duracion total de la cancion
+                  Text(song.duration!), //duracion total de la cancion
                   const SizedBox(width: 6),
                   IconButton(
                     onPressed: () {

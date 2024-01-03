@@ -55,7 +55,7 @@ class _ArtistCard extends StatelessWidget {
             height: size.width * 0.3,
             child: ClipOval(
                 child: Image.memory(
-              Uint8List.fromList(artist.image),
+              Uint8List.fromList(artist.image!),
               fit: BoxFit.cover,
             )),
           ),

@@ -6,12 +6,8 @@ import 'package:sign_in_bloc/infrastructure/presentation/pages/home/widgets/prom
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/tracklist.dart';
 import '../../config/router/app_router.dart';
-import '../../widgets/albums_carousel.dart';
-import 'widgets/artists_carousel.dart';
-import 'widgets/playlist_wrap.dart';
-import '../../widgets/music_player.dart';
+import '../search/widgets/custom_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends IPage {
@@ -38,24 +34,7 @@ class HomePage extends IPage {
                       SingleChildScrollView(
                         child: Column(
                           children: [
-                            AppBar(
-                              backgroundColor: Colors.transparent,
-                              actions: [
-                                IconButton(
-                                    onPressed: () =>
-                                        navigator.navigateTo('/search'),
-                                    icon: const Icon(
-                                      Icons.search,
-                                      color: Colors.white,
-                                    )),
-                                const SizedBox(width: 10),
-                                const Icon(
-                                  Icons.more_vert,
-                                  color: Colors.white,
-                                ),
-                                const SizedBox(width: 10),
-                              ],
-                            ),
+                            const CustomAppBar(),
                             PromotionalBannerWidget(
                               banner: trendingsState.promotionalBanner,
                             ),
@@ -86,13 +65,13 @@ class HomePage extends IPage {
                           ],
                         ),
                       ),
-                      Visibility(
-                        visible: true,
-                        child: Align(
-                          alignment: Alignment.bottomLeft,
-                          child: MusicPlayer(key: key),
-                        ),
-                      )
+                      // Visibility(
+                      //   visible: true,
+                      //   child: Align(
+                      //     alignment: Alignment.bottomLeft,
+                      //     child: MusicPlayer(key: key),
+                      //   ),
+                      // )
                     ],
                   );
                 } else if (trendingsState is TrendingsLoading) {

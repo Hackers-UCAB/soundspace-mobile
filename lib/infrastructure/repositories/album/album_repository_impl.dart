@@ -27,10 +27,4 @@ class AlbumRepositoryImpl extends AlbumRepository {
       (data) => AlbumMapper.fromJson(data['data']),
     );
   }
-
-  @override
-  Future<Result<List<Album>>> getAlbumsByName(String name) {
-    // TODO: implement getAlbumsByCoincidenceName
-    throw UnimplementedError();
-  }
 }

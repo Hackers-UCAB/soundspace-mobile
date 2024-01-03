@@ -13,7 +13,7 @@ class AlbumClipRRect extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Image.memory(
-        Uint8List.fromList(album.image),
+        Uint8List.fromList(album.image!),
         fit: BoxFit.fill,
         width: 180,
       ),

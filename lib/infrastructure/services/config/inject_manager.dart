@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -17,7 +16,6 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
-import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_by_name_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_local_data_use_case.dart';
@@ -32,12 +30,11 @@ import 'package:sign_in_bloc/infrastructure/services/internet_connection/connect
 import 'package:sign_in_bloc/infrastructure/services/config/firebase/firebase_options.dart';
 import 'package:sign_in_bloc/infrastructure/datasources/local/local_storage_impl.dart';
 import 'package:sign_in_bloc/infrastructure/services/location/location_checker_impl.dart';
+import 'package:sign_in_bloc/infrastructure/services/search_entities_by_name_impl.dart';
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
 import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import '../../../application/BLoC/socket/socket_bloc.dart';
 import '../../../application/BLoC/trendings/trendings_bloc.dart';
-import '../../../application/use_cases/album/get_album_by_name_use_case.dart';
-import '../../../application/use_cases/artist/get_artist_by_name_use_case.dart';
 import '../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
 import '../../../application/use_cases/user/log_in_guest_use_case.dart';
@@ -133,12 +130,6 @@ class InjectManager {
         GetArtistDataUseCase(artistRepository: artistRepository);
     final GetAlbumDataUseCase getAlbumDataUseCase =
         GetAlbumDataUseCase(albumRepository: albumRepository);
-    final GetPlaylistByNameUseCase getPlaylistByNameUseCase =
-        GetPlaylistByNameUseCase(playlistRepository: playlistRepository);
-    final GetArtistByNameUseCase getArtistByNameUseCase =
-        GetArtistByNameUseCase(artistRepository: artistRepository);
-    final GetAlbumByNameUseCase getAlbumByNameUseCase =
-        GetAlbumByNameUseCase(albumRepository: albumRepository);
     //blocs
     final getIt = GetIt.instance;
     //blocs
@@ -153,9 +144,8 @@ class InjectManager {
     getIt.registerSingleton<AlbumDetailBloc>(
         AlbumDetailBloc(getAlbumDataUseCase: getAlbumDataUseCase));
     getIt.registerSingleton<SearchBloc>(SearchBloc(
-        getArtistByNameUseCase: getArtistByNameUseCase,
-        getAlbumByNameUseCase: getAlbumByNameUseCase,
-        getPlaylistByNameUseCase: getPlaylistByNameUseCase));
+        searchEntitiesByName: SearchEntitiesByNameImpl(
+            apiConnectionManager: apiConnectionManagerImpl)));
     getIt.registerSingleton<UserPermissionsBloc>(UserPermissionsBloc(
         getUserLocalDataUseCase: getUserLocalDataUseCase,
         connectionManager: connectionManager,

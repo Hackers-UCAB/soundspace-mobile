@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/datasources/local/local_storage.dart';
 import 'package:sign_in_bloc/application/model/socket_chunk.dart';
-import 'package:sign_in_bloc/infrastructure/datasources/local/local_storage_impl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../../application/BLoC/socket/socket_bloc.dart';
 import '../../../application/services/streaming/socket_client.dart';
@@ -44,7 +41,7 @@ class SocketClientImpl extends SocketClient {
             .setPath('/socket.io')
             .setAuth({
               'token':
-                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzg5ODg3MiwiZXhwIjoxNzAzOTg1MjcyfQ.9xeYaG4H_XOSe2QTYZdwnzZ5_Iuu_sSjnsvYDF3SPlc'
+                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwNDIwNjI5NCwiZXhwIjoxNzA0MjkyNjk0fQ.sckJJI9d9utRukHJUINo48TioZ39jZ1XCI0kq0vzz7k'
             })
             .build());
 
@@ -60,7 +57,7 @@ class SocketClientImpl extends SocketClient {
   @override
   void sendIdSong(String message) {
     socket.emit('message-from-client',
-        {'preview': true, 'songId': message, 'second': 100});
+        {'preview': false, 'songId': message, 'second': 100});
   }
 
   @override

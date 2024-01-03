@@ -61,7 +61,7 @@ class _AlbumCard extends StatelessWidget {
     return ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         child: Image.memory(
-          Uint8List.fromList(album.image),
+          Uint8List.fromList(album.image!),
           fit: BoxFit.cover,
         ));
   }

@@ -9,6 +9,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/tracklist.dart';
 import '../../widgets/error_page.dart';
+import '../search/widgets/custom_app_bar.dart';
 
 class ArtistDetail extends IPage {
   final String artistId;
@@ -37,21 +38,8 @@ class ArtistDetail extends IPage {
                           SingleChildScrollView(
                             child: Column(
                               children: [
-                                AppBar(
-                                  backgroundColor: Colors.transparent,
-                                  actions: const [
-                                    Icon(
-                                      Icons.search,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Icon(
-                                      Icons.more_vert,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(width: 10),
-                                  ],
-                                ), // TODO: implementar ArtistInfo
+                                const CustomAppBar(),
+                                // TODO: implementar ArtistInfo
                                 ArtistInfo(artist: artistState.artist),
                                 AlbumsCarousel(
                                     albums: artistState.artist.albums!),

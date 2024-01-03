@@ -26,10 +26,4 @@ class ArtistRepositoryImpl extends ArtistRepository {
       (data) => ArtistMapper.fromJson(data['data']),
     );
   }
-
-  @override
-  Future<Result<List<Artist>>> getArtistByName(String name) {
-    // TODO: implement getArtistByName
-    throw UnimplementedError();
-  }
 }

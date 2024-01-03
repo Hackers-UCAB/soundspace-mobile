@@ -18,22 +18,16 @@ class CustomChoiceChips extends StatelessWidget {
     final List<Widget> chips = choices
         .map<ChoiceChip>((String choice) => ChoiceChip(
               label: Text(choice,
-                  style: choice == searchBloc.state.filter
+                  style: searchBloc.state.filter.contains(choice)
                       ? textTheme?.copyWith(color: Colors.black)
                       : textTheme),
-              selected: choice == searchBloc.state.filter,
-              onSelected: (bool selected) {
-                if (selected) {
-                  searchBloc.add(SearchFilterChanged(filter: choice));
-                } else {
-                  searchBloc.add(SearchFilterChanged(filter: ''));
-                }
-              },
+              selected: searchBloc.state.filter.contains(choice),
+              onSelected: (bool selected) =>
+                  searchBloc.add(SearchFilterChanged(filter: choice)),
               selectedColor: const Color.fromARGB(255, 255, 255, 255),
               backgroundColor: const Color.fromARGB(255, 20, 2, 45),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
+                  borderRadius: BorderRadius.circular(20)),
             ))
         .toList();
 

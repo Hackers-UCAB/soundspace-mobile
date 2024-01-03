@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_null_aware_operators
+
 import '../../../domain/song/song.dart';
 import '../../helpers/image_convertert.dart';
 
@@ -7,9 +9,11 @@ class SongMapper {
       id: json['id'],
       name: json['name'],
       duration: json['duration'],
-      image: ImageConverter.convert(json['image']),
-      artistsName: json['artists'] ??
-          json['artists'].map<String>((e) => e.name).toList(),
+      image:
+          json['image'] != null ? ImageConverter.convert(json['image']) : null,
+      artistsName: json['artists'] != null
+          ? json['artists'].map<String>((e) => e.name).toList()
+          : null,
     );
   }
 

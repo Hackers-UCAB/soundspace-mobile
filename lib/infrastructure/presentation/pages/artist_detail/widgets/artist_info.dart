@@ -12,7 +12,7 @@ class ArtistInfo extends StatelessWidget {
     return Column(
       children: [
         Image.memory(
-          Uint8List.fromList(artist.image),
+          Uint8List.fromList(artist.image!),
           width: 200,
           height: 200,
           fit: BoxFit.cover,

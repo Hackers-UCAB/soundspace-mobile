@@ -1,8 +1,8 @@
 class Song {
   final String id;
   final String name;
-  final String duration;
-  final List<int> image;
+  final String? duration;
+  final List<int>? image;
   final List<String>? artistsName;
 
   Song({

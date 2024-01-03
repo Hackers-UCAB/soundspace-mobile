@@ -22,7 +22,7 @@ class SearchPage extends IPage {
     final AppNavigator appNavigator = getIt.get<AppNavigator>();
     return RefreshIndicator(
       onRefresh: () async {
-        //TODO:
+        searchBloc.add(FetchSearchedData());
       },
       child: ListView(
         children: [
@@ -36,25 +36,28 @@ class SearchPage extends IPage {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomAppBar(
-                          title: "Buscar artista o tema",
-                          onPressed: () => appNavigator.pop(),
-                        ),
-                        const SizedBox(height: 10),
+                        const CustomAppBar(),
                         CustomTextFormField(
                           hint: "",
                           onChanged: searchBloc.onChangeData,
                         ),
+                        const SizedBox(height: 10),
                         CustomChoiceChips(),
-                        if (searchState.filter.isEmpty)
-                          const Center(
-                              child: Text('Selecciona un filtro de busqueda')),
+                        const SizedBox(height: 10),
                         if (searchState is SearchLoading)
                           const CustomCircularProgressIndicator(),
                         if (searchState is SearchLoaded)
-                          //TODO: Implementar el widget de la lista
-                          SearchList(searchData: searchState.searchData),
-                        //TODO: Falta el estado de cuando no tenga data la busqueda
+                          SearchList(entities: searchState.entites),
+                        if (searchState is SearchEmpty)
+                          Center(
+                            child: Text(
+                              "Lo sentimos, no encontramos resultados que coincidan",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: Colors.blue),
+                            ),
+                          ),
                         if (searchState is SearchFailed)
                           ErrorPage(failure: searchState.failure),
                       ],

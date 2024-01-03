@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final String? label;
@@ -40,12 +39,11 @@ class CustomTextFormField extends StatelessWidget {
 
     return Container(
       decoration: background,
+      height: 60,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: TextFormField(
-          style: GoogleFonts.poppins().copyWith(
-            color: Colors.white,
-          ),
+          style: Theme.of(context).textTheme.bodyMedium,
           onChanged: onChanged,
           validator: validator,
           obscureText: obscureText,

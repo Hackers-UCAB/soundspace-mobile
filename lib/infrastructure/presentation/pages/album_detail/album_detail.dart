@@ -6,6 +6,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
 import '../../../../application/BLoC/album_detail/album_detail_bloc.dart';
 import '../../widgets/tracklist.dart';
+import '../search/widgets/custom_app_bar.dart';
 import 'widgets/album_header.dart';
 import 'widgets/album_image.dart';
 import 'widgets/album_info.dart';
@@ -35,6 +36,7 @@ class AlbumDetail extends StatelessWidget {
                         SingleChildScrollView(
                           child: Column(
                             children: [
+                              const CustomAppBar(),
                               AlbumHeader(
                                 onBackPress: () {
                                   Navigator.pop(context);
