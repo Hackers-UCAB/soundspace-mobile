@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
+import 'package:sign_in_bloc/application/model/socket_chunk.dart';
 import 'package:sign_in_bloc/infrastructure/services/player/custom_source.dart';
 
 import '../../../application/services/player/player_services.dart';
@@ -9,7 +10,6 @@ class PlayerServiceImpl extends PlayerService {
   late final AudioPlayer player;
   final getIt = GetIt.instance;
   late final MyCustomSource mySource;
-  Duration aux = Duration.zero;
 
   @override
   void initialize() {
@@ -18,6 +18,7 @@ class PlayerServiceImpl extends PlayerService {
     trackingDuration();
     trackingPosition();
     trackingState();
+    trackingProccesingState();
   }
 
   @override
@@ -40,17 +41,21 @@ class PlayerServiceImpl extends PlayerService {
   }
 
   @override
-  Future<void> setAudioSource(List<int> source) async {
+  Future<void> setAudioSource(SocketChunck chunk) async {
+    final playerBloc = getIt.get<PlayerBloc>();
     try {
-      mySource.addBytes(source);
+      mySource.addBytes(chunk.data);
 
-      await player.setAudioSource(mySource);
+      await player.setAudioSource(
+        mySource,
+        preload: true,
+      );
+
       await player.load();
-      if (player.position < aux) {
-        await player.seek(aux);
-      }
 
-      play();
+      if (player.processingState == ProcessingState.ready) {
+        play();
+      }
     } on PlayerInterruptedException catch (e) {
       print("Connection aborted: ${e.message}");
     } catch (e) {
@@ -60,15 +65,24 @@ class PlayerServiceImpl extends PlayerService {
 
   @override
   void reset() {
-    seek(Duration.zero);
-    pause();
+    player.seek(Duration.zero);
+    player.stop();
   }
 
   @override
   void trackingDuration() {
     final playerBloc = getIt.get<PlayerBloc>();
+    playerBloc.add(
+        UpdatingDuration(Duration(minutes: 3, seconds: 13, milliseconds: 54)));
+
     player.durationStream.listen((duration) {
-      playerBloc.add(UpdatingDuration(duration!));
+      print('duracion actual ${duration}');
+      //if (duration! > Duration.zero) {
+      //  playerBloc.add(UpdatingDuration(duration));
+      //}
+
+      //playerBloc.add(UpdatingDuration(
+      //    Duration(minutes: 13, seconds: 13, milliseconds: 54)));
     });
   }
 
@@ -76,16 +90,32 @@ class PlayerServiceImpl extends PlayerService {
   void trackingPosition() {
     final playerBloc = getIt.get<PlayerBloc>();
     player.positionStream.listen((position) {
-      if (position != Duration.zero && position > aux) {
-        aux = position;
-        print("posicion verificada ${position}");
+      if (position.inSeconds ==
+              ((playerBloc.state.currentEnd - playerBloc.state.currentStart) -
+                  1) &&
+          playerBloc.state.isRequired) {
+        print('NUEVO LOAD');
+        print('NUEVA SECUENCIA ${playerBloc.state.sequence + 1}');
+        playerBloc.add(ValidateState(!playerBloc.state.isRequired));
+        if ((playerBloc.state.sequence + 1) < 21) {
+          playerBloc.add(AskForChunk(playerBloc.state.sequence + 1));
+        }
       }
 
-      if (position == Duration.zero) {
-        seek(aux);
+      print("position tracking ${position.inMilliseconds}");
+      print(
+          "position tracking start - end + position ${(playerBloc.state.currentEnd - playerBloc.state.currentStart) - 1}");
+
+      print(
+          "position tracking position final ${playerBloc.state.currentStart + position.inSeconds}");
+      if (position > Duration.zero) {
+        print(
+            'duracion para la barra ${Duration(minutes: (playerBloc.state.currentStart + position.inSeconds) ~/ 60, seconds: (playerBloc.state.currentStart + position.inSeconds) % 60)}');
+        playerBloc.add(TrackingCurrentPosition(Duration(
+            minutes: (playerBloc.state.currentStart + position.inSeconds) ~/ 60,
+            seconds:
+                (playerBloc.state.currentStart + position.inSeconds) % 60)));
       }
-      print("position tracking ${position}");
-      playerBloc.add(TrackingCurrentPosition(position));
     });
   }
 
@@ -95,5 +125,10 @@ class PlayerServiceImpl extends PlayerService {
     player.playerStateStream.listen((event) {
       playerBloc.add(PlayerPlaybackStateChanged(event.playing));
     });
+  }
+
+  @override
+  void trackingProccesingState() {
+    player.processingStateStream.listen((event) {});
   }
 }

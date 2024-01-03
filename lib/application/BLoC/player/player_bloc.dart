@@ -1,5 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/socket/socket_bloc.dart';
+import 'package:sign_in_bloc/application/model/socket_chunk.dart';
 
 import '../../services/player/player_services.dart';
 
@@ -16,6 +19,25 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<TrackingCurrentPosition>(_updatingCurrentPosition);
     on<UpdatingDuration>(_updateDuration);
     on<ResetPlayer>(_resetPlayer);
+    on<AskForChunk>(_askForChunk);
+    on<InitStream>(_initStream);
+    on<ValidateState>(_setRequiredState);
+  }
+
+  void _setRequiredState(ValidateState event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(isRequired: event.isRequired));
+  }
+
+  void _initStream(InitStream event, Emitter<PlayerState> emit) {
+    add(AskForChunk(1));
+    GetIt.instance.get<SocketBloc>().add(SocketSendIdSong(event.songId, 0));
+  }
+
+  void _askForChunk(AskForChunk event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(
+        sequence: event.secuencia, isRequired: !state.isRequired));
+    GetIt.instance.get<SocketBloc>().add(RequiredChunk(event.secuencia));
+    GetIt.instance.get<SocketBloc>().add(RequiredState(true));
   }
 
   void _resetPlayer(ResetPlayer event, Emitter<PlayerState> emit) {
@@ -45,8 +67,10 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   Future<void> _settingPlayerSource(
       PlayerSetSource event, Emitter<PlayerState> emit) async {
-    emit(state.copyWith(source: event.source + state.source));
-    await playerService.setAudioSource(event.source);
+    //emit(state.copyWith(source: event.chunk + state.source));
+    emit(state.copyWith(
+        currentEnd: event.chunk.end, currentStart: event.chunk.start));
+    await playerService.setAudioSource(event.chunk);
   }
 
   Future<void> _settingPlayerWave(

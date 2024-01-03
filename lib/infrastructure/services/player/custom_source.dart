@@ -5,7 +5,8 @@ class MyCustomSource extends StreamAudioSource {
   List<int> _bytes = [];
 
   void addBytes(List<int> bytes) {
-    _bytes.addAll(bytes);
+    _bytes = bytes;
+    //_bytes.addAll(bytes);
   }
 
   @override
@@ -17,7 +18,7 @@ class MyCustomSource extends StreamAudioSource {
       contentLength: end - start,
       offset: start,
       stream: Stream.value(_bytes.sublist(start, end)),
-      contentType: 'audio/mpeg',
+      contentType: 'audio/mp3',
     );
   }
 }

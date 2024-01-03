@@ -13,8 +13,8 @@ class MusicPlayer extends StatelessWidget {
 
     if (((playerBloc.state.position.inSeconds.toDouble() /
                 playerBloc.state.duration.inSeconds.toDouble()) *
-            100.toDouble()) ==
-        100.0) {
+            100.toDouble()) >
+        99.5) {
       playerBloc.add(ResetPlayer());
     }
 
@@ -64,20 +64,19 @@ class MusicPlayer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        '${playerBloc.state.position.inMinutes}',
+                        '${playerBloc.state.position.inMinutes}:${playerBloc.state.position.inSeconds % 60}',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(width: 6),
                       IconButton(
                         padding: const EdgeInsets.all(0),
                         onPressed: () => {
-                          //playerBloc.add(PlayingStartedEvent(song: song)),
-                          socketBloc.add(
-                            const SocketSendIdSong(
-                                'de7ae1e9-3e38-4ce6-825b-b3045c8d5054'),
+                          playerBloc.add(
+                            InitStream('de7ae1e9-3e38-4ce6-825b-b3045c8d5054'),
+                            //socketBloc.add(
+                            //  const SocketSendIdSong(
+                            //      'de7ae1e9-3e38-4ce6-825b-b3045c8d5054'),
                           )
-                          //socketBloc.add(const SocketSendIdSong(
-                          //    '78c071d3-d1b3-49e1-9658-420eb89415fc'))
                         },
                         icon: const Icon(
                           Icons.play_arrow_sharp,

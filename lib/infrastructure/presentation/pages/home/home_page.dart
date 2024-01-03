@@ -86,11 +86,11 @@ class HomePage extends IPage {
                           ],
                         ),
                       ),
-                      Visibility(
+                      const Visibility(
                         visible: true,
                         child: Align(
                           alignment: Alignment.bottomLeft,
-                          child: MusicPlayer(key: key),
+                          child: MusicPlayer(),
                         ),
                       )
                     ],
@@ -98,7 +98,8 @@ class HomePage extends IPage {
                 } else if (trendingsState is TrendingsLoading) {
                   return const CustomCircularProgressIndicator();
                 } else {
-                  return ErrorPage(failure: trendingsState.failure!);
+                  return MusicPlayer(key: key);
+                  //return ErrorPage(failure: trendingsState.failure!);
                 }
               },
             );

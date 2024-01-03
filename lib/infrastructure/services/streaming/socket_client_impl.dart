@@ -44,7 +44,7 @@ class SocketClientImpl extends SocketClient {
             .setPath('/socket.io')
             .setAuth({
               'token':
-                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzg5ODg3MiwiZXhwIjoxNzAzOTg1MjcyfQ.9xeYaG4H_XOSe2QTYZdwnzZ5_Iuu_sSjnsvYDF3SPlc'
+                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwNDI0NzcwMywiZXhwIjoxNzA0MzM0MTAzfQ.q7Ahtx8tpBdeWntjnuTouQDnUpECtHeuJoo8cyLZ_jA'
             })
             .build());
 
@@ -58,15 +58,13 @@ class SocketClientImpl extends SocketClient {
   }
 
   @override
-  void sendIdSong(String message) {
+  void sendIdSong(String message, int second) {
     socket.emit('message-from-client',
-        {'preview': true, 'songId': message, 'second': 100});
+        {'preview': true, 'songId': message, 'second': second});
   }
 
   @override
   void receiveChunk(SocketBloc socketBloc) async {
-    final getIt = GetIt.instance;
-    final playerBloc = getIt.get<PlayerBloc>();
     final streamController = StreamController<SocketChunck>();
 
     socket.on('message-from-server', (data) {
@@ -74,8 +72,9 @@ class SocketClientImpl extends SocketClient {
     });
 
     streamController.stream.listen((chunk) async {
+      socketBloc
+          .add(ReadyState(chunk.sequence == socketBloc.state.requiredSequence));
       socketBloc.add(SocketReceiveChunk(chunk));
-      playerBloc.add(PlayerSetSource(chunk.data));
     });
   }
 
