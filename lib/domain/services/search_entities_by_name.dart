@@ -7,7 +7,7 @@ import '../album/album.dart';
 
 abstract class SearchEntitiesByName {
   Future<Result<EntitiesByName>> call(
-      String name, List<String>? entitiesFilter);
+      String name, List<String>? entitiesFilter, int limit, int offset);
 }
 
 class EntitiesByName {

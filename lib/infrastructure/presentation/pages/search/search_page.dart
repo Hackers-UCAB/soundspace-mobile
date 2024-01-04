@@ -17,7 +17,8 @@ class SearchPage extends IPage {
 
   @override
   Future<void> onRefresh() async {
-    searchBloc.add(FetchSearchedData(page: 1));
+    searchBloc.add(FetchSearchedData(
+        page: 0, scrollPosition: searchBloc.state.scrollPosition));
   }
 
   @override
@@ -41,10 +42,9 @@ class SearchPage extends IPage {
                   const SizedBox(height: 10),
                   if (searchState is SearchLoading)
                     const CustomCircularProgressIndicator(),
-                  if (searchState is SearchLoaded)
+                  if (searchState.searchList.isNotEmpty)
                     SearchList(items: searchState.searchList),
-                  if (searchState is SearchLoaded &&
-                      searchState.searchList.isEmpty)
+                  if (searchState.searchList.isEmpty && searchState.lastPage)
                     Center(
                       child: Text(
                         "Lo sentimos, no encontramos resultados que coincidan",

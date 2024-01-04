@@ -1,13 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-
 import '../../../../../application/BLoC/search/search_bloc.dart';
 
 class CustomChoiceChips extends StatelessWidget {
   late final List<String> choices;
-
+  Timer? _debounce;
+  String? _lastFilter;
   CustomChoiceChips({super.key}) {
-    choices = ['Artista', 'Album', 'Playlist', 'Song', 'Podcast'];
+    choices = ['Artista', 'Album', 'Playlist', 'Song'];
   }
 
   @override
@@ -22,8 +24,15 @@ class CustomChoiceChips extends StatelessWidget {
                       ? textTheme?.copyWith(color: Colors.black)
                       : textTheme),
               selected: searchBloc.state.filter.contains(choice),
-              onSelected: (bool selected) =>
-                  searchBloc.add(SearchFilterChanged(filter: choice)),
+              onSelected: (bool selected) {
+                if (_debounce?.isActive ?? false) _debounce?.cancel();
+                _lastFilter = _mapChoiceToFilter(choice);
+                _debounce = Timer(const Duration(milliseconds: 500), () {
+                  final getIt = GetIt.instance;
+                  final searchBloc = getIt.get<SearchBloc>();
+                  searchBloc.add(SearchFilterChanged(filter: _lastFilter!));
+                });
+              },
               selectedColor: const Color.fromARGB(255, 255, 255, 255),
               backgroundColor: const Color.fromARGB(255, 20, 2, 45),
               shape: RoundedRectangleBorder(
@@ -39,5 +48,20 @@ class CustomChoiceChips extends StatelessWidget {
         children: chips,
       ),
     );
+  }
+
+  String _mapChoiceToFilter(String choice) {
+    switch (choice) {
+      case 'Artista':
+        return 'artist';
+      case 'Album':
+        return 'album';
+      case 'Playlist':
+        return 'playlist';
+      case 'Song':
+        return 'song';
+      default:
+        return '';
+    }
   }
 }

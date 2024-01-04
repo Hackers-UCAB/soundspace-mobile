@@ -16,6 +16,7 @@ class SearchDataChanged extends SearchEvent {
 
 class FetchSearchedData extends SearchEvent {
   final int page;
+  final int scrollPosition;
 
-  FetchSearchedData({required this.page});
+  FetchSearchedData({required this.page, required this.scrollPosition});
 }

@@ -17,22 +17,23 @@ class SearchEntitiesByNameImpl implements SearchEntitiesByName {
 
   @override
   Future<Result<EntitiesByName>> call(
-      String name, List<String>? entitiesFilter) async {
+      String name, List<String>? entitiesFilter, int limit, int offset) async {
     final result = await _apiConnectionManager
         .request<EntitiesByName>('search/$name', 'GET', (data) {
-      final albums = data['album'] != null
+      final albums = data['album'] != null && data['album'].isNotEmpty
           ? data['album']
               .map<Album>((e) => AlbumMapper.fromJsonList(e))
               .toList()
           : null;
-      final artists = data['artist'] != null
+      final artists = data['artist'] != null && data['artist'].isNotEmpty
           ? ArtistMapper.fromJsonList(data['artist'])
           : null;
-      final playlists = data['playlist'] != null
+      final playlists = data['playlist'] != null && data['playlist'].isNotEmpty
           ? PlaylistMapper.fromJsonList(data['playlist'])
           : null;
-      final songs =
-          data['song'] != null ? SongMapper.fromJsonList(data['song']) : null;
+      final songs = data['song'] != null && data['song'].isNotEmpty
+          ? SongMapper.fromJsonList(data['song'])
+          : null;
 
       return EntitiesByName(
         albums: albums,
@@ -40,7 +41,11 @@ class SearchEntitiesByNameImpl implements SearchEntitiesByName {
         playlists: playlists,
         songs: songs,
       );
-    }, queryParameters: {'type': entitiesFilter});
+    }, queryParameters: {
+      'type': entitiesFilter,
+      'limit': limit,
+      'offset': offset
+    });
 
     return result;
   }

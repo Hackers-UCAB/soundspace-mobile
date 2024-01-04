@@ -12,7 +12,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   SearchBloc({required SearchEntitiesByName searchEntitiesByName})
       : _searchEntitiesByName = searchEntitiesByName,
-        super(const SearchInitial(filter: [], data: '', searchList: [])) {
+        super(const SearchInitial(
+            filter: [], searchList: [], data: '', lastPage: false, page: 0)) {
     on<SearchFilterChanged>(_searchFilterChanged);
     on<SearchDataChanged>(_searchDataChanged);
     on<FetchSearchedData>(_fetchSearchedData);
@@ -28,54 +29,82 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             state.filter.where((element) => element != event.filter).toList()
         : filter = state.filter + [event.filter];
 
-    emit(state.copyWith(filter: filter, searchList: List.empty()));
-    add(FetchSearchedData(page: 1));
+    emit(state.copyWith(
+        filter: filter, searchList: [], lastPage: false, page: 0));
+    add(FetchSearchedData(page: 0, scrollPosition: 0));
   }
 
   //cada vez que cambia el Texfield
   Future<void> _searchDataChanged(
       SearchDataChanged event, Emitter<SearchState> emit) async {
-    emit(state.copyWith(data: event.data, searchList: List.empty()));
-    add(FetchSearchedData(page: 1));
+    emit(state.copyWith(
+        data: event.data, searchList: [], lastPage: false, page: 0));
+    add(FetchSearchedData(page: 0, scrollPosition: 0));
   }
 
   Future<void> _fetchSearchedData(
       FetchSearchedData event, Emitter<SearchState> emit) async {
-    if (state.data.isNotEmpty) {
-      emit(SearchLoading(
-          filter: state.filter,
-          data: state.data,
-          searchList: state.searchList,
-          page: event.page));
-      final result = await _searchEntitiesByName.call(state.data,
-          state.filter.map<String>((string) => string.toLowerCase()).toList());
+    if (state is! SearchLoading) {
+      if (state.data.isNotEmpty) {
+        if (!state.lastPage) {
+          emit(SearchLoading(
+              filter: state.filter,
+              searchList: state.searchList,
+              data: state.data,
+              page: state.page,
+              lastPage: state.lastPage,
+              scrollPosition: state.scrollPosition));
 
-      if (result.hasValue()) {
-        List<Map<String, String>> items = [];
-        for (var entity in result.value!.entitiesMap.entries) {
-          if (entity.value.isNotEmpty) {
-            items += entity.value
-                .map<Map<String, String>>((e) => {
-                      'filter': entity.key,
-                      'id': e.id,
-                      'name': e.name,
-                    })
-                .toList();
+          List<Map<String, String>> items = [];
+          int page = event.page;
+          bool notEmpty = true;
+          while (items.length < 15 && notEmpty) {
+            final result = await _searchEntitiesByName.call(
+                state.data,
+                state.filter
+                    .map<String>((string) => string.toLowerCase())
+                    .toList(),
+                15,
+                page);
+
+            if (result.hasValue()) {
+              notEmpty = false;
+              for (var entity in result.value!.entitiesMap.entries) {
+                if (entity.value.isNotEmpty) {
+                  notEmpty = true;
+                  items += entity.value
+                      .map<Map<String, String>>((e) => {
+                            'filter': entity.key,
+                            'id': e.id,
+                            'name': e.name,
+                          })
+                      .toList();
+                }
+              }
+
+              items = state.searchList + items;
+              page++;
+            } else {
+              emit(SearchFailed(
+                  failure: result.failure!,
+                  searchList: state.searchList,
+                  filter: state.filter,
+                  data: state.data,
+                  page: state.page,
+                  lastPage: state.lastPage,
+                  scrollPosition: state.scrollPosition));
+              return;
+            }
           }
+          emit(state.copyWith(
+              searchList: items,
+              page: page,
+              lastPage: !notEmpty,
+              scrollPosition: event.scrollPosition));
         }
-        items = state.searchList + items;
-        emit(SearchLoaded(
-            filter: state.filter,
-            data: state.data,
-            searchList: items,
-            page: event.page));
-      } else {
-        emit(SearchFailed(
-            filter: state.filter,
-            data: state.data,
-            failure: result.failure!,
-            searchList: state.searchList,
-            page: event.page));
+      } else if (state.filter.isEmpty) {
+        emit(const SearchInitial(
+            filter: [], data: '', page: 0, lastPage: false, searchList: []));
       }
     }
   }

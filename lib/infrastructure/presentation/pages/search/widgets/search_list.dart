@@ -4,21 +4,39 @@ import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
 import '../../../../../application/BLoC/socket/socket_bloc.dart';
 import '../../../config/router/app_router.dart';
 
-class SearchList extends StatelessWidget {
+class SearchList extends StatefulWidget {
   final List<Map<String, String>> items;
+
+  const SearchList({super.key, required this.items});
+
+  @override
+  SearchListState createState() => SearchListState();
+}
+
+class SearchListState extends State<SearchList> {
   final _scrollController = ScrollController();
 
-  SearchList({super.key, required this.items});
-
-  ScrollController _getScrollController(BuildContext context, SearchBloc bloc) {
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        final page = bloc.state.page + 1;
-        bloc.add(FetchSearchedData(page: page));
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final searchBloc = GetIt.instance.get<SearchBloc>();
+      if (searchBloc.state.page > 0) {
+        _scrollToIndex(searchBloc.state.scrollPosition);
       }
     });
-    return _scrollController;
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToIndex(int index) {
+    final position = index * 18 * 65.0;
+    _scrollController.animateTo(position,
+        duration: const Duration(seconds: 1), curve: Curves.easeIn);
   }
 
   @override
@@ -26,37 +44,35 @@ class SearchList extends StatelessWidget {
     final getIt = GetIt.instance;
     final appNavigator = getIt.get<AppNavigator>();
     final socketBloc = getIt.get<SocketBloc>();
-    final searchBloc = getIt.get<SearchBloc>();
-
-    final List<_SearchListItem> searchList = items
-        .map<_SearchListItem>(
-          (item) => _SearchListItem(
-            onTap: item['filter'] == 'song'
-                ? () => socketBloc.add(SocketSendIdSong(item['id']!))
-                : () =>
-                    appNavigator.navigateTo('/${item['filter']}/${item['id']}'),
-            name: item['name']!,
-            filter: item['filter']!,
-          ),
-        )
-        .toList();
 
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.75,
-      child: ListView.builder(
-          controller: _getScrollController(context, searchBloc),
-          itemCount: items.length,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+            final searchBloc = getIt.get<SearchBloc>();
+            final page = searchBloc.state.page + 1;
+            searchBloc.add(FetchSearchedData(page: page, scrollPosition: page));
+          }
+          return true;
+        },
+        child: ListView.builder(
+          controller: _scrollController,
+          itemCount: widget.items.length,
           itemBuilder: (context, index) {
-            if (index < searchList.length) {
-              return searchList[index];
-            }
-            Future.delayed(const Duration(milliseconds: 30));
-            _scrollController
-                .jumpTo(_scrollController.position.maxScrollExtent);
-            return const Center(
-              child: CircularProgressIndicator(),
+            return _SearchListItem(
+              name: widget.items[index]['name']!,
+              onTap: widget.items[index]['filter'] == 'song'
+                  ? () => socketBloc
+                      .add(SocketSendIdSong(widget.items[index]['id']!))
+                  : () => appNavigator.navigateTo(
+                      '/${widget.items[index]['filter']}/${widget.items[index]['id']}'),
+              filter: widget.items[index]['filter']!,
             );
-          }),
+          },
+          physics: const BouncingScrollPhysics(),
+        ),
+      ),
     );
   }
 }
