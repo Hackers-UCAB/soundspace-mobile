@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import '../../../../application/BLoC/album_detail/album_detail_bloc.dart';
 import '../../widgets/tracklist.dart';
 import '../search/widgets/custom_app_bar.dart';
@@ -11,57 +12,53 @@ import 'widgets/album_header.dart';
 import 'widgets/album_image.dart';
 import 'widgets/album_info.dart';
 
-class AlbumDetail extends StatelessWidget {
+class AlbumDetail extends IPage {
   final String albumId;
+  late final albumBloc = GetIt.instance.get<AlbumDetailBloc>();
 
-  const AlbumDetail({super.key, required this.albumId});
+  AlbumDetail({super.key, required this.albumId});
 
   @override
-  Widget build(BuildContext context) {
-    final albumBloc = GetIt.instance.get<AlbumDetailBloc>();
+  Future<void> onRefresh() async {
     albumBloc.add(FetchAlbumDetailEvent(albumId: albumId));
-    return RefreshIndicator(
-      onRefresh: () async {
-        albumBloc.add(FetchAlbumDetailEvent(albumId: albumId));
-      },
-      child: ListView(
-        children: [
-          BlocBuilder<PlayerBloc, PlayerState>(
-            builder: (context, playerState) {
-              return BlocBuilder<AlbumDetailBloc, AlbumDetailState>(
-                builder: (context, albumState) {
-                  if (albumState is AlbumDetailLoaded) {
-                    return Stack(
+  }
+
+  @override
+  Widget child(BuildContext context) {
+    albumBloc.add(FetchAlbumDetailEvent(albumId: albumId));
+    return BlocBuilder<PlayerBloc, PlayerState>(
+      builder: (context, playerState) {
+        return BlocBuilder<AlbumDetailBloc, AlbumDetailState>(
+          builder: (context, albumState) {
+            if (albumState is AlbumDetailLoaded) {
+              return Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
                       children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              const CustomAppBar(),
-                              AlbumHeader(
-                                onBackPress: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              AlbumImage(album: albumState.album),
-                              AlbumInfo(album: albumState.album),
-                              //TODO: Player ()
-                              Tracklist(songs: albumState.album.songs!),
-                            ],
-                          ),
+                        const CustomAppBar(),
+                        AlbumHeader(
+                          onBackPress: () {
+                            Navigator.pop(context);
+                          },
                         ),
+                        AlbumImage(album: albumState.album),
+                        AlbumInfo(album: albumState.album),
+                        //TODO: Player ()
+                        Tracklist(songs: albumState.album.songs!),
                       ],
-                    );
-                  } else if (albumState is AlbumDetailFailed) {
-                    return ErrorPage(failure: albumState.failure);
-                  } else {
-                    return const CustomCircularProgressIndicator();
-                  }
-                },
+                    ),
+                  ),
+                ],
               );
-            },
-          )
-        ],
-      ),
+            } else if (albumState is AlbumDetailFailed) {
+              return ErrorPage(failure: albumState.failure);
+            } else {
+              return const CustomCircularProgressIndicator();
+            }
+          },
+        );
+      },
     );
   }
 }

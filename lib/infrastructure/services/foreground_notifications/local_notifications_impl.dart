@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sign_in_bloc/infrastructure/services/notifications/notification_actions_manager.dart';
 import '../../../application/services/foreground_notifications/local_notifications.dart';
 
 class LocalNotificationsImpl extends LocalNotifications {
@@ -29,6 +31,16 @@ class LocalNotificationsImpl extends LocalNotifications {
 
   @override
   Future<void> inicializeLocalNotifications() async {
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('app_logo');
+
+    const initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    //TODO: despues
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+
     await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
@@ -43,9 +55,8 @@ class LocalNotificationsImpl extends LocalNotifications {
         InitializationSettings(android: initializationSettingsAndroid);
 
     //TODO: despues
-    await _flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-    );
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
   }
 
   @override
@@ -78,7 +89,10 @@ class LocalNotificationsImpl extends LocalNotifications {
 
   @override
   Future<void> showLocalNotifications(
-      {required int id, String? title, String? body, String? data}) async {
+      {required int id,
+      String? title,
+      String? body,
+      Map<String, dynamic>? data}) async {
     //TODO: CUADRAR LO DE LA IMAGEN CON HTTP
     const androidDetails = AndroidNotificationDetails(
         "channelId", "channelName",
@@ -93,7 +107,7 @@ class LocalNotificationsImpl extends LocalNotifications {
     );
 
     await _flutterLocalNotificationsPlugin
-        .show(id, title, body, notificationDetails, payload: data);
+        .show(id, title, body, notificationDetails, payload: data.toString());
   }
 
   @override
@@ -105,16 +119,39 @@ class LocalNotificationsImpl extends LocalNotifications {
   @override
   void onForegroundMessage() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      //TODO: aqui cae la data del message
-      if (message.notification == null) return;
+      if (message.notification == null) {
+        return;
+      }
+
+      NotificationActionManager.selectActionHandler(message.data, false);
 
       showLocalNotifications(
         id: 1,
         body: message.notification!.body ?? '',
-        data: message.data
-            .toString(), //TODO:Aqui hacemos el manejo de la redireccion y del caso de uso para quitar el permiso de suscriptor
+        data: message.data,
         title: message.notification!.title ?? '',
       );
     });
+  }
+
+  @override
+  Future<void> setupInteractedMessage() async {
+    await _messaging.getInitialMessage();
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      NotificationActionManager.selectActionHandler(message.data, true);
+    });
+  }
+
+  void onDidReceiveNotificationResponse(NotificationResponse response) {
+    final str = response.payload!.toString();
+    Map<String, dynamic> map = {};
+
+    str.split(',').forEach((part) {
+      var parts = part.split(':');
+      map[parts[0]] = parts[1];
+    });
+
+    NotificationActionManager.selectActionHandler(map, true);
   }
 }

@@ -6,84 +6,78 @@ import 'package:sign_in_bloc/infrastructure/presentation/pages/home/widgets/prom
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
-import '../../config/router/app_router.dart';
-import '../search/widgets/custom_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends IPage {
-  const HomePage({super.key});
+  final getIt = GetIt.instance;
+  late final trendingsBloc = getIt.get<TrendingsBloc>();
+  HomePage({super.key});
+
+  @override
+  Future<void> onRefresh() async {
+    trendingsBloc.add(FetchTrendingsEvent());
+  }
 
   @override
   Widget child(BuildContext context) {
-    final getIt = GetIt.instance;
-    final trendingsBloc = getIt.get<TrendingsBloc>();
-    final navigator = getIt.get<AppNavigator>();
     trendingsBloc.add(FetchTrendingsEvent());
-    return RefreshIndicator(
-      onRefresh: () async {
-        trendingsBloc.add(FetchTrendingsEvent());
-      },
-      child: ListView(children: [
-        BlocBuilder<PlayerBloc, PlayerState>(
-          builder: (context, playerState) {
-            return BlocBuilder<TrendingsBloc, TrendingsState>(
-              builder: (context, trendingsState) {
-                if (trendingsState is TrendingsLoaded) {
-                  return Stack(
-                    children: [
-                      SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            const CustomAppBar(),
-                            PromotionalBannerWidget(
-                              banner: trendingsState.promotionalBanner,
-                            ),
-                            //TODO: Hacer el banner de suscripcion
-                            // _Collapse(name: 'Playlist', child: [
-                            //   PlaylistWrap(
-                            //       playlists: trendingsState.trendingPlaylists)
-                            // ]),
-                            // _Collapse(name: 'Aqustico Experience', child: [
-                            //   AlbumsCarousel(
-                            //       albums: trendingsState.trendingAlbums)
-                            // ]),
-                            // _Collapse(name: 'Artistas Trending', child: [
-                            //   ArtistsCarousel(
-                            //       artists: trendingsState.trendingArtists)
-                            // ]),
-                            // const Divider(
-                            //   color: Color.fromARGB(18, 142, 139, 139),
-                            //   height: 40, //TODO: poner responsive
-                            //   thickness: 2,
-                            //   indent: 20,
-                            //   endIndent: 20,
-                            // ),
-                            // _Collapse(name: 'Tracklist', child: [
-                            //   Tracklist(songs: trendingsState.trendingSongs)
-                            // ]),
-                            // const SizedBox(height: 100)
-                          ],
+    return BlocBuilder<PlayerBloc, PlayerState>(
+      builder: (context, playerState) {
+        return BlocBuilder<TrendingsBloc, TrendingsState>(
+          builder: (context, trendingsState) {
+            if (trendingsState is TrendingsLoaded) {
+              return Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        PromotionalBannerWidget(
+                          banner: trendingsState.promotionalBanner,
                         ),
-                      ),
-                      // Visibility(
-                      //   visible: true,
-                      //   child: Align(
-                      //     alignment: Alignment.bottomLeft,
-                      //     child: MusicPlayer(key: key),
-                      //   ),
-                      // )
-                    ],
-                  );
-                } else if (trendingsState is TrendingsLoading) {
-                  return const CustomCircularProgressIndicator();
-                } else {
-                  return ErrorPage(failure: trendingsState.failure!);
-                }
-              },
-            );
+                        //TODO: Hacer el banner de suscripcion
+                        // _Collapse(name: 'Playlist', child: [
+                        //   PlaylistWrap(
+                        //       playlists: trendingsState.trendingPlaylists)
+                        // ]),
+                        // _Collapse(name: 'Aqustico Experience', child: [
+                        //   AlbumsCarousel(
+                        //       albums: trendingsState.trendingAlbums)
+                        // ]),
+                        // _Collapse(name: 'Artistas Trending', child: [
+                        //   ArtistsCarousel(
+                        //       artists: trendingsState.trendingArtists)
+                        // ]),
+                        // const Divider(
+                        //   color: Color.fromARGB(18, 142, 139, 139),
+                        //   height: 40, //TODO: poner responsive
+                        //   thickness: 2,
+                        //   indent: 20,
+                        //   endIndent: 20,
+                        // ),
+                        // _Collapse(name: 'Tracklist', child: [
+                        //   Tracklist(songs: trendingsState.trendingSongs)
+                        // ]),
+                        // const SizedBox(height: 100)
+                      ],
+                    ),
+                  ),
+                  // Visibility(
+                  //   visible: true,
+                  //   child: Align(
+                  //     alignment: Alignment.bottomLeft,
+                  //     child: MusicPlayer(key: key),
+                  //   ),
+                  // )
+                ],
+              );
+            } else if (trendingsState is TrendingsLoading) {
+              return const CustomCircularProgressIndicator();
+            } else {
+              return ErrorPage(failure: trendingsState.failure!);
+            }
           },
-        ),
-      ]),
+        );
+      },
     );
   }
 }

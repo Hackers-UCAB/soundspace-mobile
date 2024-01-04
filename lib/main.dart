@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/connectivity/connectivity_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
@@ -73,6 +74,9 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => getIt.get<LogInGuestBloc>(),
+            ),
+            BlocProvider(
+              create: (context) => getIt.get<LogOutBloc>(),
             ),
             BlocProvider(
               create: (context) => getIt.get<NotificationsBloc>(),

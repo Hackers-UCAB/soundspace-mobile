@@ -1,16 +1,11 @@
 // ignore_for_file: prefer_null_aware_operators
-
 import 'package:sign_in_bloc/domain/album/album.dart';
-import 'package:sign_in_bloc/domain/playlist/playlist.dart';
-import 'package:sign_in_bloc/domain/song/song.dart';
 import 'package:sign_in_bloc/infrastructure/datasources/api/api_connection_manager.dart';
 import 'package:sign_in_bloc/infrastructure/mappers/album/album_mapper.dart';
 import 'package:sign_in_bloc/infrastructure/mappers/artist/artist_mapper.dart';
 import 'package:sign_in_bloc/infrastructure/mappers/playlist/playlist_mapper.dart';
 import 'package:sign_in_bloc/infrastructure/mappers/song/song_mapper.dart';
-
 import '../../common/result.dart';
-import '../../domain/artist/artist.dart';
 import '../../domain/services/search_entities_by_name.dart';
 
 class SearchEntitiesByNameImpl implements SearchEntitiesByName {

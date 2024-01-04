@@ -8,4 +8,10 @@ class ProfilePage extends IPage {
   Widget child(BuildContext context) {
     return const Placeholder();
   }
+
+  @override
+  Future<void> onRefresh() {
+    // TODO: implement onRefresh
+    throw UnimplementedError();
+  }
 }

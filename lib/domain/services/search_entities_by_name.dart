@@ -11,15 +11,22 @@ abstract class SearchEntitiesByName {
 }
 
 class EntitiesByName {
-  final List<Album>? albums;
-  final List<Artist>? artists;
-  final List<Playlist>? playlists;
-  final List<Song>? songs;
+  final Map<String, List<dynamic>> entitiesMap = {
+    'album': [],
+    'artist': [],
+    'playlist': [],
+    'song': [],
+  };
 
   EntitiesByName({
-    this.albums,
-    this.artists,
-    this.playlists,
-    this.songs,
-  });
+    List<Album>? albums,
+    List<Artist>? artists,
+    List<Playlist>? playlists,
+    List<Song>? songs,
+  }) {
+    entitiesMap['albums'] = albums ?? [];
+    entitiesMap['artist'] = artists ?? [];
+    entitiesMap['playlist'] = playlists ?? [];
+    entitiesMap['song'] = songs ?? [];
+  }
 }

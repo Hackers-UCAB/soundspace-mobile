@@ -23,9 +23,9 @@ class AlbumMapper {
   static Map<String, dynamic> toJson(Album album) {
     //TODO:Arreglar esto
     return {
-      'codigo_playlist': album.id,
-      'nombre': album.name,
-      'referencia_imagen': album.image,
+      'id': album.id,
+      'name': album.name,
+      'image': album.image,
     };
   }
 

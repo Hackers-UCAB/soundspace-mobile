@@ -14,6 +14,8 @@ class SearchDataChanged extends SearchEvent {
   SearchDataChanged({required this.data});
 }
 
-class FetchSearchedData extends SearchEvent {}
+class FetchSearchedData extends SearchEvent {
+  final int page;
 
-class FetchMoreSearchedData extends SearchEvent {}
+  FetchSearchedData({required this.page});
+}

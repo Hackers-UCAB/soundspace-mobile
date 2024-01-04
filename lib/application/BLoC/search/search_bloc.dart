@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sign_in_bloc/domain/services/search_entities_by_name.dart';
@@ -9,16 +8,14 @@ part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchEntitiesByName _searchEntitiesByName;
-  int _currentPage = 1;
   Timer? _debounce;
 
   SearchBloc({required SearchEntitiesByName searchEntitiesByName})
       : _searchEntitiesByName = searchEntitiesByName,
-        super(const SearchInitial(filter: [], data: '')) {
+        super(const SearchInitial(filter: [], data: '', searchList: [])) {
     on<SearchFilterChanged>(_searchFilterChanged);
     on<SearchDataChanged>(_searchDataChanged);
     on<FetchSearchedData>(_fetchSearchedData);
-    on<FetchMoreSearchedData>(_fetchMoreSearchedData);
   }
 
   //cada vez que cambia la seleccion del CustomChoiceChip
@@ -31,37 +28,54 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             state.filter.where((element) => element != event.filter).toList()
         : filter = state.filter + [event.filter];
 
-    emit(state.copyWith(filter: filter));
-    add(FetchSearchedData());
+    emit(state.copyWith(filter: filter, searchList: List.empty()));
+    add(FetchSearchedData(page: 1));
   }
 
   //cada vez que cambia el Texfield
   Future<void> _searchDataChanged(
       SearchDataChanged event, Emitter<SearchState> emit) async {
-    emit(state.copyWith(data: event.data));
-    add(FetchSearchedData());
+    emit(state.copyWith(data: event.data, searchList: List.empty()));
+    add(FetchSearchedData(page: 1));
   }
 
-  Future<void> _fetchSearchedData<T>(
+  Future<void> _fetchSearchedData(
       FetchSearchedData event, Emitter<SearchState> emit) async {
     if (state.data.isNotEmpty) {
-      emit(SearchLoading(filter: state.filter, data: state.data));
-      final result = await _searchEntitiesByName.call(state.data, state.filter);
+      emit(SearchLoading(
+          filter: state.filter,
+          data: state.data,
+          searchList: state.searchList,
+          page: event.page));
+      final result = await _searchEntitiesByName.call(state.data,
+          state.filter.map<String>((string) => string.toLowerCase()).toList());
 
       if (result.hasValue()) {
-        final entities = result.value!;
-        if (entities.albums == null &&
-            entities.artists == null &&
-            entities.playlists == null &&
-            entities.songs == null) {
-          emit(SearchEmpty(filter: state.filter, data: state.data));
-        } else {
-          emit(SearchLoaded(
-              filter: state.filter, data: state.data, entites: entities));
+        List<Map<String, String>> items = [];
+        for (var entity in result.value!.entitiesMap.entries) {
+          if (entity.value.isNotEmpty) {
+            items += entity.value
+                .map<Map<String, String>>((e) => {
+                      'filter': entity.key,
+                      'id': e.id,
+                      'name': e.name,
+                    })
+                .toList();
+          }
         }
+        items = state.searchList + items;
+        emit(SearchLoaded(
+            filter: state.filter,
+            data: state.data,
+            searchList: items,
+            page: event.page));
       } else {
         emit(SearchFailed(
-            filter: state.filter, data: state.data, failure: result.failure!));
+            filter: state.filter,
+            data: state.data,
+            failure: result.failure!,
+            searchList: state.searchList,
+            page: event.page));
       }
     }
   }
@@ -78,15 +92,5 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Future<void> close() {
     _debounce?.cancel();
     return super.close();
-  }
-
-  void _fetchMoreSearchedData(
-      FetchMoreSearchedData event, Emitter<SearchState> emit) {
-    _currentPage++;
-    final startIndex = (_currentPage - 1) * 8;
-    final endIndex = min(
-      _currentPage * 8,
-    );
-    final itemsToShow = state.items.sublist(startIndex, endIndex);
   }
 }

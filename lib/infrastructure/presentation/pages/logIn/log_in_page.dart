@@ -14,48 +14,51 @@ class RegisterScreen extends IPage {
   const RegisterScreen({super.key});
 
   @override
+  Future<void> onRefresh() {
+    return Future<void>.value(); //TODO: Pensar en una mejor idea que esto
+  }
+
+  @override
   Widget child(BuildContext context) {
     return const SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 140),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                child: Text(
-                  'Iniciar sesión',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 37,
-                    fontWeight: FontWeight.w500,
-                  ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 140),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text(
+                'Iniciar sesión',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 37,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
+            ),
 
-              SizedBox(height: 30),
+            SizedBox(height: 30),
 
-              //Numero de teléfono text
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                child: Text(
-                  'Número de teléfono',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
+            //Numero de teléfono text
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text(
+                'Número de teléfono',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
                 ),
               ),
+            ),
 
-              SizedBox(height: 15),
+            SizedBox(height: 15),
 
-              _RegisterForm(),
+            _RegisterForm(),
 
-              SizedBox(height: 20),
-            ],
-          ),
+            SizedBox(height: 20),
+          ],
         ),
       ),
     );

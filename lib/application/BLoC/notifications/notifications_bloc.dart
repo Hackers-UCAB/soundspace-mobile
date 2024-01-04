@@ -17,6 +17,12 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     // Listener para notificaciones en Foreground
     _onForegroundMessage();
+
+    _setupInteractedMessage();
+  }
+
+  void _setupInteractedMessage() {
+    localNotifications.setupInteractedMessage();
   }
 
   void _notificationStatusChanged(

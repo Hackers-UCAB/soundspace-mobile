@@ -17,6 +17,7 @@ class AppNavigator {
   final AuthRouteGuard authRouteGuard;
   final SubscriptionRouteGuard subscriptionRouteGuard;
   final getIt = GetIt.instance;
+  late String currentLocation;
   AppNavigator(
       {required this.authRouteGuard, required this.subscriptionRouteGuard}) {
     _routes = GoRouter(
@@ -24,22 +25,32 @@ class AppNavigator {
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) => const LandingPage(),
+          builder: (context, state) {
+            currentLocation = '/';
+            return const LandingPage();
+          },
           redirect: _authProtectedNavigation,
         ),
         GoRoute(
           path: '/logIn',
-          builder: (context, state) => const RegisterScreen(),
+          builder: (context, state) {
+            currentLocation = '/logIn';
+            return const RegisterScreen();
+          },
           redirect: _authProtectedNavigation,
         ),
         GoRoute(
           path: '/home',
-          builder: (context, state) => const HomePage(),
+          builder: (context, state) {
+            currentLocation = '/home';
+            return HomePage();
+          },
         ),
         GoRoute(
           path: '/artist/:id',
           builder: (context, state) {
             final artistId = state.pathParameters['id']!;
+            currentLocation = '/artist/$artistId';
             return ArtistDetail(artistId: artistId);
           },
         ),
@@ -47,16 +58,23 @@ class AppNavigator {
           path: '/album/:id',
           builder: (context, state) {
             final albumId = state.pathParameters['id']!;
+            currentLocation = '/album/$albumId';
             return AlbumDetail(albumId: albumId);
           },
         ),
         GoRoute(
           path: '/search',
-          builder: (context, state) => const SearchPage(),
+          builder: (context, state) {
+            currentLocation = '/search';
+            return SearchPage();
+          },
         ),
         GoRoute(
           path: '/profile',
-          builder: (context, state) => const ProfilePage(),
+          builder: (context, state) {
+            currentLocation = '/profile';
+            return const ProfilePage();
+          },
         ),
       ],
     );
@@ -92,13 +110,9 @@ class AppNavigator {
     _routes.replace(routeName);
   }
 
-  String currentLocation() {
-    Uri uri = _routes.routeInformationProvider.value.uri;
-    return uri.path;
-  }
-
   String? _authProtectedNavigation(BuildContext context, GoRouterState state) {
     if (authRouteGuard.canNavigate()) {
+      currentLocation = '/home';
       return '/home';
     }
     return null;

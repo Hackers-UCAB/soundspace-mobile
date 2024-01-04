@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_bloc/application/BLoC/album_detail/album_detail_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/artist_detail/artist_detail_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
@@ -30,6 +31,7 @@ import 'package:sign_in_bloc/infrastructure/services/internet_connection/connect
 import 'package:sign_in_bloc/infrastructure/services/config/firebase/firebase_options.dart';
 import 'package:sign_in_bloc/infrastructure/datasources/local/local_storage_impl.dart';
 import 'package:sign_in_bloc/infrastructure/services/location/location_checker_impl.dart';
+import 'package:sign_in_bloc/infrastructure/services/notifications/notification_actions_manager.dart';
 import 'package:sign_in_bloc/infrastructure/services/search_entities_by_name_impl.dart';
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
 import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
@@ -52,7 +54,10 @@ class InjectManager {
       RemoteMessage message) async {
     // If you're going to use other Firebase services in the background, such as Firestore,
     // make sure you call `initializeApp` before using other Firebase services.
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+
+    NotificationActionManager.selectActionHandler(message.data, false);
   }
 
   static Future<void> setUpInjections() async {
@@ -130,6 +135,7 @@ class InjectManager {
         GetArtistDataUseCase(artistRepository: artistRepository);
     final GetAlbumDataUseCase getAlbumDataUseCase =
         GetAlbumDataUseCase(albumRepository: albumRepository);
+
     //blocs
     final getIt = GetIt.instance;
     //blocs
@@ -160,6 +166,8 @@ class InjectManager {
         logOutUseCase: logOutUserUseCase));
     getIt.registerSingleton<LogInGuestBloc>(
         LogInGuestBloc(logInGuestUseCase: logInGuestUseCase));
+    getIt.registerSingleton<LogOutBloc>(
+        LogOutBloc(logOutUserUseCase: logOutUserUseCase));
     //check if user has a session
     final userPermissionsBloc = getIt.get<UserPermissionsBloc>()
       ..add(UserPermissionsRequested());
@@ -174,6 +182,7 @@ class InjectManager {
     getIt.registerSingleton<AppNavigator>(AppNavigator(
         authRouteGuard: authGuard, subscriptionRouteGuard: subscriptionGuard));
 
+    //TODO: Quitamos esto or what
     HttpOverrides.global = MyHttpOverrides();
   }
 }

@@ -63,18 +63,6 @@ class LogInSubscriberBloc
     }
   }
 
-  Future<void> _logOut(
-      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
-    final result = await logOutUseCase.execute(LogOutUserUseCaseInput());
-    if (result.hasValue()) {
-      _userPermissionsBloc.add(
-          UserPermissionsChanged(isAuthenticated: false, isSubscribed: false));
-      emit(LogInSubscriberInitial());
-    } else {
-      emit(LogInSubscriberFailure(failure: result.failure!));
-    }
-  }
-
   Future<void> _phoneChanged(
       LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
     if (event.phone.isEmpty || event.phone.trim().isEmpty) {
