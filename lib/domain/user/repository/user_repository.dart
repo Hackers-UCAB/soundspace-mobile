@@ -6,4 +6,5 @@ abstract class UserRepository {
   Future<Result<User>> logInGuest();
   Future<Result<User>> signUpUser(
       String number, String notificationsToken, String operator);
+  Future<Result<bool>> changeUserRole();
 }

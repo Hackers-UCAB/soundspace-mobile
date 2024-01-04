@@ -70,4 +70,15 @@ class UserRepositoryImpl extends UserRepository {
 
     return response;
   }
+
+  @override
+  Future<Result<bool>> changeUserRole() {
+    final response = _apiConnectionManager.request<bool>(
+      'auth/change-role', //TODO: change to correct endpoint
+      'POST',
+      (_) => true,
+    );
+
+    return response;
+  }
 }
