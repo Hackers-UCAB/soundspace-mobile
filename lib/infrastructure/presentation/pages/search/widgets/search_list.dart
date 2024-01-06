@@ -63,7 +63,7 @@ class SearchListState extends State<SearchList> {
             return _SearchListItem(
               name: widget.items[index]['name']!,
               onTap: widget.items[index]['filter'] == 'song'
-                  ? () => socketBloc.add(SocketSendIdSong(
+                  ? () => socketBloc.add(SendIdSong(
                       widget.items[index]['id']!, 0)) //TODO: Javi revisa esto
                   : () => appNavigator.navigateTo(
                       '/${widget.items[index]['filter']}/${widget.items[index]['id']}'),

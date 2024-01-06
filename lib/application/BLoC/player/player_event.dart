@@ -4,19 +4,13 @@ abstract class PlayerEvent {
   const PlayerEvent();
 }
 
-class PlayerSetSource extends PlayerEvent {
-  final SocketChunck chunk;
-  PlayerSetSource(this.chunk);
-}
-
-class ValidateState extends PlayerEvent {
-  final bool isRequired;
-  ValidateState(this.isRequired);
+class ReceiveChunkFromSocket extends PlayerEvent {
+  SocketChunk chunk;
+  ReceiveChunkFromSocket(this.chunk);
 }
 
 class PlayerSetWave extends PlayerEvent {
-  final List<double> wave;
-  PlayerSetWave(this.wave);
+  PlayerSetWave();
 }
 
 class PlayerPlaybackStateChanged extends PlayerEvent {
@@ -39,11 +33,28 @@ class ResetPlayer extends PlayerEvent {
 }
 
 class AskForChunk extends PlayerEvent {
-  final int secuencia;
-  AskForChunk(this.secuencia);
+  final int second;
+  AskForChunk(this.second);
 }
 
 class InitStream extends PlayerEvent {
   final String songId;
-  InitStream(this.songId);
+  final int second;
+  InitStream(this.songId, this.second);
+}
+
+class UpdateInitState extends PlayerEvent {
+  final bool isInit;
+  UpdateInitState(this.isInit);
+}
+
+class UpdateRequiredState extends PlayerEvent {
+  final bool isRequired;
+  UpdateRequiredState(this.isRequired);
+}
+
+//TODO RECORDAR SOLUCIONAR CUANDO SE MUEVE LA BARRA
+class UpdateLatestStart extends PlayerEvent {
+  final int latestStart;
+  UpdateLatestStart(this.latestStart);
 }

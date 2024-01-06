@@ -1,13 +1,13 @@
-class SocketChunck {
+class SocketChunk {
   int sequence;
   int start;
   int end;
   List<int> data;
 
-  SocketChunck(this.sequence, this.data, this.start, this.end);
+  SocketChunk(this.sequence, this.data, this.start, this.end);
 
-  factory SocketChunck.fromJson(Map<String, dynamic> json) {
-    return SocketChunck(
+  factory SocketChunk.fromJson(Map<String, dynamic> json) {
+    return SocketChunk(
         json['secuencia'], json['chunk'], json['start'], json['end']);
   }
 }

@@ -1,58 +1,60 @@
 part of 'player_bloc.dart';
 
 class PlayerState extends Equatable {
-  final List<int> source;
-  final List<double> wave;
   final Duration duration;
   final Duration position;
-  final bool playbackState;
-  final int sequence;
-  final int currentStart;
-  final int currentEnd;
+  final bool isInit;
   final bool isRequired;
+  final bool playbackState;
+  final int currentStart;
+  final int latestStart;
+  final int currentEnd;
+  final String currentIdSong;
 
-  const PlayerState(
-      {this.source = const [],
-      this.wave = const [],
-      this.duration = const Duration(seconds: 1),
-      this.position = Duration.zero,
-      this.playbackState = false,
-      this.sequence = 0,
-      this.currentStart = 0,
-      this.currentEnd = 0,
-      this.isRequired = false});
+  const PlayerState({
+    this.isInit = false,
+    this.isRequired = false,
+    this.currentIdSong = 'empty',
+    this.duration = const Duration(seconds: 1),
+    this.position = Duration.zero,
+    this.playbackState = false,
+    this.currentStart = 0,
+    this.latestStart = 0,
+    this.currentEnd = 0,
+  });
 
   PlayerState copyWith(
-          {List<int>? source,
-          List<double>? wave,
+          {bool? isInit,
+          bool? isRequired,
+          String? currentIdSong,
           Duration? duration,
           Duration? position,
           bool? playbackState,
-          int? sequence,
           int? currentStart,
-          int? currentEnd,
-          bool? isRequired}) =>
+          int? latestStart,
+          int? currentEnd}) =>
       PlayerState(
-          source: source ?? this.source,
-          wave: wave ?? this.wave,
-          duration: duration ?? this.duration,
-          position: position ?? this.position,
-          playbackState: playbackState ?? this.playbackState,
-          sequence: sequence ?? this.sequence,
-          currentStart: currentStart ?? this.currentStart,
-          currentEnd: currentEnd ?? this.currentEnd,
-          isRequired: isRequired ?? this.isRequired);
+        isRequired: isRequired ?? this.isRequired,
+        isInit: isInit ?? this.isInit,
+        currentIdSong: currentIdSong ?? this.currentIdSong,
+        duration: duration ?? this.duration,
+        position: position ?? this.position,
+        playbackState: playbackState ?? this.playbackState,
+        currentStart: currentStart ?? this.currentStart,
+        latestStart: currentStart ?? this.latestStart,
+        currentEnd: currentEnd ?? this.currentEnd,
+      );
 
   @override
   List<Object> get props => [
-        source,
-        wave,
+        isInit,
+        currentIdSong,
         duration,
         position,
         playbackState,
-        sequence,
         currentEnd,
         currentStart,
+        latestStart,
         isRequired
       ];
 }

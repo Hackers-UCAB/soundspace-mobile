@@ -10,67 +10,31 @@ part 'socket_state.dart';
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
   SocketClient socketClient;
-  List<SocketChunck> buffer = [];
-  int bufferSize = 0;
 
   SocketBloc({required this.socketClient}) : super(const SocketState()) {
-    on<SocketSendIdSong>(_sendIdSong);
-    on<SocketReceiveChunk>(_receiveChunck);
-    on<SocketReceiveStreamInfo>(_receiveInfo);
-    on<RequiredChunk>(_requiredChunk);
-    on<SendRequiredChunk>(_sendRequiredChunk);
-    on<RequiredState>(_setRequiredState);
-    on<ReadyState>(_setReadyState);
+    on<SendIdSong>(_sendIdSongToServer);
+    on<SocketReceiveChunk>(_receiveChunkFromServer);
+    on<SendRequiredChunkToPlayer>(_sendRequiredChunkToPlayer);
     _receiveBackgroundChunck();
   }
 
-  void _setRequiredState(RequiredState event, Emitter<SocketState> emit) {
-    emit(state.copyWith(isRequired: event.isRequired));
+  void _sendRequiredChunkToPlayer(
+      SendRequiredChunkToPlayer event, Emitter<SocketState> emit) {
+    GetIt.instance.get<PlayerBloc>().add(ReceiveChunkFromSocket(event.chunck));
   }
 
-  void _setReadyState(ReadyState event, Emitter<SocketState> emit) {
-    emit(state.copyWith(isRequired: event.isReady));
+  void _sendIdSongToServer(SendIdSong event, Emitter<SocketState> emit) async {
+    //se debe agregar el primer atributo como el permiso del usuario para traer el preview o no
+    socketClient.sendIdSongToServer(
+        true, event.idSong, event.second, state.streamingMode);
   }
 
-  void _sendRequiredChunk(SendRequiredChunk event, Emitter<SocketState> emit) {
-    if (state.isReady && state.isRequired) {
-      GetIt.instance.get<PlayerBloc>().add(PlayerSetSource(event.chunck));
-      add(ReadyState(!state.isReady));
-      add(RequiredState(!state.isRequired));
-    }
-  }
-
-  void _requiredChunk(RequiredChunk event, Emitter<SocketState> emit) async {
-    emit(state.copyWith(requiredSequence: event.secuence));
-
-    state.buffer.forEach((element) {
-      if (element.sequence == event.secuence) {
-        add(SendRequiredChunk(element));
-      }
-    });
-    //GetIt.instance.get<PlayerBloc>().add(PlayerSetSource(state.buffer
-    //    .firstWhere((element) => element.sequence == event.secuence)));
-  }
-
-  void _sendIdSong(SocketSendIdSong event, Emitter<SocketState> emit) async {
-    socketClient.sendIdSong(event.idSong, event.second);
-    //socketClient.receiveInfo(this);
-  }
-
-  Future<void> _receiveChunck(
+  Future<void> _receiveChunkFromServer(
       SocketReceiveChunk event, Emitter<SocketState> emit) async {
-    emit(state.copyWith(buffer: [event.chunck, ...state.buffer]));
-    if (state.requiredSequence == event.chunck.sequence) {
-      add(SendRequiredChunk(event.chunck));
-    }
-  }
-
-  Future<void> _receiveInfo(
-      SocketReceiveStreamInfo event, Emitter<SocketState> emit) async {
-    emit(state.copyWith(bufferSize: event.bufferSize));
+    add(SendRequiredChunkToPlayer(event.chunck));
   }
 
   Future<void> _receiveBackgroundChunck() async {
-    socketClient.receiveChunk(this);
+    socketClient.receiveChunkFromServer();
   }
 }

@@ -13,7 +13,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   PlayerService playerService;
 
   PlayerBloc({required this.playerService}) : super(const PlayerState()) {
-    on<PlayerSetSource>(_settingPlayerSource);
+    on<ReceiveChunkFromSocket>(_setChunkToJustAudio);
     on<PlayerSetWave>(_settingPlayerWave);
     on<PlayerPlaybackStateChanged>(_playbackStateChanged);
     on<TrackingCurrentPosition>(_updatingCurrentPosition);
@@ -21,23 +21,36 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<ResetPlayer>(_resetPlayer);
     on<AskForChunk>(_askForChunk);
     on<InitStream>(_initStream);
-    on<ValidateState>(_setRequiredState);
+    on<UpdateInitState>(_updateInitState);
+    on<UpdateRequiredState>(_updateRequiredState);
+    on<UpdateLatestStart>(_updateLatestStart);
   }
 
-  void _setRequiredState(ValidateState event, Emitter<PlayerState> emit) {
+  void _updateLatestStart(UpdateLatestStart event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(latestStart: event.latestStart));
+  }
+
+  void _updateRequiredState(
+      UpdateRequiredState event, Emitter<PlayerState> emit) {
     emit(state.copyWith(isRequired: event.isRequired));
   }
 
+  void _updateInitState(UpdateInitState event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(isInit: event.isInit));
+  }
+
   void _initStream(InitStream event, Emitter<PlayerState> emit) {
-    add(AskForChunk(2));
-    GetIt.instance.get<SocketBloc>().add(SocketSendIdSong(event.songId, 0));
+    emit(state.copyWith(currentIdSong: event.songId, isInit: false));
+    playerService.clean();
+    GetIt.instance
+        .get<SocketBloc>()
+        .add(SendIdSong(event.songId, event.second));
   }
 
   void _askForChunk(AskForChunk event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(
-        sequence: event.secuencia, isRequired: !state.isRequired));
-    GetIt.instance.get<SocketBloc>().add(RequiredChunk(event.secuencia));
-    GetIt.instance.get<SocketBloc>().add(RequiredState(true));
+    GetIt.instance
+        .get<SocketBloc>()
+        .add(SendIdSong(state.currentIdSong, event.second));
   }
 
   void _resetPlayer(ResetPlayer event, Emitter<PlayerState> emit) {
@@ -65,18 +78,16 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     }
   }
 
-  Future<void> _settingPlayerSource(
-      PlayerSetSource event, Emitter<PlayerState> emit) async {
-    //emit(state.copyWith(source: event.chunk + state.source));
+  Future<void> _setChunkToJustAudio(
+      ReceiveChunkFromSocket event, Emitter<PlayerState> emit) async {
+    add(UpdateRequiredState(true));
     emit(state.copyWith(
         currentEnd: event.chunk.end, currentStart: event.chunk.start));
     await playerService.setAudioSource(event.chunk);
   }
 
   Future<void> _settingPlayerWave(
-      PlayerSetWave event, Emitter<PlayerState> emit) async {
-    emit(state.copyWith(wave: event.wave + state.wave));
-  }
+      PlayerSetWave event, Emitter<PlayerState> emit) async {}
 
   Future<void> play() async {
     playerService.play();

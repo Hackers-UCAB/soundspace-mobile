@@ -145,6 +145,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  ffmpeg_kit_flutter:
+    dependency: transitive
+    description:
+      name: ffmpeg_kit_flutter
+      sha256: "843aae41823ca94a0988d975b4b6cdc6948744b9b7e2707d81a3a9cd237b0100"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.3"
+  ffmpeg_kit_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: ffmpeg_kit_flutter_platform_interface
+      sha256: addf046ae44e190ad0101b2fde2ad909a3cd08a2a109f6106d2f7048b7abedee
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   file:
     dependency: transitive
     description:
@@ -288,6 +304,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.1"
+  general_audio_waveforms:
+    dependency: "direct main"
+    description:
+      name: general_audio_waveforms
+      sha256: "14549e1778d41e33dacab2bbd1146a2eeb1a8a9186b3e137e76603016031272b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.10"
   get:
     dependency: "direct main"
     description:
@@ -693,6 +717,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  wav:
+    dependency: transitive
+    description:
+      name: wav
+      sha256: ca53b6b494bbe37984dd3c7262294938b6d7a362b0f434f4c534f1ebb459f8be
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0"
   web:
     dependency: transitive
     description:

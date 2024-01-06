@@ -67,7 +67,9 @@ class HomePage extends IPage {
                     visible: true,
                     child: Align(
                       alignment: Alignment.bottomLeft,
-                      child: MusicPlayer(key: key),
+                      child: Column(
+                        children: [MusicPlayer(key: key)],
+                      ),
                     ),
                   )
                 ],
