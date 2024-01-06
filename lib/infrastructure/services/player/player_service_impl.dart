@@ -2,7 +2,6 @@ import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/services/player/custom_source.dart';
-
 import '../../../application/services/player/player_services.dart';
 
 class PlayerServiceImpl extends PlayerService {

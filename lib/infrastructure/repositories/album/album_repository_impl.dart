@@ -15,16 +15,16 @@ class AlbumRepositoryImpl extends AlbumRepository {
     final result = await _apiConnectionManager.request<List<Album>>(
         'playlist/top_playlists?type=album', //TODO: el type es un query param
         'GET',
-        (data) => AlbumMapper.fromJsonList(data['data']));
+        (data) => AlbumMapper.fromJsonList(data));
     return result;
   }
 
   @override
   Future<Result<Album>> getAlbumById(String albumId) async {
     return await _apiConnectionManager.request<Album>(
-      'albums/$albumId',
+      'playlist/7bcbfd8a-e775-4149-83ee-9ba4c709e8a2',
       'GET',
-      (data) => AlbumMapper.fromJson(data['data']),
+      (data) => AlbumMapper.fromJson(data),
     );
   }
 }

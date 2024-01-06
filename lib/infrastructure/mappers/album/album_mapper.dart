@@ -9,8 +9,9 @@ class AlbumMapper {
     return Album(
       id: json['id'],
       name: json['name'],
-      image:
-          json['image'] != null ? ImageConverter.convert(json['image']) : null,
+      image: json['image'] != null
+          ? ImageConverter.convert(json['image']['data'])
+          : null,
       artistName: json['creators'] != null
           ? json['creators'].map<String>((e) => e['creatorName']).toList()
           : null,

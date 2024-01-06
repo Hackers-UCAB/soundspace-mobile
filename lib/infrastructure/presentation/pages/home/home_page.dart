@@ -8,6 +8,8 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../widgets/music_player.dart';
+
 class HomePage extends IPage {
   final getIt = GetIt.instance;
   late final trendingsBloc = getIt.get<TrendingsBloc>();
@@ -61,13 +63,13 @@ class HomePage extends IPage {
                       ],
                     ),
                   ),
-                  // Visibility(
-                  //   visible: true,
-                  //   child: Align(
-                  //     alignment: Alignment.bottomLeft,
-                  //     child: MusicPlayer(key: key),
-                  //   ),
-                  // )
+                  Visibility(
+                    visible: true,
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: MusicPlayer(key: key),
+                    ),
+                  )
                 ],
               );
             } else if (trendingsState is TrendingsLoading) {

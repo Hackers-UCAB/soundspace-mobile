@@ -4,20 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../../../../../application/BLoC/search/search_bloc.dart';
 
-class CustomChoiceChips extends StatelessWidget {
+class CustomChoiceChips extends StatefulWidget {
   late final List<String> choices;
-  Timer? _debounce;
-  String? _lastFilter;
+
   CustomChoiceChips({super.key}) {
     choices = ['Artista', 'Album', 'Playlist', 'Song'];
   }
+
+  @override
+  State<CustomChoiceChips> createState() => _CustomChoiceChipsState();
+}
+
+class _CustomChoiceChipsState extends State<CustomChoiceChips> {
+  Timer? _debounce;
+
+  String? _lastFilter;
 
   @override
   Widget build(BuildContext context) {
     final getIt = GetIt.instance;
     final searchBloc = getIt.get<SearchBloc>();
     final textTheme = Theme.of(context).textTheme.bodySmall;
-    final List<Widget> chips = choices
+    final List<Widget> chips = widget.choices
         .map<ChoiceChip>((String choice) => ChoiceChip(
               label: Text(choice,
                   style: searchBloc.state.filter.contains(choice)

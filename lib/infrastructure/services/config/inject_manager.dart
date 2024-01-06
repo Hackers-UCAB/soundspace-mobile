@@ -89,7 +89,6 @@ class InjectManager {
     final token = localStorage.getValue('appToken');
     if (token != null) {
       apiConnectionManagerImpl.setHeaders('Authorization', 'Bearer $token');
-      print(token);
     }
     final firebaseToken = await localNotifications.getToken();
     print(firebaseToken);

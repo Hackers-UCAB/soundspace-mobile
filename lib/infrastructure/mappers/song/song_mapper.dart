@@ -9,10 +9,11 @@ class SongMapper {
       id: json['id'],
       name: json['name'],
       duration: json['duration'],
-      image:
-          json['image'] != null ? ImageConverter.convert(json['image']) : null,
+      image: json['image'] != null
+          ? ImageConverter.convert(json['image']['data'])
+          : null,
       artistsName: json['artists'] != null
-          ? json['artists'].map<String>((e) => e.name).toList()
+          ? (json['artists'] as List).map<String>((e) => e['name']).toList()
           : null,
     );
   }
