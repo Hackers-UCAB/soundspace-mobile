@@ -7,4 +7,5 @@ abstract class UserRepository {
   Future<Result<User>> fetchUserProfileData();
   Future<Result<User>> signUpUser(
       String number, String notificationsToken, String operator);
+  Future<Result<User>> saveUserData(User user);
 }

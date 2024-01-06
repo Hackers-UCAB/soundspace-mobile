@@ -15,6 +15,7 @@ import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_u
 import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_local_data_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/user/save_user_profile_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/subscribe_use_case.dart';
 import 'package:sign_in_bloc/infrastructure/repositories/album/album_repository_impl.dart';
 import 'package:sign_in_bloc/infrastructure/repositories/artist/artist_repository_impl.dart';
@@ -108,6 +109,9 @@ class InjectManager {
     final FetchUserProfileDataUseCase fetchUserProfileDataUseCase =
         FetchUserProfileDataUseCase(
             userRepository: userRepository, localStorage: localStorage);
+    final SaveUserProfileDataUseCase saveUserProfileDataUseCase =
+        SaveUserProfileDataUseCase(
+            userRepository: userRepository, localStorage: localStorage);
 
     final getIt = GetIt.instance;
     //blocs
@@ -135,8 +139,9 @@ class InjectManager {
     getIt.registerSingleton<GpsBloc>(GpsBloc(
         locationManager: locationManager,
         userPermissionsBloc: userPermissionsBloc));
-    getIt.registerSingleton<UserBloc>(
-        UserBloc(fetchUserProfileDataUseCase: fetchUserProfileDataUseCase));
+    getIt.registerSingleton<UserBloc>(UserBloc(
+        fetchUserProfileDataUseCase: fetchUserProfileDataUseCase,
+        saveUserProfileDataUseCase: saveUserProfileDataUseCase));
     //router config
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);
     final subscriptionGuard =

@@ -12,7 +12,27 @@ class ToggleProfileEditableEvent extends UserEvent {
   ToggleProfileEditableEvent();
 }
 
-class EditingFechaEvent extends UserEvent {
-  final DateTime fecha;
-  EditingFechaEvent({required this.fecha});
+class NameEditedEvent extends UserEvent {
+  final String name;
+  NameEditedEvent({required this.name});
+}
+
+class EmailEditedEvent extends UserEvent {
+  final String email;
+  EmailEditedEvent({required this.email});
+}
+
+class FechaEditedEvent extends UserEvent {
+  final String fecha;
+  FechaEditedEvent({required this.fecha});
+}
+
+class GenderEditedEvent extends UserEvent {
+  final String gender;
+  GenderEditedEvent({required this.gender});
+}
+
+class SubmitChangesEvent extends UserEvent {
+  final User user;
+  SubmitChangesEvent({required this.user});
 }

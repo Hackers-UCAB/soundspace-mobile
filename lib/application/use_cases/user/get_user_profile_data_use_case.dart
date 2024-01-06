@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:sign_in_bloc/common/failure.dart';
 
 import '../../datasources/local/local_storage.dart';
@@ -14,9 +15,11 @@ class FetchUserProfileDataUseCase {
 
   Future<Result<User>> execute() async {
     final result = await userRepository.fetchUserProfileData();
-    //print("usecase");
-    //print(result);
-    //print(result.value);
+    print("usecase: " +
+        result.toString() +
+        " ' " +
+        result.value.toString() +
+        " end of usecase");
     if (result.hasValue()) {
       return result;
     } else {

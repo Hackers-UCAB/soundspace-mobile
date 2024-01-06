@@ -66,18 +66,36 @@ class UserRepositoryImpl extends UserRepository {
     }
   }
 
-  //! arreglar
   @override
   Future<Result<User>> fetchUserProfileData() async {
+    //!TEMPORAL
     _apiConnectionManager.setHeaders('Authorization',
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
     final response = await _apiConnectionManager.request('user', 'GET');
-    //print(response);
-    //print(response.value);
-    //print("userRepo");
+    print("repo: " +
+        response.toString() +
+        " , " +
+        response.value.toString() +
+        " end of repo");
 
     if (response.hasValue()) {
-      //print("sending shit");
+      return Result<User>(
+          value: UserMapper.fromJson(response.value.data['data']));
+    } else {
+      return Result<User>(failure: response.failure);
+    }
+  }
+
+  @override
+  Future<Result<User>> saveUserData(User user) async {
+    //!TEMPORAL
+    _apiConnectionManager.setHeaders('Authorization',
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
+
+    final response = await _apiConnectionManager
+        .request('user', 'PATCH', body: {'user': user});
+
+    if (response.hasValue()) {
       return Result<User>(
           value: UserMapper.fromJson(response.value.data['data']));
     } else {
