@@ -29,7 +29,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _initStream(InitStream event, Emitter<PlayerState> emit) {
-    add(AskForChunk(1));
+    add(AskForChunk(2));
     GetIt.instance.get<SocketBloc>().add(SocketSendIdSong(event.songId, 0));
   }
 

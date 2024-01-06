@@ -5,8 +5,8 @@ class MyCustomSource extends StreamAudioSource {
   List<int> _bytes = [];
 
   void addBytes(List<int> bytes) {
-    _bytes = bytes;
-    //_bytes.addAll(bytes);
+    //_bytes = bytes;
+    _bytes.addAll(bytes);
   }
 
   @override

@@ -24,8 +24,8 @@ class SocketClientImpl extends SocketClient {
 
   @override
   void inicializeSocket() async {
-    //socket = IO.io('http://192.168.1.106:5000',
-    //    IO.OptionBuilder().setTransports(['websocket']).build());
+    socket = IO.io('http://192.168.1.103:5000',
+        IO.OptionBuilder().setTransports(['websocket']).build());
 
     String url = 'https://soundspace-api-production-3d1f.up.railway.app';
 
@@ -37,16 +37,16 @@ class SocketClientImpl extends SocketClient {
 
     print(localStorage.getValue('appToken'));
 
-    socket = IO.io(
-        url,
-        IO.OptionBuilder()
-            .setTransports(['websocket', 'polling'])
-            .setPath('/socket.io')
-            .setAuth({
-              'token':
-                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwNDI0NzcwMywiZXhwIjoxNzA0MzM0MTAzfQ.q7Ahtx8tpBdeWntjnuTouQDnUpECtHeuJoo8cyLZ_jA'
-            })
-            .build());
+    //socket = IO.io(
+    //    url,
+    //    IO.OptionBuilder()
+    //        .setTransports(['websocket', 'polling'])
+    //        .setPath('/socket.io')
+    //        .setAuth({
+    //          'token':
+    //              'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwNDMzNDgzM30.sKaT9qFNy4Ctx2I869JbOJy3ee_gNL0j5Lf4MA1jWMI'
+    //        })
+    //        .build());
 
     socket.connect();
 

@@ -72,7 +72,7 @@ class MusicPlayer extends StatelessWidget {
                         padding: const EdgeInsets.all(0),
                         onPressed: () => {
                           playerBloc.add(
-                            InitStream('de7ae1e9-3e38-4ce6-825b-b3045c8d5054'),
+                            InitStream('ac75ed9c-4f69-4c59-a4cc-8843c8a33108'),
                             //socketBloc.add(
                             //  const SocketSendIdSong(
                             //      'de7ae1e9-3e38-4ce6-825b-b3045c8d5054'),
