@@ -1,8 +1,7 @@
-import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:sign_in_bloc/infrastructure/services/notifications/notification_actions_manager.dart';
 import '../../../application/services/foreground_notifications/local_notifications.dart';
+import '../notifications/notification_actions_manager.dart';
 
 class LocalNotificationsImpl extends LocalNotifications {
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
