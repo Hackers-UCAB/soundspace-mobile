@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/bloc_listeners/log_out_listener.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/bloc_listeners/user_permissions_listener.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/music_player.dart';
 import '../config/router/app_router.dart';
 import '../pages/search/widgets/custom_app_bar.dart';
 
@@ -21,13 +24,31 @@ abstract class IPage extends StatelessWidget {
         RefreshIndicator(
             onRefresh: onRefresh,
             child: ListView(children: [
-              if (navigator.currentLocation != '/' &&
-                  navigator.currentLocation != '/logIn')
-                const CustomAppBar(),
-              UserPermissionsListener(
-                  child: LogOutListener(
-                child: child(context),
-              )),
+              Column(
+                children: [
+                  Column(
+                    children: [
+                      if (navigator.currentLocation != '/' &&
+                          navigator.currentLocation != '/logIn')
+                        const CustomAppBar(),
+                      UserPermissionsListener(
+                          child: LogOutListener(
+                        child: child(context),
+                      )),
+                    ],
+                  ),
+                  BlocBuilder<PlayerBloc, PlayerState>(
+                      builder: (context, state) {
+                    return Visibility(
+                      visible: GetIt.instance.get<PlayerBloc>().state.isUsed,
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: MusicPlayer(),
+                      ),
+                    );
+                  })
+                ],
+              )
             ])),
       ]),
     );

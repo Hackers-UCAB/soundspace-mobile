@@ -23,64 +23,72 @@ class HomePage extends IPage {
   @override
   Widget child(BuildContext context) {
     trendingsBloc.add(FetchTrendingsEvent());
-    return BlocBuilder<PlayerBloc, PlayerState>(
-      builder: (context, playerState) {
-        return BlocBuilder<TrendingsBloc, TrendingsState>(
-          builder: (context, trendingsState) {
-            if (trendingsState is TrendingsLoaded) {
-              return Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        PromotionalBannerWidget(
-                          banner: trendingsState.promotionalBanner,
-                        ),
-                        //TODO: Hacer el banner de suscripcion
-                        // _Collapse(name: 'Playlist', child: [
-                        //   PlaylistWrap(
-                        //       playlists: trendingsState.trendingPlaylists)
-                        // ]),
-                        // _Collapse(name: 'Aqustico Experience', child: [
-                        //   AlbumsCarousel(
-                        //       albums: trendingsState.trendingAlbums)
-                        // ]),
-                        // _Collapse(name: 'Artistas Trending', child: [
-                        //   ArtistsCarousel(
-                        //       artists: trendingsState.trendingArtists)
-                        // ]),
-                        // const Divider(
-                        //   color: Color.fromARGB(18, 142, 139, 139),
-                        //   height: 40, //TODO: poner responsive
-                        //   thickness: 2,
-                        //   indent: 20,
-                        //   endIndent: 20,
-                        // ),
-                        // _Collapse(name: 'Tracklist', child: [
-                        //   Tracklist(songs: trendingsState.trendingSongs)
-                        // ]),
-                        // const SizedBox(height: 100)
-                      ],
+    return BlocBuilder<TrendingsBloc, TrendingsState>(
+      builder: (context, trendingsState) {
+        if (trendingsState is TrendingsLoaded) {
+          return Column(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    PromotionalBannerWidget(
+                      banner: trendingsState.promotionalBanner,
                     ),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Column(
-                        children: [MusicPlayer(key: key)],
-                      ),
-                    ),
-                  )
-                ],
-              );
-            } else if (trendingsState is TrendingsLoading) {
-              return const CustomCircularProgressIndicator();
-            } else {
-              return ErrorPage(failure: trendingsState.failure!);
-            }
-          },
-        );
+                    //TODO: Hacer el banner de suscripcion
+                    // _Collapse(name: 'Playlist', child: [
+                    //   PlaylistWrap(
+                    //       playlists: trendingsState.trendingPlaylists)
+                    // ]),
+                    // _Collapse(name: 'Aqustico Experience', child: [
+                    //   AlbumsCarousel(
+                    //       albums: trendingsState.trendingAlbums)
+                    // ]),
+                    // _Collapse(name: 'Artistas Trending', child: [
+                    //   ArtistsCarousel(
+                    //       artists: trendingsState.trendingArtists)
+                    // ]),
+                    // const Divider(
+                    //   color: Color.fromARGB(18, 142, 139, 139),
+                    //   height: 40, //TODO: poner responsive
+                    //   thickness: 2,
+                    //   indent: 20,
+                    //   endIndent: 20,
+                    // ),
+                    // _Collapse(name: 'Tracklist', child: [
+                    //   Tracklist(songs: trendingsState.trendingSongs)
+                    // ]),
+                    // const SizedBox(height: 100)
+                  ],
+                ),
+              ),
+              IconButton(
+                padding: const EdgeInsets.all(0),
+                onPressed: () => {
+                  GetIt.instance.get<PlayerBloc>().add(
+                        InitStream('ac75ed9c-4f69-4c59-a4cc-8843c8a33108', 0),
+                      )
+                },
+                icon: const Icon(
+                  Icons.play_arrow_sharp,
+                  color: Color(0xff1de1ee),
+                ),
+              ),
+              //Visibility(
+              //  visible: GetIt.instance.get<PlayerBloc>().state.isUsed,
+              //  child: Align(
+              //    alignment: Alignment.bottomLeft,
+              //    child: Column(
+              //      children: [MusicPlayer(key: key)],
+              //    ),
+              //  ),
+              //)
+            ],
+          );
+        } else if (trendingsState is TrendingsLoading) {
+          return const CustomCircularProgressIndicator();
+        } else {
+          return ErrorPage(failure: trendingsState.failure!);
+        }
       },
     );
   }

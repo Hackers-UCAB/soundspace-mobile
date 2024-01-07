@@ -9,10 +9,6 @@ class ReceiveChunkFromSocket extends PlayerEvent {
   ReceiveChunkFromSocket(this.chunk);
 }
 
-class PlayerSetWave extends PlayerEvent {
-  PlayerSetWave();
-}
-
 class PlayerPlaybackStateChanged extends PlayerEvent {
   final bool playbackState;
   PlayerPlaybackStateChanged(this.playbackState);
@@ -57,4 +53,17 @@ class UpdateRequiredState extends PlayerEvent {
 class UpdateLatestStart extends PlayerEvent {
   final int latestStart;
   UpdateLatestStart(this.latestStart);
+}
+
+class UpdateWaveForm extends PlayerEvent {
+  UpdateWaveForm();
+}
+
+class UpdateUse extends PlayerEvent {
+  UpdateUse();
+}
+
+class UpdateLoading extends PlayerEvent {
+  final bool isLoading;
+  UpdateLoading(this.isLoading);
 }

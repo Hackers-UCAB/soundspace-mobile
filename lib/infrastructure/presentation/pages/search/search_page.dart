@@ -7,6 +7,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/pages/search/widgets/cu
 import 'package:sign_in_bloc/infrastructure/presentation/pages/search/widgets/custom_textfield.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/music_player.dart';
 import '../../widgets/ipage.dart';
 import 'widgets/search_list.dart';
 

@@ -51,7 +51,7 @@ class PlayerServiceImpl extends PlayerService {
           .add(AudioSource.uri(Uri.dataFromBytes(chunk.data)));
 
       if (!GetIt.instance.get<PlayerBloc>().state.isInit) {
-        print('ENTRAAAAAAAAAAAAA');
+        GetIt.instance.get<PlayerBloc>().add(UpdateLatestStart(chunk.start));
         GetIt.instance.get<PlayerBloc>().add(UpdateInitState(true));
         await player.setAudioSource(concatenatingAudioSource, preload: true);
         await player.load();
@@ -79,7 +79,9 @@ class PlayerServiceImpl extends PlayerService {
         UpdatingDuration(Duration(minutes: 3, seconds: 13, milliseconds: 54)));
 
     // TODO es realmente necesario??
-    player.durationStream.listen((duration) {});
+    player.durationStream.listen((duration) {
+      print('DURACION ACTUAL ${duration?.inSeconds}');
+    });
   }
 
   @override
@@ -96,16 +98,19 @@ class PlayerServiceImpl extends PlayerService {
             AskForChunk(GetIt.instance.get<PlayerBloc>().state.currentEnd + 1));
       }
 
-      if (position == player.duration && position > Duration.zero) {
-        playerBloc.add(UpdateLatestStart(playerBloc.state.currentStart));
+      if (position.inSeconds ==
+          (playerBloc.state.currentEnd - playerBloc.state.currentStart)) {
+        GetIt.instance.get<PlayerBloc>().add(UpdateLatestStart(
+            GetIt.instance.get<PlayerBloc>().state.currentStart));
+      } else {
+        playerBloc.add(TrackingCurrentPosition(Duration(
+            minutes: (playerBloc.state.latestStart + position.inSeconds) ~/ 60,
+            seconds:
+                (playerBloc.state.latestStart + position.inSeconds) % 60)));
       }
 
-      if (position > Duration.zero) {
-        //playerBloc.add(TrackingCurrentPosition(Duration(
-        //    minutes: (playerBloc.state.latestStart + position.inSeconds) ~/ 60,
-        //    seconds:
-        //        (playerBloc.state.latestStart + position.inSeconds) % 60)));
-      }
+      print(
+          'LATEST START ${playerBloc.state.latestStart} CURRENT START ${playerBloc.state.currentStart} CURRENT POSITION ${playerBloc.state.latestStart + position.inSeconds}');
     });
   }
 
@@ -130,7 +135,11 @@ class PlayerServiceImpl extends PlayerService {
   @override
   void trackingProccesingState() {
     player.processingStateStream.listen((event) async {
-      if (event == ProcessingState.completed) {}
+      if (event == ProcessingState.ready) {
+        GetIt.instance.get<PlayerBloc>().add(UpdateLoading(false));
+      } else if (event != ProcessingState.completed) {
+        GetIt.instance.get<PlayerBloc>().add(UpdateLoading(true));
+      }
     });
   }
 }

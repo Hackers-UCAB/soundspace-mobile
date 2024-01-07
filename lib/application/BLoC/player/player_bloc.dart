@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
@@ -14,7 +16,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   PlayerBloc({required this.playerService}) : super(const PlayerState()) {
     on<ReceiveChunkFromSocket>(_setChunkToJustAudio);
-    on<PlayerSetWave>(_settingPlayerWave);
     on<PlayerPlaybackStateChanged>(_playbackStateChanged);
     on<TrackingCurrentPosition>(_updatingCurrentPosition);
     on<UpdatingDuration>(_updateDuration);
@@ -24,6 +25,30 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<UpdateInitState>(_updateInitState);
     on<UpdateRequiredState>(_updateRequiredState);
     on<UpdateLatestStart>(_updateLatestStart);
+    on<UpdateWaveForm>(_updateWaveForm);
+    on<UpdateUse>(_updateUserUse);
+    on<UpdateLoading>(_updateLoading);
+  }
+
+  void _updateLoading(UpdateLoading event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(isLoading: event.isLoading));
+  }
+
+  void _updateUserUse(UpdateUse event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(isUsed: true));
+  }
+
+  void _updateWaveForm(UpdateWaveForm event, Emitter<PlayerState> emit) {
+    if (state.waveForm.length > 1) {
+      emit(state.copyWith(waveForm: [0]));
+    } else if (state.waveForm.length == 1) {
+      emit(state.copyWith(
+          waveForm: List<double>.generate(
+              180,
+              (i) =>
+                  (Random().nextBool() ? 1 : -1) * Random().nextDouble() * 100)
+            ..shuffle()));
+    }
   }
 
   void _updateLatestStart(UpdateLatestStart event, Emitter<PlayerState> emit) {
@@ -41,6 +66,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   void _initStream(InitStream event, Emitter<PlayerState> emit) {
     emit(state.copyWith(currentIdSong: event.songId, isInit: false));
+    add(UpdateWaveForm());
+    add(UpdateUse());
     playerService.clean();
     GetIt.instance
         .get<SocketBloc>()
@@ -54,6 +81,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _resetPlayer(ResetPlayer event, Emitter<PlayerState> emit) {
+    add(UpdateWaveForm());
     emit(state.copyWith(position: Duration.zero));
     playerService.reset();
   }
@@ -85,9 +113,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         currentEnd: event.chunk.end, currentStart: event.chunk.start));
     await playerService.setAudioSource(event.chunk);
   }
-
-  Future<void> _settingPlayerWave(
-      PlayerSetWave event, Emitter<PlayerState> emit) async {}
 
   Future<void> play() async {
     playerService.play();

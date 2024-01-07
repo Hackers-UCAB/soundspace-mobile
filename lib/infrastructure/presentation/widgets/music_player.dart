@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:general_audio_waveforms/general_audio_waveforms.dart';
 import 'package:get_it/get_it.dart';
@@ -11,7 +9,6 @@ class MusicPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final socketBloc = GetIt.instance.get<SocketBloc>();
     final playerBloc = GetIt.instance.get<PlayerBloc>();
     var addMinuteZero = '0';
     var addSecondZero = '0';
@@ -27,9 +24,6 @@ class MusicPlayer extends StatelessWidget {
     } else {
       addSecondZero = '';
     }
-    var list = List<double>.generate(180,
-        (i) => (Random().nextBool() ? 1 : -1) * Random().nextDouble() * 100)
-      ..shuffle();
 
     if (((playerBloc.state.position.inSeconds.toDouble() /
                 playerBloc.state.duration.inSeconds.toDouble()) *
@@ -55,18 +49,22 @@ class MusicPlayer extends StatelessWidget {
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Row(
               children: [
-                IconButton(
-                  padding: const EdgeInsets.all(0),
-                  onPressed: () => {
-                    playerBloc.add(PlayerPlaybackStateChanged(
-                        !playerBloc.state.playbackState))
-                  },
-                  icon: const Icon(
-                    Icons.play_circle_fill,
-                    size: 50,
-                    color: Color(0xff1de1ee),
-                  ),
-                ),
+                GetIt.instance.get<PlayerBloc>().state.isLoading
+                    ? CircularProgressIndicator()
+                    : IconButton(
+                        padding: const EdgeInsets.all(0),
+                        onPressed: () {
+                          playerBloc.add(PlayerPlaybackStateChanged(
+                              !playerBloc.state.playbackState));
+                        },
+                        icon: Icon(
+                          GetIt.instance.get<PlayerBloc>().state.playbackState
+                              ? Icons.pause_circle
+                              : Icons.play_circle_fill,
+                          size: 50,
+                          color: Color(0xff1de1ee),
+                        ),
+                      ),
                 Padding(
                   padding: const EdgeInsets.all(14),
                   child: Column(children: [
@@ -112,8 +110,9 @@ class MusicPlayer extends StatelessWidget {
             waveformType: WaveformType.rectangle,
             height: 80,
             width: 400,
-            maxSamples: list.length,
-            source: AudioDataSource(samples: list),
+            maxSamples: GetIt.instance.get<PlayerBloc>().state.waveForm.length,
+            source: AudioDataSource(
+                samples: GetIt.instance.get<PlayerBloc>().state.waveForm),
             maxDuration: Duration(minutes: 3, seconds: 13),
             elapsedDuration: playerBloc.state.position,
             elapsedIsChanged: (d) {

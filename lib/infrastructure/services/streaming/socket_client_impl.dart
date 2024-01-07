@@ -67,6 +67,7 @@ class SocketClientImpl extends SocketClient {
     });
 
     streamController.stream.listen((chunk) async {
+      print('LLEGANDO LA SECUENCIA ${chunk.sequence}');
       GetIt.instance.get<SocketBloc>().add(SocketReceiveChunk(chunk));
     });
   }

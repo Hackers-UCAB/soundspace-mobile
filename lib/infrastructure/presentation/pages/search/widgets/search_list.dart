@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
 import '../../../../../application/BLoC/socket/socket_bloc.dart';
 import '../../../config/router/app_router.dart';
@@ -43,7 +44,7 @@ class SearchListState extends State<SearchList> {
   Widget build(BuildContext context) {
     final getIt = GetIt.instance;
     final appNavigator = getIt.get<AppNavigator>();
-    final socketBloc = getIt.get<SocketBloc>();
+    final playerBloc = getIt.get<PlayerBloc>();
 
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.75,
@@ -63,7 +64,7 @@ class SearchListState extends State<SearchList> {
             return _SearchListItem(
               name: widget.items[index]['name']!,
               onTap: widget.items[index]['filter'] == 'song'
-                  ? () => socketBloc.add(SendIdSong(
+                  ? () => playerBloc.add(InitStream(
                       widget.items[index]['id']!, 0)) //TODO: Javi revisa esto
                   : () => appNavigator.navigateTo(
                       '/${widget.items[index]['filter']}/${widget.items[index]['id']}'),
