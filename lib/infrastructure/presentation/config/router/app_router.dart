@@ -1,10 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sign_in_bloc/application/BLoC/playlist_detail/playlist_detail_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
+import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_data_use_case.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/home_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/landing/landing_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/pages/playlist_detail/playlist_detail.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/profile_page.dart';
 import '../../pages/album_detail/album_detail.dart';
 import '../../pages/artist_detail/artist_detail.dart';
@@ -59,6 +63,15 @@ class AppNavigator {
             return AlbumDetail(albumId: albumId);
           },
         ),
+        GoRoute(
+            path: '/playlist/:id',
+            builder: (context, state) {
+              final playlistId = state.pathParameters['id']!;
+              currentLocation = '/playlist/$playlistId';
+              return PlaylistDetail(
+                playlistId: playlistId,
+              );
+            }),
         GoRoute(
           path: '/search',
           builder: (context, state) {

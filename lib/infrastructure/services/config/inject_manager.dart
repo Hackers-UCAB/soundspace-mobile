@@ -17,6 +17,7 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_local_data_use_case.dart';
@@ -125,6 +126,8 @@ class InjectManager {
             promotionalBannerRepository: promotionalBannerRepository);
     final GetTrendingPlaylistsUseCase getTrendingPlaylistsUseCase =
         GetTrendingPlaylistsUseCase(playlistRepository: playlistRepository);
+    final GetPlaylistDataUseCase getPlaylistDataUseCase =
+        GetPlaylistDataUseCase(playlistRepository: playlistRepository);
     final GetTrendingAlbumsUseCase getTrendingAlbumsUseCase =
         GetTrendingAlbumsUseCase(albumRepository: albumRepository);
     final GetTrendingArtistsUseCase getTrendingArtistsUseCase =
@@ -146,6 +149,7 @@ class InjectManager {
         getPromotionalBannerUseCase);
     getIt.registerSingleton<GetTrendingPlaylistsUseCase>(
         getTrendingPlaylistsUseCase);
+    getIt.registerSingleton<GetPlaylistDataUseCase>(getPlaylistDataUseCase);
     getIt.registerSingleton<GetTrendingSongsUseCase>(getTrendingSongsUseCase);
     getIt.registerSingleton<GetArtistDataUseCase>(getArtistDataUseCase);
     getIt.registerSingleton<GetAlbumDataUseCase>(getAlbumDataUseCase);

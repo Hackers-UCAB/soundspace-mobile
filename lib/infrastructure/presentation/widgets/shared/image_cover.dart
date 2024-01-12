@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../../domain/album/album.dart';
-import 'album_clip_rect.dart';
+import 'clip_rect_cover.dart';
 
-class AlbumImage extends StatelessWidget {
-  final dynamic album;
+class ImageCover extends StatelessWidget {
+  final List<int>? image;
 
-  const AlbumImage({super.key, required this.album});
+  const ImageCover({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,7 @@ class AlbumImage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            AlbumClipRRect(album: album),
+            ClipRRectCover(image: image),
           ],
         ),
       ),

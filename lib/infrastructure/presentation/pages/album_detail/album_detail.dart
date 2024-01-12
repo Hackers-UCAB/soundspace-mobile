@@ -7,10 +7,10 @@ import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/image_cover.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/info.dart';
 import '../../../../application/BLoC/album_detail/album_detail_bloc.dart';
 import '../../widgets/tracklist.dart';
-import 'widgets/album_image.dart';
-import 'widgets/album_info.dart';
 
 class AlbumDetail extends IPage {
   final String albumId;
@@ -41,8 +41,12 @@ class AlbumDetail extends IPage {
                     SingleChildScrollView(
                       child: Column(
                         children: [
-                          AlbumImage(album: albumState.album),
-                          AlbumInfo(album: albumState.album),
+                          ImageCover(image: albumState.album.image),
+                          Info(
+                            name: albumState.album.name,
+                            artistName: albumState.album.artistName,
+                            songs: albumState.album.songs,
+                          ),
                           //TODO: Player ()
                           const SizedBox(height: 20),
                           Tracklist(songs: albumState.album.songs!),

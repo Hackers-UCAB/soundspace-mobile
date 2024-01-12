@@ -60,7 +60,7 @@ class _PlaylistCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => {
         //TODO: Javier
-        GetIt.instance.get<AppNavigator>().navigateTo('/album/$id'),
+        GetIt.instance.get<AppNavigator>().navigateTo('/playlist/$id'),
       },
       child: SizedBox(
           width: size.width * 0.45,
