@@ -5,9 +5,9 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/home_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/landing/landing_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/profile_page.dart';
 import '../../pages/album_detail/album_detail.dart';
 import '../../pages/artist_detail/artist_detail.dart';
+import '../../pages/profile/user_profile_page.dart';
 import '../../pages/search/search_page.dart';
 
 part 'route_guard.dart';
@@ -25,14 +25,17 @@ class AppNavigator {
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) => const LandingPage(),
+          builder: (context, state) {
+            currentLocation = '/';
+            return const LandingPage();
+          },
           redirect: _authProtectedNavigation,
         ),
         GoRoute(
           path: '/logIn',
           builder: (context, state) {
             currentLocation = '/logIn';
-            return RegisterScreen();
+            return const RegisterScreen();
           },
           redirect: _authProtectedNavigation,
         ),

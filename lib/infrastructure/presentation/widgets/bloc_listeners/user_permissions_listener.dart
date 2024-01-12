@@ -11,15 +11,23 @@ class UserPermissionsListener
       : super(
           bloc: GetIt.instance.get<UserPermissionsBloc>(),
           listener: (BuildContext context, UserPermissionsState state) {
-            if (state is! UserPermissionsFailed &&
-                state.validLocation == false) {
-              CustomDialog().show(
-                  context: context,
-                  title: 'Parece que te encuentras lejos...',
-                  message:
-                      'Ahora eres un invitado, solo en Venezuela tienes acceso premium',
-                  barrierDismissible: true);
-            } else if (state is UserPermissionsFailed) {
+            if (state is! UserPermissionsFailed) {
+              if (state.validLocation == false) {
+                CustomDialog().show(
+                    context: context,
+                    title: 'Parece que te encuentras lejos...',
+                    message:
+                        'Ahora eres un invitado, solo en Venezuela tienes acceso premium',
+                    barrierDismissible: true);
+              } else if (state.isSubscribed == false) {
+                CustomDialog().show(
+                    context: context,
+                    title: 'Una lastima!',
+                    message:
+                        'Tu subscripcion ha sido cancelada, pero siempre puedes volver a la experiencia premium!',
+                    barrierDismissible: true);
+              }
+            } else {
               child = ErrorPage(failure: state.failure);
             }
           },

@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import '../../../../../application/BLoC/search/search_bloc.dart';
 
 class CustomChoiceChips extends StatefulWidget {
   late final List<String> choices;
+  final SearchBloc searchBloc;
 
-  CustomChoiceChips({super.key}) {
+  CustomChoiceChips({super.key, required this.searchBloc}) {
     choices = ['Artista', 'Album', 'Playlist', 'Song'];
   }
 
@@ -22,23 +22,20 @@ class _CustomChoiceChipsState extends State<CustomChoiceChips> {
 
   @override
   Widget build(BuildContext context) {
-    final getIt = GetIt.instance;
-    final searchBloc = getIt.get<SearchBloc>();
     final textTheme = Theme.of(context).textTheme.bodySmall;
     final List<Widget> chips = widget.choices
         .map<ChoiceChip>((String choice) => ChoiceChip(
               label: Text(choice,
-                  style: searchBloc.state.filter.contains(choice)
+                  style: widget.searchBloc.state.filter.contains(choice)
                       ? textTheme?.copyWith(color: Colors.black)
                       : textTheme),
-              selected: searchBloc.state.filter.contains(choice),
+              selected: widget.searchBloc.state.filter.contains(choice),
               onSelected: (bool selected) {
                 if (_debounce?.isActive ?? false) _debounce?.cancel();
                 _lastFilter = _mapChoiceToFilter(choice);
                 _debounce = Timer(const Duration(milliseconds: 500), () {
-                  final getIt = GetIt.instance;
-                  final searchBloc = getIt.get<SearchBloc>();
-                  searchBloc.add(SearchFilterChanged(filter: _lastFilter!));
+                  widget.searchBloc
+                      .add(SearchFilterChanged(filter: _lastFilter!));
                 });
               },
               selectedColor: const Color.fromARGB(255, 255, 255, 255),

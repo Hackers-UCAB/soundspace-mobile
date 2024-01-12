@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:sign_in_bloc/infrastructure/datasources/api/api_connection_manager.dart';
 import '../../../common/result.dart';
 import '../../../domain/user/repository/user_repository.dart';
@@ -20,6 +19,7 @@ class UserRepositoryImpl extends UserRepository {
       'auth/log-in',
       'POST',
       (data) {
+        data['id'] = data['token'];
         data['role'] = 'subscriber';
         data['phone'] = number;
         return UserMapper.fromJson(data);
@@ -44,6 +44,7 @@ class UserRepositoryImpl extends UserRepository {
       'auth/sign-up/$operator',
       'POST',
       (data) {
+        data['id'] = data['token'];
         data['role'] = 'subscriber';
         data['phone'] = number;
         return UserMapper.fromJson(data);
@@ -85,38 +86,21 @@ class UserRepositoryImpl extends UserRepository {
 
   @override
   Future<Result<User>> fetchUserProfileData() async {
-    //!TEMPORAL
-    _apiConnectionManager.setHeaders('Authorization',
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
-    final response = await _apiConnectionManager.request('user', 'GET');
-    print("repo: " +
-        response.toString() +
-        " , " +
-        response.value.toString() +
-        " end of repo");
-
-    if (response.hasValue()) {
-      return Result<User>(
-          value: UserMapper.fromJson(response.value.data['data']));
-    } else {
-      return Result<User>(failure: response.failure);
-    }
+    return await _apiConnectionManager.request<User>('user', 'GET', (data) {
+      data['role'] = 'subscriber';
+      return UserMapper.fromJson(data);
+    });
   }
 
   @override
-  Future<Result<User>> saveUserData(User user) async {
-    //!TEMPORAL
-    _apiConnectionManager.setHeaders('Authorization',
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
-
+  Future<Result<String>> saveUserData(Map<String, String> userData) async {
     final response = await _apiConnectionManager
-        .request('user', 'PATCH', body: {'user': user});
+        .request<String>('user', 'PATCH', (data) => 'success', body: userData);
 
     if (response.hasValue()) {
-      return Result<User>(
-          value: UserMapper.fromJson(response.value.data['data']));
+      return response;
     } else {
-      return Result<User>(failure: response.failure);
+      return Result<String>(failure: response.failure);
     }
   }
 }
