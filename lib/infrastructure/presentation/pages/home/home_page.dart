@@ -65,7 +65,7 @@ class HomePage extends IPage {
                 padding: const EdgeInsets.all(0),
                 onPressed: () => {
                   GetIt.instance.get<PlayerBloc>().add(
-                        InitStream('ac75ed9c-4f69-4c59-a4cc-8843c8a33108', 0),
+                        InitStream('ac75ed9c-4f69-4c59-a4cc-8843c8a33108', 11),
                       )
                 },
                 icon: const Icon(

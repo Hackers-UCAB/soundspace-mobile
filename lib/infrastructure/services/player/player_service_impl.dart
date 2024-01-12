@@ -16,7 +16,7 @@ class PlayerServiceImpl extends PlayerService {
 
   @override
   void initialize() async {
-    player = AudioPlayer(handleInterruptions: false);
+    player = AudioPlayer();
     mySource = MyCustomSource();
     trackingDuration();
     trackingPosition();
@@ -45,15 +45,21 @@ class PlayerServiceImpl extends PlayerService {
 
   @override
   Future<void> setAudioSource(SocketChunk chunk) async {
+    if (chunk.sequence == 10) {
+      print('llega');
+    }
     print('SECUENCIA ACTUAL ${chunk.sequence}');
     try {
       concatenatingAudioSource
           .add(AudioSource.uri(Uri.dataFromBytes(chunk.data)));
 
       if (!GetIt.instance.get<PlayerBloc>().state.isInit) {
-        GetIt.instance.get<PlayerBloc>().add(UpdateLatestStart(chunk.start));
         GetIt.instance.get<PlayerBloc>().add(UpdateInitState(true));
-        await player.setAudioSource(concatenatingAudioSource, preload: true);
+        await player.setAudioSource(concatenatingAudioSource,
+            preload: true,
+            initialIndex: 0,
+            initialPosition:
+                GetIt.instance.get<PlayerBloc>().state.seekPosition);
         await player.load();
 
         if (player.processingState == ProcessingState.ready) {
@@ -87,35 +93,32 @@ class PlayerServiceImpl extends PlayerService {
   @override
   void trackingPosition() {
     final playerBloc = GetIt.instance.get<PlayerBloc>();
+
     player.positionStream.listen((position) async {
-      if ((playerBloc.state.currentEnd - playerBloc.state.currentStart) -
-                  position.inSeconds ==
-              3 &&
-          playerBloc.state.isRequired) {
-        GetIt.instance.get<PlayerBloc>().add(UpdateRequiredState(
-            !GetIt.instance.get<PlayerBloc>().state.isRequired));
-        GetIt.instance.get<PlayerBloc>().add(
-            AskForChunk(GetIt.instance.get<PlayerBloc>().state.currentEnd + 1));
+      if (player.duration != null) {
+        if (((player.duration!.inSeconds - position.inSeconds) == 3) &&
+            playerBloc.state.isRequired) {
+          GetIt.instance.get<PlayerBloc>().add(UpdateRequiredState(
+              !GetIt.instance.get<PlayerBloc>().state.isRequired));
+          GetIt.instance
+              .get<PlayerBloc>()
+              .add(AskForChunk(playerBloc.state.position.inSeconds + 5));
+        }
       }
 
-      if (position.inSeconds ==
-          (playerBloc.state.currentEnd - playerBloc.state.currentStart)) {
-        GetIt.instance.get<PlayerBloc>().add(UpdateLatestStart(
-            GetIt.instance.get<PlayerBloc>().state.currentStart));
-      } else {
-        playerBloc.add(TrackingCurrentPosition(Duration(
-            minutes: (playerBloc.state.latestStart + position.inSeconds) ~/ 60,
-            seconds:
-                (playerBloc.state.latestStart + position.inSeconds) % 60)));
+      if (player.sequence != null && player.currentIndex != null) {
+        var totalDuration = Duration.zero;
+        for (var i = 0; i < player.currentIndex!; i++) {
+          totalDuration += player.sequence![i].duration!;
+        }
+        totalDuration += player.position + playerBloc.state.seekPosition;
+        playerBloc.add(TrackingCurrentPosition(totalDuration));
       }
-
-      print(
-          'LATEST START ${playerBloc.state.latestStart} CURRENT START ${playerBloc.state.currentStart} CURRENT POSITION ${playerBloc.state.latestStart + position.inSeconds}');
     });
   }
 
   void clean() {
-    player.stop();
+    player.pause();
     concatenatingAudioSource.clear();
   }
 

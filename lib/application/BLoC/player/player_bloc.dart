@@ -24,10 +24,15 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<InitStream>(_initStream);
     on<UpdateInitState>(_updateInitState);
     on<UpdateRequiredState>(_updateRequiredState);
-    on<UpdateLatestStart>(_updateLatestStart);
     on<UpdateWaveForm>(_updateWaveForm);
     on<UpdateUse>(_updateUserUse);
     on<UpdateLoading>(_updateLoading);
+    on<UpdateSeekPosition>(_updateSeekPosition);
+  }
+
+  void _updateSeekPosition(
+      UpdateSeekPosition event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(seekPosition: event.seekPosition));
   }
 
   void _updateLoading(UpdateLoading event, Emitter<PlayerState> emit) {
@@ -51,10 +56,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     }
   }
 
-  void _updateLatestStart(UpdateLatestStart event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(latestStart: event.latestStart));
-  }
-
   void _updateRequiredState(
       UpdateRequiredState event, Emitter<PlayerState> emit) {
     emit(state.copyWith(isRequired: event.isRequired));
@@ -65,10 +66,15 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _initStream(InitStream event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(currentIdSong: event.songId, isInit: false));
+    playerService.clean();
+    emit(state.copyWith(
+      currentIdSong: event.songId,
+      isInit: false,
+    ));
+    add(UpdateSeekPosition(
+        Duration(minutes: (event.second) ~/ 60, seconds: (event.second) % 60)));
     add(UpdateWaveForm());
     add(UpdateUse());
-    playerService.clean();
     GetIt.instance
         .get<SocketBloc>()
         .add(SendIdSong(event.songId, event.second));
@@ -109,8 +115,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   Future<void> _setChunkToJustAudio(
       ReceiveChunkFromSocket event, Emitter<PlayerState> emit) async {
     add(UpdateRequiredState(true));
-    emit(state.copyWith(
-        currentEnd: event.chunk.end, currentStart: event.chunk.start));
+
     await playerService.setAudioSource(event.chunk);
   }
 

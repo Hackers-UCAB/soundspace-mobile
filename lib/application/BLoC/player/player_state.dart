@@ -4,17 +4,16 @@ class PlayerState extends Equatable {
   final List<double> waveForm;
   final Duration duration;
   final Duration position;
+  final Duration seekPosition;
   final bool isInit;
   final bool isRequired;
   final bool playbackState;
   final bool isUsed;
-  final int currentStart;
-  final int latestStart;
-  final int currentEnd;
   final String currentIdSong;
   final bool isLoading;
 
   const PlayerState({
+    this.seekPosition = Duration.zero,
     this.isLoading = false,
     this.waveForm = const [0],
     this.isInit = false,
@@ -24,9 +23,6 @@ class PlayerState extends Equatable {
     this.position = Duration.zero,
     this.playbackState = false,
     this.isUsed = false,
-    this.currentStart = 0,
-    this.latestStart = 0,
-    this.currentEnd = 0,
   });
 
   PlayerState copyWith(
@@ -38,10 +34,8 @@ class PlayerState extends Equatable {
           String? currentIdSong,
           Duration? duration,
           Duration? position,
+          Duration? seekPosition,
           bool? playbackState,
-          int? currentStart,
-          int? latestStart,
-          int? currentEnd,
           bool? isUsed}) =>
       PlayerState(
           waveForm: waveForm ?? this.waveForm,
@@ -50,10 +44,8 @@ class PlayerState extends Equatable {
           currentIdSong: currentIdSong ?? this.currentIdSong,
           duration: duration ?? this.duration,
           position: position ?? this.position,
+          seekPosition: seekPosition ?? this.seekPosition,
           playbackState: playbackState ?? this.playbackState,
-          currentStart: currentStart ?? this.currentStart,
-          latestStart: latestStart ?? this.latestStart,
-          currentEnd: currentEnd ?? this.currentEnd,
           isUsed: isUsed ?? this.isUsed,
           isLoading: isLoading ?? this.isLoading);
 
@@ -63,10 +55,8 @@ class PlayerState extends Equatable {
         currentIdSong,
         duration,
         position,
+        seekPosition,
         playbackState,
-        currentEnd,
-        currentStart,
-        latestStart,
         isRequired,
         waveForm,
         isUsed,
