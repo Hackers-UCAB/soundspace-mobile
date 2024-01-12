@@ -62,8 +62,11 @@ class UserRepositoryImpl extends UserRepository {
 
   @override
   Future<Result<User>> logInGuest() async {
-    final response = await _apiConnectionManager.request(
-        'auth/log-in/guest', 'POST', (data) => UserMapper.fromJson(data));
+    final response = await _apiConnectionManager
+        .request('auth/log-in/guest', 'POST', (data) {
+      data['id'] = data['token'];
+      return UserMapper.fromJson(data);
+    });
 
     if (response.hasValue()) {
       _apiConnectionManager.setHeaders(
@@ -76,7 +79,7 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<Result<bool>> changeUserRole() {
     final response = _apiConnectionManager.request<bool>(
-      'auth/change-role', //TODO: change to correct endpoint
+      'subscription/cancel', //TODO: change to correct endpoint
       'POST',
       (_) => true,
     );

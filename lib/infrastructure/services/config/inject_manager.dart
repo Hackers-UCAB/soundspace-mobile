@@ -16,6 +16,7 @@ import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/user/cancel_user_subscription_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_local_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/log_out_user_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/save_user_profile_data_use_case.dart';
@@ -139,6 +140,9 @@ class InjectManager {
         FetchUserProfileDataUseCase(userRepository: userRepository);
     final SaveUserProfileDataUseCase saveUserProfileDataUseCase =
         SaveUserProfileDataUseCase(userRepository: userRepository);
+    final CancelSubscriptionUseCase cancelSubscriptionUseCase =
+        CancelSubscriptionUseCase(
+            userRepository: userRepository, localStorage: localStorage);
 
     final getIt = GetIt.instance;
     getIt.registerSingleton<GetTrendingArtistsUseCase>(
@@ -157,6 +161,8 @@ class InjectManager {
         fetchUserProfileDataUseCase);
     getIt.registerSingleton<SaveUserProfileDataUseCase>(
         saveUserProfileDataUseCase);
+    getIt.registerSingleton<CancelSubscriptionUseCase>(
+        cancelSubscriptionUseCase);
 
     //blocs
     getIt.registerSingleton<UserPermissionsBloc>(UserPermissionsBloc(

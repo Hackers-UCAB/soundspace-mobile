@@ -41,7 +41,7 @@ abstract class IPage extends StatelessWidget {
                       builder: (context, state) {
                     return Visibility(
                       visible: GetIt.instance.get<PlayerBloc>().state.isUsed,
-                      child: Align(
+                      child: const Align(
                         alignment: Alignment.bottomLeft,
                         child: MusicPlayer(),
                       ),
