@@ -86,21 +86,23 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<Result<User>> fetchUserProfileData() async {
     //!TEMPORAL
-    _apiConnectionManager.setHeaders('Authorization',
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
-    final response = await _apiConnectionManager.request('user', 'GET');
-    print("repo: " +
-        response.toString() +
-        " , " +
-        response.value.toString() +
-        " end of repo");
+    //_apiConnectionManager.setHeaders('Authorization',
+    //    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
+    //final response = await _apiConnectionManager.request('user', 'GET');
+    //print("repo: " +
+    //    response.toString() +
+    //    " , " +
+    //    response.value.toString() +
+    //    " end of repo");
+//
+    //if (response.hasValue()) {
+    //  return Result<User>(
+    //      value: UserMapper.fromJson(response.value.data['data']));
+    //} else {
+    //  return Result<User>(failure: response.failure);
+    //}
 
-    if (response.hasValue()) {
-      return Result<User>(
-          value: UserMapper.fromJson(response.value.data['data']));
-    } else {
-      return Result<User>(failure: response.failure);
-    }
+    return Result();
   }
 
   @override
@@ -109,14 +111,16 @@ class UserRepositoryImpl extends UserRepository {
     _apiConnectionManager.setHeaders('Authorization',
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
 
-    final response = await _apiConnectionManager
-        .request('user', 'PATCH', body: {'user': user});
+    //final response = await _apiConnectionManager
+    //    .request('user', 'PATCH', body: {'user': user});
+//
+    //if (response.hasValue()) {
+    //  return Result<User>(
+    //      value: UserMapper.fromJson(response.value.data['data']));
+    //} else {
+    //  return Result<User>(failure: response.failure);
+    //}
 
-    if (response.hasValue()) {
-      return Result<User>(
-          value: UserMapper.fromJson(response.value.data['data']));
-    } else {
-      return Result<User>(failure: response.failure);
-    }
+    return Result();
   }
 }
