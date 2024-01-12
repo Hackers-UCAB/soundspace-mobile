@@ -5,6 +5,10 @@ import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/user/save_user_profile_data_use_case.dart';
+import 'package:sign_in_bloc/domain/user/valueObjects/birth_day_value_object.dart';
+import 'package:sign_in_bloc/domain/user/valueObjects/email_address_value_object.dart';
+import 'package:sign_in_bloc/domain/user/valueObjects/gender_value_object.dart';
+import 'package:sign_in_bloc/domain/user/valueObjects/name_value_object.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/music_player.dart';
 import '../../../../domain/user/user.dart';
@@ -279,8 +283,20 @@ class ProfileForm extends StatelessWidget {
                         visible: state.editable,
                         child: ElevatedButton(
                           onPressed: () {
-                            //userBloc.add(SubmitChangesEvent(user: state.user));
-                            //print(state.editable);
+                            userBloc.add(ToggleProfileEditableEvent());
+                            userBloc.add(SubmitChangesEvent(
+                                user: User(
+                                    id: state.user.id,
+                                    name: UserName(state.name),
+                                    email: EmailAddress(state.email),
+                                    phone: state.user.phone,
+                                    role: state.user.role,
+                                    birthdate:
+                                        BirthDate(DateTime.parse(state.fecha)),
+                                    gender: Gender(state.gender),
+                                    appToken: state.user.appToken,
+                                    notificationsToken:
+                                        state.user.notificationsToken)));
                           },
                           style: const ButtonStyle(
                             minimumSize:

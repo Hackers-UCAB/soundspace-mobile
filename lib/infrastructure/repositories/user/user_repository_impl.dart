@@ -70,7 +70,7 @@ class UserRepositoryImpl extends UserRepository {
   Future<Result<User>> fetchUserProfileData() async {
     //!TEMPORAL
     _apiConnectionManager.setHeaders('Authorization',
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFhZGUzZDQ1LTkwYzktNGJjNy1hOWU4LWQxM2E2Nzg2NTc4NCIsImlhdCI6MTcwNDU2NjczNH0.x6VxnP9jmSfD3Zvn2fvJ9eTK1oCWqTcEXO4JTxWVJbU');
     final response = await _apiConnectionManager.request('user', 'GET');
     print("repo: " +
         response.toString() +
@@ -90,7 +90,7 @@ class UserRepositoryImpl extends UserRepository {
   Future<Result<User>> saveUserData(User user) async {
     //!TEMPORAL
     _apiConnectionManager.setHeaders('Authorization',
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFhZGUzZDQ1LTkwYzktNGJjNy1hOWU4LWQxM2E2Nzg2NTc4NCIsImlhdCI6MTcwNDU2NjczNH0.x6VxnP9jmSfD3Zvn2fvJ9eTK1oCWqTcEXO4JTxWVJbU');
 
     final response = await _apiConnectionManager
         .request('user', 'PATCH', body: {'user': user});

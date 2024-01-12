@@ -23,8 +23,8 @@ class AppNavigator {
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) => const UserProfilePage(),
-          //redirect: _authProtectedNavigation,
+          builder: (context, state) => const LandingPage(),
+          redirect: _authProtectedNavigation,
         ),
         GoRoute(
           path: '/logIn',
