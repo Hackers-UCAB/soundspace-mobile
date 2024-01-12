@@ -8,10 +8,10 @@ import '../song/song_mapper.dart';
 class PlaylistMapper {
   static Playlist fromJson(Map<String, dynamic> json) {
     return Playlist(
-      id: json['codigo_playlist'],
-      name: json['nombre'],
+      id: json['id'],
+      name: json['name'],
       image: json['image'] != null
-          ? ImageConverter.convert(json['referencia_imagen'])
+          ? ImageConverter.convert(json['image']['data'])
           : null,
       artistName: json['creators'] != null
           ? json['creators'].map<String>((e) => e['creatorName']).toList()

@@ -27,7 +27,7 @@ class AppNavigator {
           path: '/',
           builder: (context, state) {
             currentLocation = '/';
-            return const LandingPage();
+            return LandingPage();
           },
           redirect: _authProtectedNavigation,
         ),
@@ -35,7 +35,7 @@ class AppNavigator {
           path: '/logIn',
           builder: (context, state) {
             currentLocation = '/logIn';
-            return const RegisterScreen();
+            return RegisterScreen();
           },
           redirect: _authProtectedNavigation,
         ),
@@ -73,7 +73,7 @@ class AppNavigator {
           path: '/profile',
           builder: (context, state) {
             currentLocation = '/profile';
-            return const ProfilePage();
+            return ProfilePage();
           },
         ),
       ],

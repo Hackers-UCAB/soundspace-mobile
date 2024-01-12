@@ -41,6 +41,7 @@ import '../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
 import '../../../application/use_cases/user/log_in_guest_use_case.dart';
 import '../../../application/use_cases/user/log_in_use_case.dart';
+import '../../../domain/services/search_entities_by_name.dart';
 import '../../presentation/config/router/app_router.dart';
 import '../../repositories/playlist/playlist_repository_impl.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -89,6 +90,7 @@ class InjectManager {
     final token = localStorage.getValue('appToken');
     if (token != null) {
       apiConnectionManagerImpl.setHeaders('Authorization', 'Bearer $token');
+      print(token);
     }
     final firebaseToken = await localNotifications.getToken();
     print(firebaseToken);
@@ -136,22 +138,21 @@ class InjectManager {
     final GetAlbumDataUseCase getAlbumDataUseCase =
         GetAlbumDataUseCase(albumRepository: albumRepository);
 
-    //blocs
     final getIt = GetIt.instance;
+    getIt.registerSingleton<GetTrendingArtistsUseCase>(
+        getTrendingArtistsUseCase);
+    getIt.registerSingleton<GetTrendingAlbumsUseCase>(getTrendingAlbumsUseCase);
+    getIt.registerSingleton<GetPromotionalBannerUseCase>(
+        getPromotionalBannerUseCase);
+    getIt.registerSingleton<GetTrendingPlaylistsUseCase>(
+        getTrendingPlaylistsUseCase);
+    getIt.registerSingleton<GetTrendingSongsUseCase>(getTrendingSongsUseCase);
+    getIt.registerSingleton<GetArtistDataUseCase>(getArtistDataUseCase);
+    getIt.registerSingleton<GetAlbumDataUseCase>(getAlbumDataUseCase);
+    getIt.registerSingleton<SearchEntitiesByName>(SearchEntitiesByNameImpl(
+        apiConnectionManager: apiConnectionManagerImpl));
+
     //blocs
-    getIt.registerSingleton<TrendingsBloc>(TrendingsBloc(
-        getTrendingArtistsUseCase: getTrendingArtistsUseCase,
-        getTrendingAlbumsUseCase: getTrendingAlbumsUseCase,
-        getPromotionalBannerUseCase: getPromotionalBannerUseCase,
-        getTrendingPlaylistsUseCase: getTrendingPlaylistsUseCase,
-        getTrendingSongsUseCase: getTrendingSongsUseCase));
-    getIt.registerSingleton<ArtistDetailBloc>(
-        ArtistDetailBloc(getArtistDataUseCase: getArtistDataUseCase));
-    getIt.registerSingleton<AlbumDetailBloc>(
-        AlbumDetailBloc(getAlbumDataUseCase: getAlbumDataUseCase));
-    getIt.registerSingleton<SearchBloc>(SearchBloc(
-        searchEntitiesByName: SearchEntitiesByNameImpl(
-            apiConnectionManager: apiConnectionManagerImpl)));
     getIt.registerSingleton<UserPermissionsBloc>(UserPermissionsBloc(
         getUserLocalDataUseCase: getUserLocalDataUseCase,
         connectionManager: connectionManager,

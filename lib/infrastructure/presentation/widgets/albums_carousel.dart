@@ -24,6 +24,15 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
     List<_AlbumCard> albumsCard =
         widget.albums.map((album) => _AlbumCard(album: album)).toList();
 
+    //FIXME: esto es un parche para que no se rompa la galeria
+    if (albumsCard.length < 3) {
+      albumsCard = [
+        ...albumsCard,
+        ...albumsCard,
+        ...albumsCard,
+      ];
+    }
+
     return Gallery3D(
       controller:
           Gallery3DController(itemCount: widget.albums.length, autoLoop: false),

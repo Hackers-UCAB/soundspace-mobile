@@ -60,6 +60,6 @@ class User {
   }
 
   bool validLocation() {
-    return _country != 'Venezuela';
+    return _country == 'Venezuela';
   }
 }

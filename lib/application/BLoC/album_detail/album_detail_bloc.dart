@@ -16,6 +16,7 @@ class AlbumDetailBloc extends Bloc<AlbumDetailEvent, AlbumDetailState> {
 
   void _fetchAlbumDetailEventHandler(
       FetchAlbumDetailEvent event, Emitter<AlbumDetailState> emit) async {
+    emit(AlbumDetailLoading());
     final result = await getAlbumDataUseCase
         .execute(GetAlbumDataUseCaseInput(albumId: event.albumId));
 

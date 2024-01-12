@@ -13,9 +13,9 @@ class SongRepositoryImpl extends SongRepository {
   @override
   Future<Result<List<Song>>> getTracklist() async {
     return await _apiConnectionManager.request(
-      'songs/tracklist',
+      'song/top_song',
       'GET',
-      (data) => SongMapper.fromJsonList(data['data']),
+      (data) => SongMapper.fromJsonList(data),
     );
   }
 }

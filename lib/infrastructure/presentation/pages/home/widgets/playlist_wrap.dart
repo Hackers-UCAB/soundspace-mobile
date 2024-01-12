@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import '../../../../../domain/playlist/playlist.dart';
+import '../../../config/router/app_router.dart';
 
 class PlaylistWrap extends StatelessWidget {
   final List<Playlist> playlists;
@@ -12,7 +14,6 @@ class PlaylistWrap extends StatelessWidget {
     final List<_PlaylistCard> playlistCards = playlists
         .map((playlist) => _PlaylistCard(
               id: playlist.id,
-              name: playlist.name!,
               img: playlist.image!,
             ))
         .toList();
@@ -49,16 +50,18 @@ class PlaylistWrap extends StatelessWidget {
 
 class _PlaylistCard extends StatelessWidget {
   final String id;
-  final String name;
   final List<int> img;
 
-  const _PlaylistCard(
-      {required this.id, required this.name, required this.img});
+  const _PlaylistCard({required this.id, required this.img});
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
+      onTap: () => {
+        //TODO: Javier
+        GetIt.instance.get<AppNavigator>().navigateTo('/album/$id'),
+      },
       child: SizedBox(
           width: size.width * 0.45,
           height: size.width * 0.26,
