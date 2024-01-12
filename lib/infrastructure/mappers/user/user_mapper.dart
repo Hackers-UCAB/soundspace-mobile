@@ -12,8 +12,12 @@ class UserMapper {
 
   static Map<String, dynamic> toJson(User user) {
     return {
-      'number': user.phone,
       'codigo_usuario': user.id,
+      'nombre': user.name,
+      'correo': user.email,
+      'telefono': user.phone,
+      'rol': user.role,
+      'fecha_nac': user.birthdate,
     };
   }
 }
