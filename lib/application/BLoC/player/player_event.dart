@@ -49,12 +49,6 @@ class UpdateRequiredState extends PlayerEvent {
   UpdateRequiredState(this.isRequired);
 }
 
-//TODO RECORDAR SOLUCIONAR CUANDO SE MUEVE LA BARRA
-class UpdateLatestStart extends PlayerEvent {
-  final int latestStart;
-  UpdateLatestStart(this.latestStart);
-}
-
 class UpdateWaveForm extends PlayerEvent {
   UpdateWaveForm();
 }
@@ -66,4 +60,9 @@ class UpdateUse extends PlayerEvent {
 class UpdateLoading extends PlayerEvent {
   final bool isLoading;
   UpdateLoading(this.isLoading);
+}
+
+class UpdateSeekPosition extends PlayerEvent {
+  final Duration seekPosition;
+  UpdateSeekPosition(this.seekPosition);
 }

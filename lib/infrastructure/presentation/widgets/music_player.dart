@@ -12,6 +12,7 @@ class MusicPlayer extends StatelessWidget {
     final playerBloc = GetIt.instance.get<PlayerBloc>();
     var addMinuteZero = '0';
     var addSecondZero = '0';
+    Duration lastD = Duration.zero;
 
     if (playerBloc.state.position.inMinutes.toString().length < 2) {
       addMinuteZero = '0';
@@ -91,7 +92,7 @@ class MusicPlayer extends StatelessWidget {
                         onPressed: () => {
                           playerBloc.add(
                             InitStream(
-                                'ac75ed9c-4f69-4c59-a4cc-8843c8a33108', 0),
+                                'ac75ed9c-4f69-4c59-a4cc-8843c8a33108', 15),
                           )
                         },
                         icon: const Icon(
@@ -116,10 +117,11 @@ class MusicPlayer extends StatelessWidget {
             maxDuration: Duration(minutes: 3, seconds: 13),
             elapsedDuration: playerBloc.state.position,
             elapsedIsChanged: (d) {
-              playerBloc.add(TrackingCurrentPosition(d));
+              playerBloc.add(UpdateSeekPosition(d));
               playerBloc.add(InitStream(
                   'ac75ed9c-4f69-4c59-a4cc-8843c8a33108', d.inSeconds));
             },
+            scrollable: true,
             waveformStyle: WaveformStyle(
                 isRoundedRectangle: true,
                 borderWidth: 1,
