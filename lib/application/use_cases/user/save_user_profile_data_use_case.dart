@@ -14,7 +14,8 @@ class SaveUserProfileDataUseCase {
       {required this.userRepository, required this.localStorage});
 
   Future<Result<User>> execute(User user) async {
-    final result = await userRepository.saveUserData(user);
+    return Result<User>(failure: const UnknownFailure(message: 'No token'));
+    /*final result = await userRepository.saveUserData(user);
     if (result.hasValue()) {
       return result;
     } else {
@@ -22,5 +23,6 @@ class SaveUserProfileDataUseCase {
           failure:
               const UnknownFailure(message: "Couldn't save user profile data"));
     }
+  */
   }
 }

@@ -83,11 +83,11 @@ class UserRepositoryImpl extends UserRepository {
     return response;
   }
 
-  @override
+  /*@override
   Future<Result<User>> fetchUserProfileData() async {
     //!TEMPORAL
-    _apiConnectionManager.setHeaders('Authorization',
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
+    //_apiConnectionManager.setHeaders('Authorization',
+    //    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
     final response = await _apiConnectionManager.request('user', 'GET');
     print("repo: " +
         response.toString() +
@@ -106,8 +106,8 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<Result<User>> saveUserData(User user) async {
     //!TEMPORAL
-    _apiConnectionManager.setHeaders('Authorization',
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
+    //_apiConnectionManager.setHeaders('Authorization',
+    //    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE5NGY4MTc2LTY5MjktNDY5NC05NDhjLTU0OGI5OTgxNGMxMSIsImlhdCI6MTcwMzcxNTgzOCwiZXhwIjoxNzAzODAyMjM4fQ.YWZeLq9QRfKV2-VQoVDNv9vWnbTcchg13XkiUhdnk_o');
 
     final response = await _apiConnectionManager
         .request('user', 'PATCH', body: {'user': user});
@@ -118,5 +118,5 @@ class UserRepositoryImpl extends UserRepository {
     } else {
       return Result<User>(failure: response.failure);
     }
-  }
+  }*/
 }
