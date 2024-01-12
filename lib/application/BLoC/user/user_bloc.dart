@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sign_in_bloc/application/use_cases/user/save_user_profile_data_use_case.dart';
-import 'package:sign_in_bloc/domain/user/valueObjects/name_value_object.dart';
 import '../../../application/use_cases/user/get_user_profile_data_use_case.dart';
 import '../../../common/result.dart';
 import '../../../domain/user/user.dart';
@@ -16,7 +15,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc(
       {required this.fetchUserProfileDataUseCase,
       required this.saveUserProfileDataUseCase})
-      : super(const UserState()) {
+      : super(UserState(user: User(id: '', role: UserRoles.subscriber))) {
     on<FetchUserProfileDataEvent>(_fetchUserProfileData);
     on<ToggleProfileEditableEvent>(_toggleProfileEditable);
     on<NameEditedEvent>(_nameEdited);
@@ -32,10 +31,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     if (user.hasValue()) {
       emit(state.copyWith(
         user: user.value,
-        name: user.value?.name?.name,
-        email: user.value?.email?.email,
-        fecha: user.value?.birthdate?.date.toString(),
-        gender: user.value?.gender?.gender,
+        name: user.value?.name,
+        email: user.value?.email,
+        fecha: user.value?.birthdate.toString(),
+        gender: user.value?.gender,
       ));
     }
   }

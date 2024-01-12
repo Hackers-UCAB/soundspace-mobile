@@ -14,6 +14,8 @@ class FetchUserProfileDataUseCase {
       {required this.userRepository, required this.localStorage});
 
   Future<Result<User>> execute() async {
+    return Result<User>(failure: const UnknownFailure(message: 'No token'));
+    /*
     final result = await userRepository.fetchUserProfileData();
     print("usecase: " +
         result.toString() +
@@ -28,5 +30,6 @@ class FetchUserProfileDataUseCase {
               message:
                   'No token')); //TODO: Personalizar este error en base al Failure que retorne getToken?
     }
+  */
   }
 }

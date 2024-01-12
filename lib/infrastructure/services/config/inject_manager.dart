@@ -13,6 +13,7 @@ import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
@@ -21,7 +22,9 @@ import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_data_us
 import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_local_data_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/user/get_user_profile_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/log_out_user_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/user/save_user_profile_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/subscribe_use_case.dart';
 import 'package:sign_in_bloc/infrastructure/repositories/album/album_repository_impl.dart';
 import 'package:sign_in_bloc/infrastructure/repositories/artist/artist_repository_impl.dart';
@@ -140,6 +143,12 @@ class InjectManager {
         GetArtistDataUseCase(artistRepository: artistRepository);
     final GetAlbumDataUseCase getAlbumDataUseCase =
         GetAlbumDataUseCase(albumRepository: albumRepository);
+    final FetchUserProfileDataUseCase fetchUserProfileDataUseCase =
+        FetchUserProfileDataUseCase(
+            userRepository: userRepository, localStorage: localStorage);
+    final SaveUserProfileDataUseCase saveUserProfileDataUseCase =
+        SaveUserProfileDataUseCase(
+            userRepository: userRepository, localStorage: localStorage);
 
     final getIt = GetIt.instance;
     getIt.registerSingleton<GetTrendingArtistsUseCase>(
@@ -180,6 +189,9 @@ class InjectManager {
         ConnectivityBloc(connectionManager: connectionManager));
     getIt.registerSingleton<NotificationsBloc>(
         NotificationsBloc(localNotifications: localNotifications));
+    getIt.registerSingleton<UserBloc>(UserBloc(
+        fetchUserProfileDataUseCase: fetchUserProfileDataUseCase,
+        saveUserProfileDataUseCase: saveUserProfileDataUseCase));
     //router config
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);
     final subscriptionGuard =

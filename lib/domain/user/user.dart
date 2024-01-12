@@ -11,6 +11,7 @@ class User {
   String? _phone;
   UserRoles _role;
   DateTime? _birthdate;
+  String? _gender;
   String? _token;
   late String _country;
 
@@ -21,6 +22,7 @@ class User {
     String? phone,
     required UserRoles role,
     DateTime? birthdate,
+    String? gender,
     String? token,
     String? country,
   })  : _id = id,
@@ -29,6 +31,7 @@ class User {
         _phone = phone,
         _role = role,
         _birthdate = birthdate,
+        _gender = gender,
         _token = token;
 
   String get id => _id;
@@ -37,6 +40,7 @@ class User {
   String? get phone => _phone;
   UserRoles get role => _role;
   DateTime? get birthdate => _birthdate;
+  String? get gender => _gender;
   String? get token => _token;
   String get country => _country;
 

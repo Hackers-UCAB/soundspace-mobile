@@ -10,7 +10,7 @@ class UserState extends Equatable {
 
   const UserState(
       {this.editable = false,
-      this.user = const User(),
+      required this.user,
       this.name = '',
       this.email = '',
       this.fecha = '',

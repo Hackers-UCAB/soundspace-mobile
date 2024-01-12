@@ -18,6 +18,7 @@ class UserMapper {
       'telefono': user.phone,
       'rol': user.role,
       'fecha_nac': user.birthdate,
+      'genero': user.gender,
     };
   }
 }

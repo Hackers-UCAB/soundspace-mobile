@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/user/save_user_profile_data_use_case.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/pages/profilePage/widgets/user_email_text_form_field.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/pages/profilePage/widgets/user_nombre_text_form_field.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/music_player.dart';
 import '../../../../domain/user/user.dart';
@@ -15,9 +16,12 @@ class UserProfilePage extends IPage {
   const UserProfilePage({super.key});
 
   @override
+  Future<void> onRefresh() async {}
+
+  @override
   Widget child(BuildContext context) {
-    /*final userBloc = GetIt.instance.get<UserBloc>();
-    userBloc.add(FetchUserProfileDataEvent());*/
+    final userBloc = GetIt.instance.get<UserBloc>();
+    userBloc.add(FetchUserProfileDataEvent());
 
     return BlocBuilder<PlayerBloc, PlayerState>(
         builder: (context, playerState) {
@@ -50,6 +54,7 @@ class ProfileForm extends StatelessWidget {
     String selectedOption = state.gender ?? genderOptions[0];
     return Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.always,
         child: Column(
           children: <Widget>[
             const SizedBox(height: 30),
@@ -99,65 +104,15 @@ class ProfileForm extends StatelessWidget {
             const SizedBox(height: 30),
 
             //Nombre y apellido
-            TextFormField(
-              enabled: context.watch<UserBloc>().state.editable,
-              initialValue: state.name,
-              onChanged: (value) => userBloc.add(NameEditedEvent(name: value)),
-              style: TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                  hintText: 'Carlos Alonso',
-                  hintStyle: TextStyle(color: Color.fromARGB(146, 0, 0, 0)),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide:
-                          BorderSide(width: 1, color: Colors.transparent)),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide: BorderSide(
-                          width: 1, color: Color.fromARGB(0, 85, 51, 51))),
-                  disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide: BorderSide(width: 1, color: Colors.black)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide: BorderSide(width: 2, color: Colors.white)),
-                  fillColor: Color.fromARGB(82, 129, 118, 160),
-                  filled: true,
-                  labelText: 'Nombre y Apellido',
-                  labelStyle: TextStyle(color: Colors.white)),
+            NombreTextFormField(
+              state: state,
             ),
 
             const SizedBox(height: 30),
 
             // CORREO
-            TextFormField(
-              enabled: state.editable,
-              initialValue: state.email,
-              onChanged: (value) =>
-                  userBloc.add(EmailEditedEvent(email: value)),
-              style: TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                  hintText: 'CarlosAlonso@CarlosAlonso.Com',
-                  hintStyle: TextStyle(color: Color.fromARGB(146, 0, 0, 0)),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide:
-                          BorderSide(width: 1, color: Colors.transparent)),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide: BorderSide(
-                          width: 1, color: Color.fromARGB(0, 85, 51, 51))),
-                  disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide: BorderSide(width: 1, color: Colors.black)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide: BorderSide(width: 2, color: Colors.white)),
-                  fillColor: Color.fromARGB(82, 129, 118, 160),
-                  filled: true,
-                  labelText: 'Correo Electrónico',
-                  labelStyle: TextStyle(color: Colors.white)),
-            ),
+            EmailTextFormField(state: state),
+
             const SizedBox(height: 30),
             Row(
               children: [
@@ -279,8 +234,20 @@ class ProfileForm extends StatelessWidget {
                         visible: state.editable,
                         child: ElevatedButton(
                           onPressed: () {
-                            //userBloc.add(SubmitChangesEvent(user: state.user));
-                            //print(state.editable);
+                            userBloc.add(ToggleProfileEditableEvent());
+                            /*userBloc.add(SubmitChangesEvent(
+                                user: User(
+                                    id: state.user.id,
+                                    name: UserName(state.name),
+                                    email: EmailAddress(state.email),
+                                    phone: state.user.phone,
+                                    role: state.user.role,
+                                    birthdate:
+                                        BirthDate(DateTime.parse(state.fecha)),
+                                    gender: Gender(state.gender),
+                                    appToken: state.user.appToken,
+                                    notificationsToken:
+                                        state.user.notificationsToken)));*/
                           },
                           style: const ButtonStyle(
                             minimumSize:
