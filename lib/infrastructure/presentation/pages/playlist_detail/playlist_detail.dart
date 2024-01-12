@@ -44,7 +44,7 @@ class PlaylistDetail extends IPage {
                         artistName: playlistState.playlist.artistName,
                         songs: playlistState.playlist.songs,
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 25),
                       Tracklist(songs: playlistState.playlist.songs!),
                     ],
                   ),
