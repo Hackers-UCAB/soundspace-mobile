@@ -1,131 +1,137 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sign_in_bloc/application/use_cases/user/save_user_profile_data_use_case.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/pages/profilePage/widgets/user_email_text_form_field.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/pages/profilePage/widgets/user_nombre_text_form_field.dart';
+import 'package:sign_in_bloc/application/use_cases/user/get_user_profile_data_use_case.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/widgets/email_text_form_field.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/music_player.dart';
-import '../../../../domain/user/user.dart';
+import '../../../../application/use_cases/user/cancel_user_subscription_use_case.dart';
+import '../../../../application/use_cases/user/save_user_profile_data_use_case.dart';
+import 'widgets/name_text_form_field.dart';
 
 final _formKey = GlobalKey<FormState>();
 
-class UserProfilePage extends IPage {
-  const UserProfilePage({super.key});
-
-  @override
-  Future<void> onRefresh() async {}
+class ProfilePage extends IPage {
+  final GetIt getIt = GetIt.instance;
+  late final UserBloc userBloc;
+  ProfilePage({super.key}) {
+    userBloc = UserBloc(
+        fetchUserProfileDataUseCase: getIt.get<FetchUserProfileDataUseCase>(),
+        saveUserProfileDataUseCase: getIt.get<SaveUserProfileDataUseCase>(),
+        cancelSubscriptionUseCase: getIt.get<CancelSubscriptionUseCase>())
+      ..add(FetchUserProfileDataEvent());
+  }
 
   @override
   Widget child(BuildContext context) {
-    final userBloc = GetIt.instance.get<UserBloc>();
-    userBloc.add(FetchUserProfileDataEvent());
+    return BlocProvider(
+      create: (context) => userBloc,
+      child: BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
+        if (userState is UserProfileLoadedState) {
+          return SafeArea(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          ProfileForm(
+                            state: userState,
+                            userBloc: userBloc,
+                          ),
+                        ]),
+                  )));
+        } else if (userState is UserProfileFaiLureState) {
+          return ErrorPage(
+            failure: userState.failure,
+          );
+        } else {
+          return const CustomCircularProgressIndicator();
+        }
+      }),
+    );
+  }
 
-    return BlocBuilder<PlayerBloc, PlayerState>(
-        builder: (context, playerState) {
-      return BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
-        return SafeArea(
-            child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: SingleChildScrollView(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        ProfileForm(userState, context),
-                      ]),
-                )));
-      });
-    });
+  @override
+  Future<void> onRefresh() {
+    // TODO: implement onRefresh
+    throw UnimplementedError();
   }
 }
 
 class ProfileForm extends StatelessWidget {
-  final BuildContext context;
-  final UserState state;
-  final userBloc = GetIt.instance.get<UserBloc>();
+  final UserProfileLoadedState state;
+  final UserBloc userBloc;
   final List<String> genderOptions = ['', 'M', 'F', 'O'];
-  ProfileForm(this.state, this.context);
+  ProfileForm({required this.state, required this.userBloc, super.key});
 
   @override
   Widget build(BuildContext context) {
-    userBloc.add(FetchUserProfileDataEvent());
-    String selectedOption = state.gender ?? genderOptions[0];
+    String selectedOption = state.user.genre ?? genderOptions[0];
     return Form(
         key: _formKey,
-        autovalidateMode: AutovalidateMode.always,
         child: Column(
-          children: <Widget>[
+          children: [
             const SizedBox(height: 30),
-            Align(
-              alignment: Alignment.topRight,
-              child: IconButton(
-                color: Colors.white,
-                iconSize: 25,
-                onPressed: () {
-                  print("current page data: ");
-                  print("name: " + state.name);
-                  print("email: " + state.email);
-                  print("date: " + state.fecha);
-                  print("gender: " + state.gender);
-                },
-                icon: const Icon(Icons.more_vert),
-              ),
-            ),
-            const SizedBox(height: 30),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      'Perfil',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'Perfil',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Visibility(
-                    visible: !state.editable,
-                    child: IconButton(
-                      color: Colors.white,
-                      iconSize: 20,
-                      onPressed: () {
-                        userBloc.add(ToggleProfileEditableEvent());
-                      },
-                      icon: const Icon(Icons.edit_sharp),
-                    ),
-                  )
-                ]),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Visibility(
+                visible: !state.editable,
+                child: IconButton(
+                  color: Colors.white,
+                  iconSize: 20,
+                  onPressed: () {
+                    userBloc.add(ToggleProfileEditableEvent(user: state.user));
+                  },
+                  icon: const Icon(Icons.edit_sharp),
+                ),
+              )
+            ]),
             const SizedBox(height: 30),
 
             //Nombre y apellido
-            NombreTextFormField(
+            NameTextFormField(
               state: state,
+              userBloc: userBloc,
             ),
 
             const SizedBox(height: 30),
 
             // CORREO
-            EmailTextFormField(state: state),
+            EmailTextFormField(state: state, userBloc: userBloc),
 
             const SizedBox(height: 30),
+//TODO: Hacer un Textfield customizado porque repites el del estilo de los border, fill, fillColor, etc - Jorge
             Row(
               children: [
                 Flexible(
                   flex: 2,
+                  //TODO: Separar en otro widget - Jorge
                   // FECHA DE NACIMIENTO
                   child: TextFormField(
                     enabled: state.editable,
                     controller: TextEditingController(
-                        text: state.fecha.toString() ?? ''),
+                        text: state.user.birthdate == null
+                            ? null
+                            : DateFormat('dd/MM/yyyy')
+                                .format(state.user.birthdate!)),
                     readOnly: true,
                     onTap: () {
-                      print(state.fecha);
                       showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
@@ -133,11 +139,10 @@ class ProfileForm extends StatelessWidget {
                         lastDate: DateTime.now(),
                       ).then((value) {
                         if (value != null) {
-                          userBloc
-                              .add(FechaEditedEvent(fecha: value.toString()));
+                          userBloc.add(
+                              FechaEditedEvent(user: state.user, fecha: value));
                         }
                       });
-                      print(state.fecha);
                     },
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
@@ -169,6 +174,8 @@ class ProfileForm extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
+
+                //TODO: Separar en otro widget - Jorge
                 Flexible(
                   flex: 1,
                   child: DropdownMenu<String>(
@@ -207,13 +214,12 @@ class ProfileForm extends StatelessWidget {
                         Color.fromARGB(255, 129, 118, 160),
                       ),
                     ),
-                    initialSelection: state.gender,
+                    initialSelection: state.user.genre,
                     onSelected: (String? newValue) {
                       if (newValue != null) {
                         selectedOption = newValue;
-                        userBloc.add(GenderEditedEvent(gender: selectedOption));
-                        // Update the selected option
-                        print('Selected option: $selectedOption');
+                        userBloc.add(GenreEditedEvent(
+                            user: state.user, genre: selectedOption));
                       }
                     },
                     dropdownMenuEntries: genderOptions
@@ -226,7 +232,9 @@ class ProfileForm extends StatelessWidget {
                 const SizedBox(width: 10),
               ],
             ),
+
             const SizedBox(height: 30),
+            //TODO: Separar en otro widget. Intentar tomar los de oriana que estan customizados - Jorge
             Row(
               children: [
                 Expanded(
@@ -234,20 +242,7 @@ class ProfileForm extends StatelessWidget {
                         visible: state.editable,
                         child: ElevatedButton(
                           onPressed: () {
-                            userBloc.add(ToggleProfileEditableEvent());
-                            /*userBloc.add(SubmitChangesEvent(
-                                user: User(
-                                    id: state.user.id,
-                                    name: UserName(state.name),
-                                    email: EmailAddress(state.email),
-                                    phone: state.user.phone,
-                                    role: state.user.role,
-                                    birthdate:
-                                        BirthDate(DateTime.parse(state.fecha)),
-                                    gender: Gender(state.gender),
-                                    appToken: state.user.appToken,
-                                    notificationsToken:
-                                        state.user.notificationsToken)));*/
+                            userBloc.add(SubmitChangesEvent(user: state.user));
                           },
                           style: const ButtonStyle(
                             minimumSize:
@@ -270,26 +265,24 @@ class ProfileForm extends StatelessWidget {
                                 color: Colors.black),
                           ),
                         ))),
-                /**/
               ],
             ),
             const SizedBox(height: 80),
-            Align(
+            //TODO: Separar en otro widget. Intentar resumirlo de alguna forma - Jorge
+            const Align(
               alignment: Alignment.centerLeft,
-              child: Visibility(
-                visible: !context.watch<UserBloc>().state.editable,
-                child: const Text(
-                  'Si deseas cancelar tu suscripción',
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
+              child: Text(
+                'Si deseas cancelar tu suscripción',
+                style: TextStyle(color: Colors.white, fontSize: 14),
               ),
             ),
 
             const SizedBox(height: 5),
             Align(
               alignment: Alignment.centerLeft,
-              child: Visibility(
-                visible: !context.watch<UserBloc>().state.editable,
+              child: GestureDetector(
+                onTap: () =>
+                    userBloc.add(CanceledSubscripcionEvent(user: state.user)),
                 child: const Text(
                   'Haz Click Aquí',
                   style: TextStyle(color: Colors.lightBlue, fontSize: 14),

@@ -10,7 +10,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/tracklist.dart';
 import '../../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../widgets/error_page.dart';
-import '../search/widgets/custom_app_bar.dart';
+import '../../widgets/custom_app_bar.dart';
 
 class ArtistDetail extends IPage {
   final String artistId;

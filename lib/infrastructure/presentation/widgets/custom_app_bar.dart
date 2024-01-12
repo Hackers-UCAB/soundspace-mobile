@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 
-import '../../../config/router/app_router.dart';
+import '../config/router/app_router.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor;
@@ -46,39 +46,39 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 alignment: Alignment.centerLeft,
                 child: Text('Buscar', style: bodyMediumStyle)),
         const SizedBox(width: 5),
-        if (userPermissions.state.isSubscribed)
-          Padding(
-            padding: const EdgeInsets.only(top: 5.0),
-            child: PopupMenuButton<String>(
-              icon: const Icon(
-                Icons.more_vert,
-                color: Colors.white,
-              ),
-              onSelected: (value) {
-                switch (value) {
-                  case 'Perfil':
-                    navigator.navigateTo('/profile');
-                    break;
-                  case 'Cerrar Sesion':
-                    logOutBloc.add(LogOutEvent());
-                    break;
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        Padding(
+          padding: const EdgeInsets.only(top: 5.0),
+          child: PopupMenuButton<String>(
+            icon: const Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            ),
+            onSelected: (value) {
+              switch (value) {
+                case 'Perfil':
+                  navigator.navigateTo('/profile');
+                  break;
+                case 'Cerrar Sesion':
+                  logOutBloc.add(LogOutEvent());
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              if (userPermissions.state.isSubscribed)
                 PopupMenuItem<String>(
                   value: 'Perfil',
                   child: Text('Perfil', style: bodySmallStyle),
                 ),
-                PopupMenuItem<String>(
-                  value: 'Cerrar Sesion',
-                  child: Text(
-                    'Cerrar Sesion',
-                    style: bodySmallStyle,
-                  ),
+              PopupMenuItem<String>(
+                value: 'Cerrar Sesion',
+                child: Text(
+                  'Cerrar Sesion',
+                  style: bodySmallStyle,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
         const SizedBox(),
       ],
     );

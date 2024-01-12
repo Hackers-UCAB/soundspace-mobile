@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
 
 class EmailTextFormField extends StatelessWidget {
-  final UserState? state;
+  final UserProfileLoadedState state;
+  final UserBloc userBloc;
 
-  const EmailTextFormField({super.key, this.state});
+  const EmailTextFormField(
+      {super.key, required this.state, required this.userBloc});
 
   String? validateEmail(String? value) {
     const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
@@ -24,13 +25,13 @@ class EmailTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userBloc = GetIt.instance.get<UserBloc>();
     return TextFormField(
       validator: validateEmail,
       enabled: state.editable,
-      initialValue: state?.email,
-      onChanged: (value) => userBloc.add(EmailEditedEvent(email: value)),
-      style: TextStyle(color: Colors.white),
+      initialValue: state.user.email,
+      onChanged: (value) =>
+          userBloc.add(EmailEditedEvent(user: state.user, email: value)),
+      style: const TextStyle(color: Colors.white),
       decoration: const InputDecoration(
           hintText: 'CarlosAlonso@CarlosAlonso.Com',
           hintStyle: TextStyle(color: Color.fromARGB(146, 0, 0, 0)),

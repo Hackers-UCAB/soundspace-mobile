@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/playlist_detail/playlist_detail_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_data_use_case.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/pages/album_detail/widgets/album_image.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
@@ -44,7 +43,7 @@ class PlaylistDetail extends IPage {
                         artistName: playlistState.playlist.artistName,
                         songs: playlistState.playlist.songs,
                       ),
-                      SizedBox(height: 25),
+                      const SizedBox(height: 25),
                       Tracklist(songs: playlistState.playlist.songs!),
                     ],
                   ),

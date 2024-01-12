@@ -6,7 +6,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/bloc_listeners/
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/bloc_listeners/user_permissions_listener.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/music_player.dart';
 import '../config/router/app_router.dart';
-import '../pages/search/widgets/custom_app_bar.dart';
+import 'custom_app_bar.dart';
 
 abstract class IPage extends StatelessWidget {
   const IPage({super.key});
@@ -41,7 +41,7 @@ abstract class IPage extends StatelessWidget {
                       builder: (context, state) {
                     return Visibility(
                       visible: GetIt.instance.get<PlayerBloc>().state.isUsed,
-                      child: Align(
+                      child: const Align(
                         alignment: Alignment.bottomLeft,
                         child: MusicPlayer(),
                       ),

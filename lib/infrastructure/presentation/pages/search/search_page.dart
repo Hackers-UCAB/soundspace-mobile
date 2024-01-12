@@ -27,41 +27,45 @@ class SearchPage extends IPage {
 
   @override
   Widget child(BuildContext context) {
-    return BlocBuilder<SearchBloc, SearchState>(
-      builder: (context, searchState) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 9),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomTextFormField(
-                hint: "",
-                onChanged: searchBloc.onChangeData,
-              ),
-              const SizedBox(height: 10),
-              CustomChoiceChips(),
-              const SizedBox(height: 10),
-              if (searchState is SearchLoading)
-                const CustomCircularProgressIndicator(),
-              if (searchState.searchList.isNotEmpty)
-                SearchList(items: searchState.searchList),
-              if (searchState.searchList.isEmpty && searchState.lastPage)
-                Center(
-                  child: Text(
-                    "Lo sentimos, no encontramos resultados que coincidan",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: Colors.blue),
-                  ),
+    return BlocProvider(
+      create: (context) => searchBloc,
+      child: BlocBuilder<SearchBloc, SearchState>(
+        builder: (context, searchState) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 9),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomTextFormField(
+                  hint: "",
+                  onChanged: searchBloc.onChangeData,
                 ),
-              if (searchState is SearchFailed)
-                ErrorPage(failure: searchState.failure),
-            ],
-          ),
-        );
-      },
+                const SizedBox(height: 10),
+                CustomChoiceChips(searchBloc: searchBloc),
+                const SizedBox(height: 10),
+                if (searchState is SearchLoading)
+                  const CustomCircularProgressIndicator(),
+                if (searchState.searchList.isNotEmpty)
+                  SearchList(
+                      items: searchState.searchList, searchBloc: searchBloc),
+                if (searchState.searchList.isEmpty && searchState.lastPage)
+                  Center(
+                    child: Text(
+                      "Lo sentimos, no encontramos resultados que coincidan",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.blue),
+                    ),
+                  ),
+                if (searchState is SearchFailed)
+                  ErrorPage(failure: searchState.failure),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

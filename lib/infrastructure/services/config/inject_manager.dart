@@ -6,14 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sign_in_bloc/application/BLoC/album_detail/album_detail_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/artist_detail/artist_detail_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
@@ -21,6 +17,7 @@ import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_u
 import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/user/cancel_user_subscription_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_local_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_profile_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/log_out_user_use_case.dart';
@@ -40,9 +37,9 @@ import 'package:sign_in_bloc/infrastructure/services/search_entities_by_name_imp
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
 import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import '../../../application/BLoC/socket/socket_bloc.dart';
-import '../../../application/BLoC/trendings/trendings_bloc.dart';
 import '../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
+import '../../../application/use_cases/user/get_user_profile_data_use_case.dart';
 import '../../../application/use_cases/user/log_in_guest_use_case.dart';
 import '../../../application/use_cases/user/log_in_use_case.dart';
 import '../../../domain/services/search_entities_by_name.dart';
@@ -144,10 +141,11 @@ class InjectManager {
     final GetAlbumDataUseCase getAlbumDataUseCase =
         GetAlbumDataUseCase(albumRepository: albumRepository);
     final FetchUserProfileDataUseCase fetchUserProfileDataUseCase =
-        FetchUserProfileDataUseCase(
-            userRepository: userRepository, localStorage: localStorage);
+        FetchUserProfileDataUseCase(userRepository: userRepository);
     final SaveUserProfileDataUseCase saveUserProfileDataUseCase =
-        SaveUserProfileDataUseCase(
+        SaveUserProfileDataUseCase(userRepository: userRepository);
+    final CancelSubscriptionUseCase cancelSubscriptionUseCase =
+        CancelSubscriptionUseCase(
             userRepository: userRepository, localStorage: localStorage);
 
     final getIt = GetIt.instance;
@@ -164,6 +162,12 @@ class InjectManager {
     getIt.registerSingleton<GetAlbumDataUseCase>(getAlbumDataUseCase);
     getIt.registerSingleton<SearchEntitiesByName>(SearchEntitiesByNameImpl(
         apiConnectionManager: apiConnectionManagerImpl));
+    getIt.registerSingleton<FetchUserProfileDataUseCase>(
+        fetchUserProfileDataUseCase);
+    getIt.registerSingleton<SaveUserProfileDataUseCase>(
+        saveUserProfileDataUseCase);
+    getIt.registerSingleton<CancelSubscriptionUseCase>(
+        cancelSubscriptionUseCase);
 
     //blocs
     getIt.registerSingleton<UserPermissionsBloc>(UserPermissionsBloc(
@@ -189,9 +193,6 @@ class InjectManager {
         ConnectivityBloc(connectionManager: connectionManager));
     getIt.registerSingleton<NotificationsBloc>(
         NotificationsBloc(localNotifications: localNotifications));
-    getIt.registerSingleton<UserBloc>(UserBloc(
-        fetchUserProfileDataUseCase: fetchUserProfileDataUseCase,
-        saveUserProfileDataUseCase: saveUserProfileDataUseCase));
     //router config
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);
     final subscriptionGuard =

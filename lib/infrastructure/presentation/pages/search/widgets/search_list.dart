@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
-import '../../../../../application/BLoC/socket/socket_bloc.dart';
 import '../../../config/router/app_router.dart';
 
 class SearchList extends StatefulWidget {
   final List<Map<String, String>> items;
+  final SearchBloc searchBloc;
 
-  const SearchList({super.key, required this.items});
+  const SearchList({super.key, required this.items, required this.searchBloc});
 
   @override
   SearchListState createState() => SearchListState();
@@ -21,9 +21,8 @@ class SearchListState extends State<SearchList> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final searchBloc = GetIt.instance.get<SearchBloc>();
-      if (searchBloc.state.page > 0) {
-        _scrollToIndex(searchBloc.state.scrollPosition);
+      if (widget.searchBloc.state.page > 0) {
+        _scrollToIndex(widget.searchBloc.state.scrollPosition);
       }
     });
   }
@@ -51,9 +50,9 @@ class SearchListState extends State<SearchList> {
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-            final searchBloc = getIt.get<SearchBloc>();
-            final page = searchBloc.state.page + 1;
-            searchBloc.add(FetchSearchedData(page: page, scrollPosition: page));
+            final page = widget.searchBloc.state.page + 1;
+            widget.searchBloc
+                .add(FetchSearchedData(page: page, scrollPosition: page));
           }
           return true;
         },

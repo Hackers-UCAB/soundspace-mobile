@@ -20,10 +20,7 @@ class LogOutBloc extends Bloc<LogOutEvent, LogOutState> {
       LogOutEvent event, Emitter<LogOutState> emit) async {
     final result = await _logOutUserUseCase.execute(LogOutUserUseCaseInput());
     if (result.hasValue()) {
-      GetIt.instance.get<UserPermissionsBloc>().add(UserPermissionsChanged(
-            isAuthenticated: false,
-            isSubscribed: false,
-          ));
+      GetIt.instance.get<UserPermissionsBloc>().add(UserPermissionsChanged());
       emit(LogOutSuccess());
     } else {
       emit(LogOutFailed(failure: result.failure!));
