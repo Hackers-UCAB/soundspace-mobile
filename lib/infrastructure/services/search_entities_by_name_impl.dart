@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_null_aware_operators
-import 'package:sign_in_bloc/domain/album/album.dart';
 import 'package:sign_in_bloc/infrastructure/datasources/api/api_connection_manager.dart';
 import 'package:sign_in_bloc/infrastructure/mappers/album/album_mapper.dart';
 import 'package:sign_in_bloc/infrastructure/mappers/artist/artist_mapper.dart';
@@ -21,9 +20,7 @@ class SearchEntitiesByNameImpl implements SearchEntitiesByName {
     final result = await _apiConnectionManager
         .request<EntitiesByName>('search/$name', 'GET', (data) {
       final albums = data['album'] != null && data['album'].isNotEmpty
-          ? data['album']
-              .map<Album>((e) => AlbumMapper.fromJsonList(e))
-              .toList()
+          ? AlbumMapper.fromJsonList(data['album'])
           : null;
       final artists = data['artist'] != null && data['artist'].isNotEmpty
           ? ArtistMapper.fromJsonList(data['artist'])

@@ -3,8 +3,14 @@ import 'clip_rect_cover.dart';
 
 class ImageCover extends StatelessWidget {
   final List<int>? image;
+  final double width;
+  final double height;
 
-  const ImageCover({super.key, required this.image});
+  const ImageCover(
+      {super.key,
+      required this.image,
+      required this.width,
+      required this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +23,7 @@ class ImageCover extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ClipRRectCover(image: image),
+            ClipRRectCover(image: image, width: width, height: height),
           ],
         ),
       ),

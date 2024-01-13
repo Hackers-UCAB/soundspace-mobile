@@ -38,7 +38,10 @@ class AlbumDetail extends IPage {
                   SingleChildScrollView(
                     child: Column(
                       children: [
-                        ImageCover(image: albumState.album.image),
+                        ImageCover(
+                            image: albumState.album.image,
+                            height: 250,
+                            width: 250),
                         Info(
                           name: albumState.album.name!,
                           artistName: albumState.album.artistName,
@@ -48,6 +51,7 @@ class AlbumDetail extends IPage {
                         //TODO: Player ()
                         const SizedBox(height: 20),
                         Tracklist(songs: albumState.album.songs!),
+                        const SizedBox(height: 100),
                       ],
                     ),
                   ),

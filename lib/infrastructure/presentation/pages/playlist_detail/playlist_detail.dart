@@ -33,7 +33,10 @@ class PlaylistDetail extends IPage {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ImageCover(image: playlistState.playlist.image),
+                      ImageCover(
+                          image: playlistState.playlist.image,
+                          height: 150,
+                          width: 300),
                       Info(
                         name: playlistState.playlist.name!,
                         artistName: playlistState.playlist.artistName,
