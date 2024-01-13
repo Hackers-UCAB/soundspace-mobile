@@ -87,7 +87,7 @@ class UserRepositoryImpl extends UserRepository {
     return response;
   }
 
-  /*@override
+  @override
   Future<Result<User>> fetchUserProfileData() async {
     return await _apiConnectionManager.request<User>('user', 'GET', (data) {
       data['role'] = 'subscriber';
@@ -105,5 +105,5 @@ class UserRepositoryImpl extends UserRepository {
     } else {
       return Result<String>(failure: response.failure);
     }
-  }*/
+  }
 }

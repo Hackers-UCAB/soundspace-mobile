@@ -23,7 +23,7 @@ class AlbumRepositoryImpl extends AlbumRepository {
   Future<Result<Album>> getAlbumById(String albumId) async {
     return await _apiConnectionManager.request<Album>(
       //FIXME: Javier
-      'playlist/$albumId',
+      'album/$albumId',
       'GET',
       (data) => AlbumMapper.fromJson(data),
     );

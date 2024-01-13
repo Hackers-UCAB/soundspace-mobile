@@ -9,8 +9,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/image_cover.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/info.dart';
-
-import 'widgets/Tracklist.dart';
+import '../../widgets/tracklist.dart';
 
 class PlaylistDetail extends IPage {
   final String playlistId;

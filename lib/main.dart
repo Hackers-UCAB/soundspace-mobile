@@ -66,9 +66,6 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => getIt.get<NotificationsBloc>(),
             ),
-            BlocProvider(
-              create: (context) => getIt.get<UserBloc>(),
-            ),
           ],
           child: MultiBlocListener(listeners: [
             ConnectionListener(),
