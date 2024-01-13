@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
 
 final List<String> genderOptions = ['', 'M', 'F', 'O'];

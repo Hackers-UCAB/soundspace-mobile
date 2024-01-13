@@ -18,6 +18,7 @@ abstract class IPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final navigator = GetIt.instance.get<AppNavigator>();
+    final playerBloc = GetIt.instance.get<PlayerBloc>();
     return Scaffold(
       body: Stack(children: [
         _GradientBackground(),
@@ -40,10 +41,11 @@ abstract class IPage extends StatelessWidget {
                   BlocBuilder<PlayerBloc, PlayerState>(
                       builder: (context, state) {
                     return Visibility(
-                      visible: GetIt.instance.get<PlayerBloc>().state.isUsed,
-                      child: const Align(
+                      visible: state.isUsed,
+                      child: Align(
                         alignment: Alignment.bottomLeft,
-                        child: MusicPlayer(),
+                        child: MusicPlayer(
+                            playerBloc: playerBloc, playerState: state),
                       ),
                     );
                   })

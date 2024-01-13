@@ -16,6 +16,7 @@ class PlaylistMapper {
               .map<String>((e) => e['creatorName'])
               .toList()
           : null,
+      duration: json['duration'],
       songs:
           json['songs'] != null ? SongMapper.fromJsonList(json['songs']) : null,
     );

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:general_audio_waveforms/general_audio_waveforms.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
-import '../../../application/BLoC/socket/socket_bloc.dart';
 
 class MusicPlayer extends StatelessWidget {
-  const MusicPlayer({super.key});
+  final PlayerBloc playerBloc;
+  final PlayerState playerState;
+  const MusicPlayer(
+      {super.key, required this.playerBloc, required this.playerState});
 
   @override
   Widget build(BuildContext context) {
-    final playerBloc = GetIt.instance.get<PlayerBloc>();
     var addMinuteZero = '0';
     var addSecondZero = '0';
-    Duration lastD = Duration.zero;
 
     if (playerBloc.state.position.inMinutes.toString().length < 2) {
       addMinuteZero = '0';
@@ -50,8 +50,8 @@ class MusicPlayer extends StatelessWidget {
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Row(
               children: [
-                GetIt.instance.get<PlayerBloc>().state.isLoading
-                    ? CircularProgressIndicator()
+                playerState.isLoading
+                    ? const CircularProgressIndicator()
                     : IconButton(
                         padding: const EdgeInsets.all(0),
                         onPressed: () {
@@ -59,11 +59,11 @@ class MusicPlayer extends StatelessWidget {
                               !playerBloc.state.playbackState));
                         },
                         icon: Icon(
-                          GetIt.instance.get<PlayerBloc>().state.playbackState
+                          playerState.playbackState
                               ? Icons.pause_circle
                               : Icons.play_circle_fill,
                           size: 50,
-                          color: Color(0xff1de1ee),
+                          color: const Color(0xff1de1ee),
                         ),
                       ),
                 Padding(
@@ -114,7 +114,7 @@ class MusicPlayer extends StatelessWidget {
             maxSamples: GetIt.instance.get<PlayerBloc>().state.waveForm.length,
             source: AudioDataSource(
                 samples: GetIt.instance.get<PlayerBloc>().state.waveForm),
-            maxDuration: Duration(minutes: 3, seconds: 13),
+            maxDuration: const Duration(minutes: 3, seconds: 13),
             elapsedDuration: playerBloc.state.position,
             elapsedIsChanged: (d) {
               playerBloc.add(UpdateSeekPosition(d));

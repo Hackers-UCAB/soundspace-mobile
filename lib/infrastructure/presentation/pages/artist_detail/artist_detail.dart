@@ -10,7 +10,6 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/tracklist.dart';
 import '../../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../widgets/error_page.dart';
-import '../../widgets/custom_app_bar.dart';
 
 class ArtistDetail extends IPage {
   final String artistId;
@@ -43,9 +42,8 @@ class ArtistDetail extends IPage {
                     SingleChildScrollView(
                       child: Column(
                         children: [
-                          const CustomAppBar(),
-                          // TODO: implementar ArtistInfo
                           ArtistInfo(artist: artistState.artist),
+                          const SizedBox(height: 20),
                           if (artistState.artist.albums!.length >= 3)
                             AlbumsCarousel(albums: artistState.artist.albums!),
                           Tracklist(songs: artistState.artist.songs!),
