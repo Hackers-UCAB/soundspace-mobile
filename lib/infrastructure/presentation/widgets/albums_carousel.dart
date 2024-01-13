@@ -70,7 +70,7 @@ class _AlbumCard extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         child: Image.memory(
           Uint8List.fromList(album.image!),
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
         ));
   }
 }

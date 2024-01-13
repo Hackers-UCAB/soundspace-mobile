@@ -61,7 +61,10 @@ class _ArtistCard extends StatelessWidget {
           ),
         ),
       ),
-      Text(artist.name)
+      Text(
+        artist.name,
+        style: Theme.of(context).textTheme.bodySmall,
+      )
     ]);
   }
 }
