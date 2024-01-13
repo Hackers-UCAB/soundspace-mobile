@@ -28,22 +28,20 @@ class AppNavigator {
           path: '/',
           builder: (context, state) {
             currentLocation = '/';
-            return const LandingPage();
+            return LandingPage();
           },
           redirect: _authProtectedNavigation,
         ),
         GoRoute(
           path: '/logIn',
           builder: (context, state) {
-            currentLocation = '/logIn';
-            return const RegisterScreen();
+            return RegisterScreen();
           },
           redirect: _authProtectedNavigation,
         ),
         GoRoute(
           path: '/home',
           builder: (context, state) {
-            currentLocation = '/home';
             return HomePage();
           },
         ),
@@ -51,7 +49,6 @@ class AppNavigator {
           path: '/artist/:id',
           builder: (context, state) {
             final artistId = state.pathParameters['id']!;
-            currentLocation = '/artist/$artistId';
             return ArtistDetail(artistId: artistId);
           },
         ),
@@ -59,7 +56,6 @@ class AppNavigator {
           path: '/album/:id',
           builder: (context, state) {
             final albumId = state.pathParameters['id']!;
-            currentLocation = '/album/$albumId';
             return AlbumDetail(albumId: albumId);
           },
         ),
@@ -67,7 +63,6 @@ class AppNavigator {
             path: '/playlist/:id',
             builder: (context, state) {
               final playlistId = state.pathParameters['id']!;
-              currentLocation = '/playlist/$playlistId';
               return PlaylistDetail(
                 playlistId: playlistId,
               );
@@ -75,14 +70,12 @@ class AppNavigator {
         GoRoute(
           path: '/search',
           builder: (context, state) {
-            currentLocation = '/search';
             return SearchPage();
           },
         ),
         GoRoute(
           path: '/profile',
           builder: (context, state) {
-            currentLocation = '/profile';
             return ProfilePage();
           },
         ),
@@ -102,18 +95,24 @@ class AppNavigator {
     return _routes.routeInformationProvider;
   }
 
+  bool canPop() {
+    return _routes.canPop();
+  }
+
   void pop() {
     _routes.canPop() ? _routes.pop() : _routes.go('/');
   }
 
   void go(String routeName) {
+    currentLocation = routeName;
     _routes.go(routeName);
   }
 
   void navigateTo(String routeName) {
-    // if (subscriptionRouteGuard.canNavigate(routeName)) {
-    _routes.push(routeName);
-    // }
+    if (subscriptionRouteGuard.canNavigate(routeName)) {
+      currentLocation = routeName;
+      _routes.push(routeName);
+    }
   }
 
   void replaceWith(String routeName) {

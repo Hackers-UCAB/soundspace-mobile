@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/connectivity/connectivity_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/theme/app_theme.dart';
 import 'package:sign_in_bloc/infrastructure/services/config/inject_manager.dart';
-import 'application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import 'application/BLoC/player/player_bloc.dart';
 import 'application/BLoC/socket/socket_bloc.dart';
 import 'infrastructure/presentation/config/router/app_router.dart';
@@ -38,7 +36,6 @@ class MyApp extends StatelessWidget {
       routeInformationParser: appNavigator.routeInformationParser,
       routeInformationProvider: appNavigator.routeInformationProvider,
       builder: (context, child) {
-        //TODO: poner esto en un widget separado
         return MultiBlocProvider(
           providers: [
             BlocProvider(
@@ -52,12 +49,6 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => getIt.get<ConnectivityBloc>(),
-            ),
-            BlocProvider(
-              create: (context) => getIt.get<LogInSubscriberBloc>(),
-            ),
-            BlocProvider(
-              create: (context) => getIt.get<LogInGuestBloc>(),
             ),
             BlocProvider(
               create: (context) => getIt.get<LogOutBloc>(),

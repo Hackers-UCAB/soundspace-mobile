@@ -35,7 +35,8 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
     }
 
     return Gallery3D(
-      controller: Gallery3DController(itemCount: 4, autoLoop: false),
+      controller:
+          Gallery3DController(itemCount: albumsCard.length, autoLoop: false),
       width: size.width,
       height: 150,
       onClickItem: (index) => GetIt.instance

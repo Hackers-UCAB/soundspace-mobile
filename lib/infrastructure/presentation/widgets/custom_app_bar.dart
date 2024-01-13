@@ -27,24 +27,26 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         textTheme.bodySmall?.copyWith(color: Colors.black, fontSize: 15);
     return AppBar(
       backgroundColor: Colors.transparent,
-      leading: navigator.currentLocation != '/home'
+      leading: navigator.canPop()
           ? IconButton(
               icon: const Icon(Icons.arrow_back_ios),
               color: Colors.white,
               onPressed: () => navigator.pop(),
             )
-          : null,
+          : const SizedBox(),
       actions: [
-        navigator.currentLocation != '/search'
-            ? IconButton(
-                onPressed: () => navigator.navigateTo('/search'),
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ))
-            : Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Buscar', style: bodyMediumStyle)),
+        if (userPermissions.state.isSubscribed &&
+            navigator.currentLocation != '/search')
+          IconButton(
+              onPressed: () => navigator.navigateTo('/search'),
+              icon: const Icon(
+                Icons.search,
+                color: Colors.white,
+              ))
+        else
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Buscar', style: bodyMediumStyle)),
         const SizedBox(width: 5),
         Padding(
           padding: const EdgeInsets.only(top: 5.0),

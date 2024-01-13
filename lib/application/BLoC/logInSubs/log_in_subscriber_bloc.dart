@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/common/failure.dart';
 import '../../use_cases/user/log_in_use_case.dart';
-import '../../use_cases/user/log_out_user_use_case.dart';
 import '../../use_cases/user/subscribe_use_case.dart';
 import '../user_permissions/user_permissions_bloc.dart';
 
@@ -14,13 +13,10 @@ class LogInSubscriberBloc
     extends Bloc<LogInSubscriberEvent, LogInSubscriberState> {
   final LogInUseCase logInUseCase;
   final SubscribeUseCase subscribeUseCase;
-  final LogOutUserUseCase logOutUseCase;
   final UserPermissionsBloc _userPermissionsBloc =
       GetIt.instance.get<UserPermissionsBloc>();
   LogInSubscriberBloc(
-      {required this.logInUseCase,
-      required this.subscribeUseCase,
-      required this.logOutUseCase})
+      {required this.logInUseCase, required this.subscribeUseCase})
       : super(LogInSubscriberInitial()) {
     on<LogInSubscriberSubmitted>(_onSubmited);
     on<LogInSubscriberPhoneChanged>(_phoneChanged);
