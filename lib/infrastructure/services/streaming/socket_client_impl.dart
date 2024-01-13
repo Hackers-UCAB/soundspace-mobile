@@ -17,10 +17,8 @@ class SocketClientImpl extends SocketClient {
 
   @override
   void inicializeSocket() async {
-    //socket = IO.io('http://192.168.1.103:5000',
+    //socket = IO.io('http://192.168.1.101:5000',
     //    IO.OptionBuilder().setTransports(['websocket']).build());
-
-    String url = 'https://soundspace-api-production-3d1f.up.railway.app';
 
     //socket = IO.io(url, <String, dynamic>{
     //  'transports': ['websocket', 'polling'],
@@ -29,6 +27,8 @@ class SocketClientImpl extends SocketClient {
     //});
 
     print(localStorage.getValue('appToken'));
+
+    String url = 'https://soundspace-api-production-3d1f.up.railway.app';
 
     socket = IO.io(
         url,
@@ -67,7 +67,6 @@ class SocketClientImpl extends SocketClient {
     });
 
     streamController.stream.listen((chunk) async {
-      print('LLEGANDO LA SECUENCIA ${chunk.sequence}');
       GetIt.instance.get<SocketBloc>().add(SocketReceiveChunk(chunk));
     });
   }

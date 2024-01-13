@@ -9,6 +9,7 @@ import 'package:sign_in_bloc/domain/playlist/playlist.dart';
 import 'package:sign_in_bloc/domain/promotional_banner/promotional_banner.dart';
 import 'package:sign_in_bloc/domain/song/song.dart';
 import '../../../common/failure.dart';
+import '../../../domain/artist/artist.dart';
 import '../../use_cases/album/get_trending_albums_use_case.dart';
 import '../../use_cases/artist/get_trending_artists_use_case.dart';
 part 'trendings_event.dart';
@@ -35,10 +36,10 @@ class TrendingsBloc extends Bloc<TrendingsEvent, TrendingsState> {
       FetchTrendingsEvent event, Emitter<TrendingsState> emit) async {
     emit(TrendingsLoading());
     final useCases = <Map<String, dynamic>>[
-      // {
-      //   'input': GetTrendingArtistsUseCaseInput(),
-      //   'useCase': getTrendingArtistsUseCase,
-      // },
+      {
+        'input': GetTrendingArtistsUseCaseInput(),
+        'useCase': getTrendingArtistsUseCase,
+      },
       {
         'input': GetTrendingAlbumsUseCaseInput(),
         'useCase': getTrendingAlbumsUseCase,
@@ -71,7 +72,7 @@ class TrendingsBloc extends Bloc<TrendingsEvent, TrendingsState> {
     }
 
     emit(TrendingsLoaded(
-      // trendingArtists: results[0].value as List<Artist>,
+      trendingArtists: results[0].value as List<Artist>,
       trendingAlbums: results[0].value as List<Album>,
       promotionalBanner: results[1].value as PromotionalBanner,
       trendingPlaylists: results[2].value as List<Playlist>,

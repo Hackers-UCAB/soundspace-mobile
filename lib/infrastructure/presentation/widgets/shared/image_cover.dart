@@ -12,7 +12,7 @@ class ImageCover extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
       child: SizedBox(
         width: double.infinity,
-        height: 200,
+        height: 250,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
