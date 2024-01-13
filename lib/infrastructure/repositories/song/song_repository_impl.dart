@@ -13,7 +13,7 @@ class SongRepositoryImpl extends SongRepository {
   @override
   Future<Result<List<Song>>> getTracklist() async {
     return await _apiConnectionManager.request(
-      'song/top_song',
+      'song/top_songs',
       'GET',
       (data) => SongMapper.fromJsonList(data),
     );

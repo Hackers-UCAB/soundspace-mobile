@@ -13,7 +13,7 @@ class ArtistRepositoryImpl extends ArtistRepository {
   @override
   Future<Result<List<Artist>>> getTrendingArtists() async {
     return await _apiConnectionManager.request<List<Artist>>(
-        'artist/top_artist',
+        'artist/top_artists',
         'GET',
         (data) => ArtistMapper.fromJsonList(data['artists']));
   }

@@ -71,7 +71,7 @@ class _TracklistItem extends StatelessWidget {
                   const SizedBox(width: 6),
                   IconButton(
                     onPressed: () {
-                      playerBloc.add(InitStream(song.id, 10));
+                      playerBloc.add(InitStream(song.id, 1));
                       //TODO: socket.sendIdSong(song.id);
                       // playerBloc.add(PlayingStartedEvent(song: song)),
                     },
