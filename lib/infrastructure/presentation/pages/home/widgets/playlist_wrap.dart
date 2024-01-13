@@ -59,7 +59,6 @@ class _PlaylistCard extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () => {
-        //TODO: Javier
         GetIt.instance.get<AppNavigator>().navigateTo('/playlist/$id'),
       },
       child: SizedBox(
@@ -69,7 +68,7 @@ class _PlaylistCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: Image.memory(
               Uint8List.fromList(img),
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
             ),
           )),
     );

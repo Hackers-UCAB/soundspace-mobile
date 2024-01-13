@@ -58,6 +58,10 @@ class _TracklistItem extends StatelessWidget {
               child: Column(children: [
                 Text(
                   song.name,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontSize: 15),
                 ), //song.artist
               ]),
             ),
@@ -67,7 +71,13 @@ class _TracklistItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(song.duration!), //duracion total de la cancion
+                  Text(
+                    song.duration!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(fontSize: 12),
+                  ), //duracion total de la cancion
                   const SizedBox(width: 6),
                   IconButton(
                     onPressed: () {
