@@ -19,17 +19,18 @@ class SearchEntitiesByNameImpl implements SearchEntitiesByName {
       String name, List<String>? entitiesFilter, int limit, int offset) async {
     final result = await _apiConnectionManager
         .request<EntitiesByName>('search/$name', 'GET', (data) {
-      final albums = data['album'] != null && data['album'].isNotEmpty
-          ? AlbumMapper.fromJsonList(data['album'])
+      final albums = data['albums'] != null && data['albums'].isNotEmpty
+          ? AlbumMapper.fromJsonList(data['albums'])
           : null;
-      final artists = data['artist'] != null && data['artist'].isNotEmpty
-          ? ArtistMapper.fromJsonList(data['artist'])
+      final artists = data['artists'] != null && data['artists'].isNotEmpty
+          ? ArtistMapper.fromJsonList(data['artists'])
           : null;
-      final playlists = data['playlist'] != null && data['playlist'].isNotEmpty
-          ? PlaylistMapper.fromJsonList(data['playlist'])
-          : null;
-      final songs = data['song'] != null && data['song'].isNotEmpty
-          ? SongMapper.fromJsonList(data['song'])
+      final playlists =
+          data['playlists'] != null && data['playlists'].isNotEmpty
+              ? PlaylistMapper.fromJsonList(data['playlists'])
+              : null;
+      final songs = data['songs'] != null && data['songs'].isNotEmpty
+          ? SongMapper.fromJsonList(data['songs'])
           : null;
 
       return EntitiesByName(

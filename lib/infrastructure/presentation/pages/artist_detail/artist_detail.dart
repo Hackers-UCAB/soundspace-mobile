@@ -44,12 +44,12 @@ class ArtistDetail extends IPage {
                     ),
                     ArtistInfo(artist: artistState.artist),
                     const SizedBox(
-                      height: 10,
+                      height: 40,
                     ),
                     if (artistState.artist.albums!.isNotEmpty)
                       AlbumsCarousel(albums: artistState.artist.albums!),
                     const SizedBox(
-                      height: 60,
+                      height: 40,
                     ),
                     Tracklist(songs: artistState.artist.songs!),
                     const SizedBox(
