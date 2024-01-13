@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/playlist_detail/playlist_detail_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_data_use_case.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
@@ -24,10 +23,8 @@ class PlaylistDetail extends IPage {
   @override
   Widget child(BuildContext context) {
     return BlocProvider(
-      create: (context) => playlistBloc,
-      child:
-          BlocBuilder<PlayerBloc, PlayerState>(builder: (context, playerState) {
-        return BlocBuilder<PlaylistDetailBloc, PlaylistDetailState>(
+        create: (context) => playlistBloc,
+        child: BlocBuilder<PlaylistDetailBloc, PlaylistDetailState>(
             builder: (contex, playlistState) {
           if (playlistState is PlaylistDetailLoaded) {
             return Stack(
@@ -55,9 +52,7 @@ class PlaylistDetail extends IPage {
           } else {
             return const CustomCircularProgressIndicator();
           }
-        });
-      }),
-    );
+        }));
   }
 
   @override

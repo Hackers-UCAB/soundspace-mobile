@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:general_audio_waveforms/general_audio_waveforms.dart';
-import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 
 class MusicPlayer extends StatelessWidget {
@@ -34,7 +32,7 @@ class MusicPlayer extends StatelessWidget {
     }
 
     return Container(
-      height: 200,
+      height: 82, //TODO: Cuidado con esto y la onda comentada
       width: double.infinity,
       decoration: const BoxDecoration(color: Color.fromARGB(255, 24, 15, 35)),
       child: Column(
@@ -47,7 +45,7 @@ class MusicPlayer extends StatelessWidget {
             minHeight: 5,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 8),
             child: Row(
               children: [
                 playerState.isLoading
@@ -84,7 +82,10 @@ class MusicPlayer extends StatelessWidget {
                     children: [
                       Text(
                         '$addMinuteZero${playerBloc.state.position.inMinutes}:$addSecondZero${playerBloc.state.position.inSeconds % 60}',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(fontSize: 12),
                       ),
                       const SizedBox(width: 6),
                       //IconButton(
@@ -106,30 +107,30 @@ class MusicPlayer extends StatelessWidget {
               ],
             ),
           ),
-          GeneralAudioWaveform(
-            scalingAlgorithmType: ScalingAlgorithmType.median,
-            waveformType: WaveformType.rectangle,
-            height: 80,
-            width: 400,
-            maxSamples: GetIt.instance.get<PlayerBloc>().state.waveForm.length,
-            source: AudioDataSource(
-                samples: GetIt.instance.get<PlayerBloc>().state.waveForm),
-            maxDuration: const Duration(minutes: 3, seconds: 13),
-            elapsedDuration: playerBloc.state.position,
-            elapsedIsChanged: (d) {
-              playerBloc.add(UpdateSeekPosition(d));
-              playerBloc.add(InitStream(
-                  'ac75ed9c-4f69-4c59-a4cc-8843c8a33108', d.inSeconds));
-            },
-            scrollable: true,
-            waveformStyle: WaveformStyle(
-                isRoundedRectangle: true,
-                borderWidth: 1,
-                inactiveColor: Colors.grey,
-                inactiveBorderColor: Colors.grey,
-                activeColor: Colors.red,
-                activeBorderColor: Colors.red),
-          ),
+          // GeneralAudioWaveform(
+          //   scalingAlgorithmType: ScalingAlgorithmType.median,
+          //   waveformType: WaveformType.rectangle,
+          //   height: 80,
+          //   width: 400,
+          //   maxSamples: GetIt.instance.get<PlayerBloc>().state.waveForm.length,
+          //   source: AudioDataSource(
+          //       samples: GetIt.instance.get<PlayerBloc>().state.waveForm),
+          //   maxDuration: const Duration(minutes: 3, seconds: 13),
+          //   elapsedDuration: playerBloc.state.position,
+          //   elapsedIsChanged: (d) {
+          //     playerBloc.add(UpdateSeekPosition(d));
+          //     playerBloc.add(InitStream(
+          //         'ac75ed9c-4f69-4c59-a4cc-8843c8a33108', d.inSeconds));
+          //   },
+          //   scrollable: true,
+          //   waveformStyle: WaveformStyle(
+          //       isRoundedRectangle: true,
+          //       borderWidth: 1,
+          //       inactiveColor: Colors.grey,
+          //       inactiveBorderColor: Colors.grey,
+          //       activeColor: Colors.red,
+          //       activeBorderColor: Colors.red),
+          // ),
         ],
       ),
     );

@@ -21,25 +21,20 @@ class ArtistInfo extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
+        const SizedBox(width: 10),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               artist.name,
-              style: const TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             Text(
               'Genero',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               '${artist.albums?.length.toString()} Album${artist.albums!.length > 1 ? 's' : ''}',
               style: const TextStyle(

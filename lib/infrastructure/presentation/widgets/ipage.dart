@@ -38,20 +38,20 @@ abstract class IPage extends StatelessWidget {
                       )),
                     ],
                   ),
-                  BlocBuilder<PlayerBloc, PlayerState>(
-                      builder: (context, state) {
-                    return Visibility(
-                      visible: state.isUsed,
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: MusicPlayer(
-                            playerBloc: playerBloc, playerState: state),
-                      ),
-                    );
-                  })
                 ],
               )
             ])),
+        BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
+          return Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Visibility(
+              visible: state.isUsed,
+              child: MusicPlayer(playerBloc: playerBloc, playerState: state),
+            ),
+          );
+        })
       ]),
     );
   }

@@ -16,7 +16,7 @@ class ClipRRectCover extends StatelessWidget {
         height: 250,
         child: Image.memory(
           Uint8List.fromList(image!),
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
         ),
       ),
     );
