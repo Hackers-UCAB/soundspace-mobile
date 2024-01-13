@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../../domain/album/album.dart';
 import 'album_clip_rect.dart';
 
 class AlbumImage extends StatelessWidget {
