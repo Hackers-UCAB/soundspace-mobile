@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/artist_detail/artist_detail_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
+import 'package:sign_in_bloc/domain/album/album.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/artist_detail/widgets/artist_info.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/albums_carousel.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
@@ -42,10 +43,17 @@ class ArtistDetail extends IPage {
                     SingleChildScrollView(
                       child: Column(
                         children: [
+                          SizedBox(
+                            height: 20,
+                          ),
                           ArtistInfo(artist: artistState.artist),
-                          const SizedBox(height: 20),
-                          if (artistState.artist.albums!.length >= 3)
-                            AlbumsCarousel(albums: artistState.artist.albums!),
+                          SizedBox(
+                            height: 60,
+                          ),
+                          AlbumsCarousel(albums: artistState.artist.albums!),
+                          SizedBox(
+                            height: 60,
+                          ),
                           Tracklist(songs: artistState.artist.songs!),
                           const Divider(
                             color: Color.fromARGB(18, 142, 139, 139),
@@ -54,7 +62,6 @@ class ArtistDetail extends IPage {
                             indent: 20,
                             endIndent: 20,
                           ),
-                          const SizedBox(height: 100)
                         ],
                       ),
                     ),

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -25,12 +26,14 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
         widget.albums.map((album) => _AlbumCard(album: album)).toList();
 
     //FIXME: esto es un parche para que no se rompa la galeria
-    if (albumsCard.length < 3) {
+    if (albumsCard.length <= 3) {
       albumsCard.addAll([
-        _AlbumCard(album: widget.albums[0]),
-        _AlbumCard(album: widget.albums[0])
+        _AlbumCard(album: Album(id: '')),
+        _AlbumCard(
+          album: Album(id: ''),
+        ),
+        _AlbumCard(album: Album(id: ''))
       ]);
-      ;
     }
 
     return Gallery3D(
@@ -66,11 +69,18 @@ class _AlbumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        child: Image.memory(
-          Uint8List.fromList(album.image!),
-          fit: BoxFit.cover,
-        ));
+    return album.id == ''
+        ? ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            child: Image.asset(
+              'images/c2.jpg',
+              fit: BoxFit.cover,
+            ))
+        : ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            child: Image.memory(
+              Uint8List.fromList(album.image!),
+              fit: BoxFit.cover,
+            ));
   }
 }
