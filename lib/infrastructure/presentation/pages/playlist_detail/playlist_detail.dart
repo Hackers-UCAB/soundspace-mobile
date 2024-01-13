@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/playlist_detail/playlist_detail_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_data_use_case.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
@@ -8,6 +9,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/image_cover.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/info.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/music_wave_player.dart';
 import '../../widgets/tracklist.dart';
 
 class PlaylistDetail extends IPage {
@@ -22,6 +24,7 @@ class PlaylistDetail extends IPage {
 
   @override
   Widget child(BuildContext context) {
+    final playerBloc = GetIt.instance.get<PlayerBloc>();
     return BlocProvider(
         create: (context) => playlistBloc,
         child: BlocBuilder<PlaylistDetailBloc, PlaylistDetailState>(
@@ -42,6 +45,19 @@ class PlaylistDetail extends IPage {
                         artistName: playlistState.playlist.artistName,
                         songs: playlistState.playlist.songs!,
                         duration: playlistState.playlist.duration!,
+                      ),
+                      const SizedBox(height: 25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          BlocBuilder<PlayerBloc, PlayerState>(
+                              builder: (context, state) {
+                            return MusicWavePlayer(
+                              playerBloc: playerBloc,
+                              playerState: state,
+                            );
+                          }),
+                        ],
                       ),
                       const SizedBox(height: 25),
                       Tracklist(songs: playlistState.playlist.songs!),

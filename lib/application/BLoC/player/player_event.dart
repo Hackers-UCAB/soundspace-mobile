@@ -35,8 +35,10 @@ class AskForChunk extends PlayerEvent {
 
 class InitStream extends PlayerEvent {
   final String songId;
+  final String nameSong;
+  final Duration durationSong;
   final int second;
-  InitStream(this.songId, this.second);
+  InitStream(this.songId, this.second, this.nameSong, this.durationSong);
 }
 
 class UpdateInitState extends PlayerEvent {

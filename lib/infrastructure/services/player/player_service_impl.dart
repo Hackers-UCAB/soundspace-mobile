@@ -76,9 +76,6 @@ class PlayerServiceImpl extends PlayerService {
 
   @override
   void trackingDuration() {
-    GetIt.instance.get<PlayerBloc>().add(
-        UpdatingDuration(Duration(minutes: 3, seconds: 13, milliseconds: 54)));
-
     // TODO es realmente necesario??
     player.durationStream.listen((duration) {
       print('DURACION ACTUAL ${duration?.inSeconds}');
@@ -110,11 +107,14 @@ class PlayerServiceImpl extends PlayerService {
           }
         }
       }
-
-      if (player.sequence != null && player.currentIndex != null) {
+      if (player.sequence != null &&
+          player.currentIndex != null &&
+          player.duration != null) {
         var totalDuration = Duration.zero;
         for (var i = 0; i < player.currentIndex!; i++) {
-          totalDuration += player.sequence![i].duration!;
+          if (player.sequence![i].duration != null) {
+            totalDuration += player.sequence![i].duration!;
+          }
         }
         totalDuration += player.position + playerBloc.state.seekPosition;
         playerBloc.add(TrackingCurrentPosition(totalDuration));

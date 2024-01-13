@@ -1,4 +1,6 @@
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:general_audio_waveforms/general_audio_waveforms.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 
 class MusicPlayer extends StatelessWidget {
@@ -24,10 +26,7 @@ class MusicPlayer extends StatelessWidget {
       addSecondZero = '';
     }
 
-    if (((playerBloc.state.position.inSeconds.toDouble() /
-                playerBloc.state.duration.inSeconds.toDouble()) *
-            100.toDouble()) >
-        99.5) {
+    if (playerState.position.inSeconds == playerState.duration.inSeconds) {
       playerBloc.add(ResetPlayer());
     }
 
@@ -37,12 +36,18 @@ class MusicPlayer extends StatelessWidget {
       decoration: const BoxDecoration(color: Color.fromARGB(255, 24, 15, 35)),
       child: Column(
         children: [
-          LinearProgressIndicator(
-            backgroundColor: const Color.fromARGB(255, 33, 31, 34),
-            value: playerBloc.state.position.inSeconds.toDouble() /
-                playerBloc.state.duration.inSeconds
-                    .toDouble(), //porcentaje que debe coincidir con el porcentaje que va de audio
-            minHeight: 5,
+          ProgressBar(
+            progress: playerState.position,
+            total: playerState.duration,
+            barHeight: 5,
+            thumbCanPaintOutsideBar: false,
+            thumbRadius: 0,
+            timeLabelLocation: TimeLabelLocation.none,
+            onSeek: (d) {
+              playerBloc.add(UpdateSeekPosition(d));
+              playerBloc.add(InitStream(playerState.currentIdSong, d.inSeconds,
+                  playerState.currentNameSong, playerState.duration));
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 8),
@@ -68,7 +73,7 @@ class MusicPlayer extends StatelessWidget {
                   padding: const EdgeInsets.all(14),
                   child: Column(children: [
                     Text(
-                      'Artist',
+                      playerState.currentNameSong,
                       style: Theme.of(context).textTheme.bodySmall,
                     )
                   ]),

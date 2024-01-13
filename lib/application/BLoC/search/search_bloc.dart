@@ -76,6 +76,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
                             'filter': entity.key,
                             'id': e.id,
                             'name': e.name,
+                            e.duration == null ? '' : 'duration': e.duration
                           })
                       .toList();
                 }
