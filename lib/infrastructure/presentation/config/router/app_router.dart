@@ -25,7 +25,11 @@ class AppNavigator {
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) => const LandingPage(),
+          builder: (context, state) 
+          {
+            currentLocation = '/';
+            return LandingPage();
+          },
           redirect: _authProtectedNavigation,
         ),
         GoRoute(

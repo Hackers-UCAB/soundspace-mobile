@@ -73,6 +73,16 @@ class _RegisterForm extends StatelessWidget {
     final getIt = GetIt.instance;
     final registerBloc = getIt.get<LogInSubscriberBloc>();
     final appNavigator = getIt.get<AppNavigator>();
+    final TextEditingController phoneNumberController = TextEditingController();
+     // Reiniciar estado solo al entrar en la página
+     bool initialized = false;
+
+    // Si no se ha inicializado, realiza la llamada y actualiza la bandera
+    if (!initialized) {
+      registerBloc.add(const LogInEntered(phone: ''));
+      initialized = true;
+    }
+     
     return BlocListener<UserPermissionsBloc, UserPermissionsState>(
         listener: (context, state) {
       if (state.isAuthenticated) {
@@ -84,12 +94,13 @@ class _RegisterForm extends StatelessWidget {
             child: Column(
           children: [
             CustomTextFormField(
-              label: 'Nombre de usuario',
+              label: 'Numero de telefono',
               onChanged: registerBloc.onPhoneChanged,
               errorMessage:
                   (state is LogInSubscriberInvalid) ? state.errorMessage : null,
               hint: 'Ej. 584241232323 o 4121232323',
               icon: Icons.info_outlined,
+              controller: phoneNumberController,
             ),
 
             const SizedBox(height: 15),
@@ -106,6 +117,7 @@ class _RegisterForm extends StatelessWidget {
 
             if (state is! LogInSubscriberPosting)
               MyButton(onTap: () {
+                registerBloc.onPhoneChanged(phoneNumberController.text);
                 if (state is LogInSubscriberValid) {
                   registerBloc
                       .add(LogInSubscriberSubmitted(phone: state.phone));
@@ -147,6 +159,7 @@ class _RegisterForm extends StatelessWidget {
               child: ImageContainer(
                   imagePath: 'images/digitel_blanco.png',
                   onTap: () {
+                    registerBloc.onPhoneChanged(phoneNumberController.text);
                     if (state is LogInSubscriberValid) {
                       registerBloc.add(OperatorSubmittedEvent(
                           phone: state.phone, selectedOperator: 'digitel'));
@@ -158,9 +171,11 @@ class _RegisterForm extends StatelessWidget {
               child: ImageContainer(
                   imagePath: 'images/movistar_blanco.png',
                   onTap: () {
+                    registerBloc.onPhoneChanged(phoneNumberController.text);
+                    print(state);
                     if (state is LogInSubscriberValid) {
                       registerBloc.add(OperatorSubmittedEvent(
-                          phone: state.phone, selectedOperator: 'movistar'));
+                          phone: phoneNumberController.text, selectedOperator: 'movistar'));
                     }
                   }),
             ),

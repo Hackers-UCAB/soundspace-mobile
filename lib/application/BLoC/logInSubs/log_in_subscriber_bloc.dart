@@ -25,6 +25,7 @@ class LogInSubscriberBloc
     on<LogInSubscriberSubmitted>(_onSubmited);
     on<LogInSubscriberPhoneChanged>(_phoneChanged);
     on<OperatorSubmittedEvent>(_onSubscribe);
+    on<LogInEntered>(_onEnter);
   }
 
   Future<void> _onSubmited(
@@ -63,8 +64,8 @@ class LogInSubscriberBloc
     }
   }
 
-  Future<void> _phoneChanged(
-      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
+  void _phoneChanged(
+      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) {
     if (event.phone.isEmpty || event.phone.trim().isEmpty) {
       emit(LogInSubscriberInvalid(
           errorMessage: 'Ingresa tu número de teléfono.'));
@@ -81,6 +82,11 @@ class LogInSubscriberBloc
         emit(LogInSubscriberValid(phone: event.phone));
       }
     }
+  }
+
+  Future<void> _onEnter(
+      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
+    emit(LogInSubscriberInitial());
   }
 
   void onPhoneChanged(String value) {
