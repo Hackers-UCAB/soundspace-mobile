@@ -46,6 +46,6 @@ class User {
   }
 
   bool validLocation() {
-    return country == 'Venezuela';
+    return country != 'Venezuela';
   }
 }
