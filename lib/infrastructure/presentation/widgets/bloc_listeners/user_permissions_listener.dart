@@ -21,13 +21,13 @@ class UserPermissionsListener
                         'Ahora eres un invitado, solo en Venezuela tienes acceso premium',
                     barrierDismissible: true);
               } else if (state.isSubscribed == false && state.isAuthenticated) {
+                GetIt.instance.get<AppNavigator>().pop();
                 CustomDialog().show(
                     context: context,
-                    title: 'Una lastima!',
+                    title: 'Una lastima...',
                     message:
                         'Tu subscripcion ha sido cancelada, pero siempre puedes volver a la experiencia premium!',
                     barrierDismissible: true);
-                GetIt.instance.get<AppNavigator>().go('/home');
               }
             } else {
               child = ErrorPage(failure: state.failure);

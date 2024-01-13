@@ -17,8 +17,7 @@ class AlbumDetail extends IPage {
 
   AlbumDetail({super.key, required this.albumId}) {
     albumBloc = AlbumDetailBloc(
-        getAlbumDataUseCase: GetIt.instance.get<GetAlbumDataUseCase>())
-      ..add(FetchAlbumDetailEvent(albumId: albumId));
+        getAlbumDataUseCase: GetIt.instance.get<GetAlbumDataUseCase>());
   }
 
   @override
@@ -28,41 +27,40 @@ class AlbumDetail extends IPage {
 
   @override
   Widget child(BuildContext context) {
-    return BlocProvider(
-        create: (context) => albumBloc,
-        child: BlocBuilder<AlbumDetailBloc, AlbumDetailState>(
-          builder: (context, albumState) {
-            if (albumState is AlbumDetailLoaded) {
-              return Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ImageCover(
-                            image: albumState.album.image,
-                            height: 250,
-                            width: 250),
-                        Info(
-                          name: albumState.album.name!,
-                          artistName: albumState.album.artistName,
-                          songs: albumState.album.songs!,
-                          duration: albumState.album.duration!,
-                        ),
-                        //TODO: Player ()
-                        const SizedBox(height: 20),
-                        Tracklist(songs: albumState.album.songs!),
-                        const SizedBox(height: 100),
-                      ],
+    return BlocProvider(create: (context) {
+      albumBloc.add(FetchAlbumDetailEvent(albumId: albumId));
+      return albumBloc;
+    }, child: BlocBuilder<AlbumDetailBloc, AlbumDetailState>(
+      builder: (context, albumState) {
+        if (albumState is AlbumDetailLoaded) {
+          return Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ImageCover(
+                        image: albumState.album.image, height: 250, width: 250),
+                    Info(
+                      name: albumState.album.name!,
+                      artistName: albumState.album.artistName,
+                      songs: albumState.album.songs!,
+                      duration: albumState.album.duration!,
                     ),
-                  ),
-                ],
-              );
-            } else if (albumState is AlbumDetailFailed) {
-              return ErrorPage(failure: albumState.failure);
-            } else {
-              return const CustomCircularProgressIndicator();
-            }
-          },
-        ));
+                    //TODO: Player ()
+                    const SizedBox(height: 20),
+                    Tracklist(songs: albumState.album.songs!),
+                    const SizedBox(height: 100),
+                  ],
+                ),
+              ),
+            ],
+          );
+        } else if (albumState is AlbumDetailFailed) {
+          return ErrorPage(failure: albumState.failure);
+        } else {
+          return const CustomCircularProgressIndicator();
+        }
+      },
+    ));
   }
 }

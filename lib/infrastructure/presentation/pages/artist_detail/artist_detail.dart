@@ -16,8 +16,7 @@ class ArtistDetail extends IPage {
 
   ArtistDetail({super.key, required this.artistId}) {
     artistBloc = ArtistDetailBloc(
-        getArtistDataUseCase: GetIt.instance.get<GetArtistDataUseCase>())
-      ..add(FetchArtistDetailEvent(artistId: artistId));
+        getArtistDataUseCase: GetIt.instance.get<GetArtistDataUseCase>());
   }
 
   @override
@@ -27,43 +26,44 @@ class ArtistDetail extends IPage {
 
   @override
   Widget child(BuildContext context) {
-    return BlocProvider(
-        create: (context) => artistBloc,
-        child: BlocBuilder<ArtistDetailBloc, ArtistDetailState>(
-          builder: (context, artistState) {
-            if (artistState is ArtistDetailLoading) {
-              return const CustomCircularProgressIndicator();
-            } else if (artistState is ArtistDetailLoaded) {
-              return Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        ArtistInfo(artist: artistState.artist),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        if (artistState.artist.albums!.isNotEmpty)
-                          AlbumsCarousel(albums: artistState.artist.albums!),
-                        const SizedBox(
-                          height: 60,
-                        ),
-                        Tracklist(songs: artistState.artist.songs!),
-                        const SizedBox(
-                          height: 100,
-                        )
-                      ],
+    return BlocProvider(create: (context) {
+      artistBloc.add(FetchArtistDetailEvent(artistId: artistId));
+      return artistBloc;
+    }, child: BlocBuilder<ArtistDetailBloc, ArtistDetailState>(
+      builder: (context, artistState) {
+        if (artistState is ArtistDetailLoading) {
+          return const CustomCircularProgressIndicator();
+        } else if (artistState is ArtistDetailLoaded) {
+          return Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                ],
-              );
-            } else {
-              return ErrorPage(failure: artistState.failure!);
-            }
-          },
-        ));
+                    ArtistInfo(artist: artistState.artist),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    if (artistState.artist.albums!.isNotEmpty)
+                      AlbumsCarousel(albums: artistState.artist.albums!),
+                    const SizedBox(
+                      height: 60,
+                    ),
+                    Tracklist(songs: artistState.artist.songs!),
+                    const SizedBox(
+                      height: 100,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          );
+        } else {
+          return ErrorPage(failure: artistState.failure!);
+        }
+      },
+    ));
   }
 }

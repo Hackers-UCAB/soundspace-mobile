@@ -35,19 +35,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             )
           : const SizedBox(),
       actions: [
-        if (userPermissions.state.isSubscribed &&
-            navigator.currentLocation != '/search')
-          IconButton(
-              onPressed: () => navigator.navigateTo('/search'),
-              icon: const Icon(
-                Icons.search,
-                color: Colors.white,
-              ))
-        else
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Buscar', style: bodyMediumStyle)),
-        const SizedBox(width: 5),
+        userPermissions.state.isSubscribed
+            ? navigator.currentLocation != '/search'
+                ? IconButton(
+                    onPressed: () => navigator.navigateTo('/search'),
+                    icon: const Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    ))
+                : Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Buscar', style: bodyMediumStyle))
+            : const SizedBox(width: 5),
         Padding(
           padding: const EdgeInsets.only(top: 5.0),
           child: PopupMenuButton<String>(

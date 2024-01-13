@@ -16,46 +16,46 @@ class PlaylistDetail extends IPage {
 
   PlaylistDetail({super.key, required this.playlistId}) {
     playlistBloc = PlaylistDetailBloc(
-        getPlaylistDataUseCase: GetIt.instance.get<GetPlaylistDataUseCase>())
-      ..add(FetchPlaylistDetailEvent(playlistId: playlistId));
+        getPlaylistDataUseCase: GetIt.instance.get<GetPlaylistDataUseCase>());
   }
 
   @override
   Widget child(BuildContext context) {
-    return BlocProvider(
-        create: (context) => playlistBloc,
-        child: BlocBuilder<PlaylistDetailBloc, PlaylistDetailState>(
-            builder: (contex, playlistState) {
-          if (playlistState is PlaylistDetailLoaded) {
-            return Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ImageCover(
-                          image: playlistState.playlist.image,
-                          height: 150,
-                          width: 300),
-                      Info(
-                        name: playlistState.playlist.name!,
-                        artistName: playlistState.playlist.artistName,
-                        songs: playlistState.playlist.songs!,
-                        duration: playlistState.playlist.duration!,
-                      ),
-                      const SizedBox(height: 25),
-                      Tracklist(songs: playlistState.playlist.songs!),
-                    ],
+    return BlocProvider(create: (context) {
+      playlistBloc.add(FetchPlaylistDetailEvent(playlistId: playlistId));
+      return playlistBloc;
+    }, child: BlocBuilder<PlaylistDetailBloc, PlaylistDetailState>(
+        builder: (contex, playlistState) {
+      if (playlistState is PlaylistDetailLoaded) {
+        return Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ImageCover(
+                      image: playlistState.playlist.image,
+                      height: 150,
+                      width: 300),
+                  Info(
+                    name: playlistState.playlist.name!,
+                    artistName: playlistState.playlist.artistName,
+                    songs: playlistState.playlist.songs!,
+                    duration: playlistState.playlist.duration!,
                   ),
-                )
-              ],
-            );
-          } else if (playlistState is PlaylistDetailFailed) {
-            return ErrorPage(failure: playlistState.failure);
-          } else {
-            return const CustomCircularProgressIndicator();
-          }
-        }));
+                  const SizedBox(height: 25),
+                  Tracklist(songs: playlistState.playlist.songs!),
+                ],
+              ),
+            )
+          ],
+        );
+      } else if (playlistState is PlaylistDetailFailed) {
+        return ErrorPage(failure: playlistState.failure);
+      } else {
+        return const CustomCircularProgressIndicator();
+      }
+    }));
   }
 
   @override

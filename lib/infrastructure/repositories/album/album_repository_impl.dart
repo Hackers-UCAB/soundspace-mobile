@@ -13,7 +13,7 @@ class AlbumRepositoryImpl extends AlbumRepository {
   @override
   Future<Result<List<Album>>> getTrendingAlbums() async {
     final result = await _apiConnectionManager.request<List<Album>>(
-        'album/top_albums', //TODO: el type es un query param
+        'album/top_albums',
         'GET',
         (data) => AlbumMapper.fromJsonList(data['playlists']));
     return result;

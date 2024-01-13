@@ -18,7 +18,7 @@ class AppNavigator {
   final AuthRouteGuard authRouteGuard;
   final SubscriptionRouteGuard subscriptionRouteGuard;
   final getIt = GetIt.instance;
-  late String currentLocation;
+  String currentLocation = '/';
   AppNavigator(
       {required this.authRouteGuard, required this.subscriptionRouteGuard}) {
     _routes = GoRouter(
@@ -27,7 +27,6 @@ class AppNavigator {
         GoRoute(
           path: '/',
           builder: (context, state) {
-            currentLocation = '/';
             return LandingPage();
           },
           redirect: _authProtectedNavigation,
@@ -49,6 +48,7 @@ class AppNavigator {
           path: '/artist/:id',
           builder: (context, state) {
             final artistId = state.pathParameters['id']!;
+            currentLocation = '/artist/$artistId';
             return ArtistDetail(artistId: artistId);
           },
         ),
@@ -56,6 +56,7 @@ class AppNavigator {
           path: '/album/:id',
           builder: (context, state) {
             final albumId = state.pathParameters['id']!;
+            currentLocation = '/album/$albumId';
             return AlbumDetail(albumId: albumId);
           },
         ),
@@ -63,6 +64,7 @@ class AppNavigator {
             path: '/playlist/:id',
             builder: (context, state) {
               final playlistId = state.pathParameters['id']!;
+              currentLocation = '/playlist/$playlistId';
               return PlaylistDetail(
                 playlistId: playlistId,
               );
@@ -100,7 +102,7 @@ class AppNavigator {
   }
 
   void pop() {
-    _routes.canPop() ? _routes.pop() : _routes.go('/');
+    _routes.pop();
   }
 
   void go(String routeName) {

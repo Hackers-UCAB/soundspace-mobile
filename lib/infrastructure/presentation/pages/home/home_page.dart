@@ -26,8 +26,7 @@ class HomePage extends IPage {
         getTrendingAlbumsUseCase: getIt.get<GetTrendingAlbumsUseCase>(),
         getPromotionalBannerUseCase: getIt.get<GetPromotionalBannerUseCase>(),
         getTrendingPlaylistsUseCase: getIt.get<GetTrendingPlaylistsUseCase>(),
-        getTrendingSongsUseCase: getIt.get<GetTrendingSongsUseCase>())
-      ..add(FetchTrendingsEvent());
+        getTrendingSongsUseCase: getIt.get<GetTrendingSongsUseCase>());
   }
 
   @override
@@ -38,7 +37,10 @@ class HomePage extends IPage {
   @override
   Widget child(BuildContext context) {
     return BlocProvider(
-      create: (context) => trendingsBloc,
+      create: (context) {
+        trendingsBloc.add(FetchTrendingsEvent());
+        return trendingsBloc;
+      },
       child: BlocBuilder<TrendingsBloc, TrendingsState>(
         builder: (context, trendingsState) {
           trendingsBloc.state;

@@ -37,14 +37,16 @@ class ProfilePage extends IPage {
     userBloc = UserBloc(
         fetchUserProfileDataUseCase: getIt.get<FetchUserProfileDataUseCase>(),
         saveUserProfileDataUseCase: getIt.get<SaveUserProfileDataUseCase>(),
-        cancelSubscriptionUseCase: getIt.get<CancelSubscriptionUseCase>())
-      ..add(FetchUserProfileDataEvent());
+        cancelSubscriptionUseCase: getIt.get<CancelSubscriptionUseCase>());
   }
 
   @override
   Widget child(BuildContext context) {
     return BlocProvider(
-      create: (context) => userBloc,
+      create: (context) {
+        userBloc.add(FetchUserProfileDataEvent());
+        return userBloc;
+      },
       child: BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
         if (userState is UserProfileLoadedState) {
           return SafeArea(
