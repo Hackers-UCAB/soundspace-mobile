@@ -1,24 +1,21 @@
+import 'dart:typed_data';
+
 import 'package:just_audio/just_audio.dart';
 
-class MyCustomSource extends StreamAudioSource {
-  MyCustomSource();
-  List<int> _bytes = [];
-
-  void addBytes(List<int> bytes) {
-    //_bytes = bytes;
-    _bytes.addAll(bytes);
-  }
+class ByteDataSource extends StreamAudioSource {
+  final Uint8List data;
+  ByteDataSource(this.data);
 
   @override
   Future<StreamAudioResponse> request([int? start, int? end]) async {
     start ??= 0;
-    end ??= _bytes.length;
+    end ??= data.length;
     return StreamAudioResponse(
-      sourceLength: _bytes.length,
+      sourceLength: data.length,
       contentLength: end - start,
       offset: start,
-      stream: Stream.value(_bytes.sublist(start, end)),
-      contentType: 'audio/mp3',
+      stream: Stream.value(data.sublist(start, end)),
+      contentType: 'audio/mpeg',
     );
   }
 }

@@ -12,12 +12,11 @@ class PlayerServiceImpl extends PlayerService {
           children: [],
           shuffleOrder: DefaultShuffleOrder(),
           useLazyPreparation: true);
-  late final MyCustomSource mySource;
+  late final ByteDataSource mySource;
 
   @override
   void initialize() async {
     player = AudioPlayer();
-    mySource = MyCustomSource();
     trackingDuration();
     trackingPosition();
     trackingState();
@@ -45,10 +44,6 @@ class PlayerServiceImpl extends PlayerService {
 
   @override
   Future<void> setAudioSource(SocketChunk chunk) async {
-    if (chunk.sequence == 10) {
-      print('llega');
-    }
-    print('SECUENCIA ACTUAL ${chunk.sequence}');
     try {
       concatenatingAudioSource
           .add(AudioSource.uri(Uri.dataFromBytes(chunk.data)));
@@ -95,14 +90,24 @@ class PlayerServiceImpl extends PlayerService {
     final playerBloc = GetIt.instance.get<PlayerBloc>();
 
     player.positionStream.listen((position) async {
+      //print(playerBloc.state.position);
       if (player.duration != null) {
-        if (((player.duration!.inSeconds - position.inSeconds) == 3) &&
+        if (((player.duration!.inSeconds - position.inSeconds) == 4) &&
             playerBloc.state.isRequired) {
-          GetIt.instance.get<PlayerBloc>().add(UpdateRequiredState(
-              !GetIt.instance.get<PlayerBloc>().state.isRequired));
-          GetIt.instance
-              .get<PlayerBloc>()
-              .add(AskForChunk(playerBloc.state.position.inSeconds + 5));
+          if (player.sequence != null && player.currentIndex != null) {
+            var totalDuration = Duration.zero;
+            for (var i = 0; i < player.currentIndex!; i++) {
+              totalDuration += player.sequence![i].duration!;
+            }
+            totalDuration += player.position + playerBloc.state.seekPosition;
+            GetIt.instance.get<PlayerBloc>().add(UpdateRequiredState(
+                !GetIt.instance.get<PlayerBloc>().state.isRequired));
+            print("TOTAL DURATION ${totalDuration}");
+            print("TOTAL DURATION ${playerBloc.state.position}");
+            GetIt.instance
+                .get<PlayerBloc>()
+                .add(AskForChunk(totalDuration.inSeconds));
+          }
         }
       }
 

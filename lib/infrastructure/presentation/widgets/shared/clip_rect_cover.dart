@@ -10,11 +10,14 @@ class ClipRRectCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Image.memory(
-        Uint8List.fromList(image!),
-        fit: BoxFit.fill,
-        width: 270,
+      borderRadius: BorderRadius.circular(20),
+      child: SizedBox(
+        width: 250,
+        height: 250,
+        child: Image.memory(
+          Uint8List.fromList(image!),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

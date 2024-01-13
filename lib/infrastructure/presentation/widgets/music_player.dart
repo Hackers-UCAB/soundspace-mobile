@@ -87,19 +87,19 @@ class MusicPlayer extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(width: 6),
-                      IconButton(
-                        padding: const EdgeInsets.all(0),
-                        onPressed: () => {
-                          playerBloc.add(
-                            InitStream(
-                                'ac75ed9c-4f69-4c59-a4cc-8843c8a33108', 15),
-                          )
-                        },
-                        icon: const Icon(
-                          Icons.play_arrow_sharp,
-                          color: Color(0xff1de1ee),
-                        ),
-                      ),
+                      //IconButton(
+                      //  padding: const EdgeInsets.all(0),
+                      //  onPressed: () => {
+                      //    playerBloc.add(
+                      //      InitStream(
+                      //          'ac75ed9c-4f69-4c59-a4cc-8843c8a33108', 15),
+                      //    )
+                      //  },
+                      //  icon: const Icon(
+                      //    Icons.play_arrow_sharp,
+                      //    color: Color(0xff1de1ee),
+                      //  ),
+                      //),
                     ],
                   ),
                 )
