@@ -15,7 +15,7 @@ class ArtistRepositoryImpl extends ArtistRepository {
     return await _apiConnectionManager.request<List<Artist>>(
         'artist/top_artist',
         'GET',
-        (data) => ArtistMapper.fromJsonList(data['data']));
+        (data) => ArtistMapper.fromJsonList(data['artists']));
   }
 
   @override
@@ -23,7 +23,7 @@ class ArtistRepositoryImpl extends ArtistRepository {
     return await _apiConnectionManager.request<Artist>(
       'artist/$artistId',
       'GET',
-      (data) => ArtistMapper.fromJson(data['data']),
+      (data) => ArtistMapper.fromJson(data),
     );
   }
 }

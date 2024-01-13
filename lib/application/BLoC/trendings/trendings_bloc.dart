@@ -73,10 +73,10 @@ class TrendingsBloc extends Bloc<TrendingsEvent, TrendingsState> {
 
     emit(TrendingsLoaded(
       trendingArtists: results[0].value as List<Artist>,
-      trendingAlbums: results[0].value as List<Album>,
-      promotionalBanner: results[1].value as PromotionalBanner,
-      trendingPlaylists: results[2].value as List<Playlist>,
-      trendingSongs: results[3].value as List<Song>,
+      trendingAlbums: results[1].value as List<Album>,
+      promotionalBanner: results[2].value as PromotionalBanner,
+      trendingPlaylists: results[3].value as List<Playlist>,
+      trendingSongs: results[4].value as List<Song>,
     ));
   }
 }

@@ -26,16 +26,15 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
 
     //FIXME: esto es un parche para que no se rompa la galeria
     if (albumsCard.length < 3) {
-      albumsCard = [
-        ...albumsCard,
-        ...albumsCard,
-        ...albumsCard,
-      ];
+      albumsCard.addAll([
+        _AlbumCard(album: widget.albums[0]),
+        _AlbumCard(album: widget.albums[0])
+      ]);
+      ;
     }
 
     return Gallery3D(
-      controller:
-          Gallery3DController(itemCount: widget.albums.length, autoLoop: false),
+      controller: Gallery3DController(itemCount: 4, autoLoop: false),
       width: size.width,
       height: 150,
       onClickItem: (index) => GetIt.instance

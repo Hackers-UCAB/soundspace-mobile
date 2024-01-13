@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
@@ -77,16 +76,6 @@ class HomePage extends IPage {
                     ],
                   ),
                 ),
-
-                //Visibility(
-                //  visible: GetIt.instance.get<PlayerBloc>().state.isUsed,
-                //  child: Align(
-                //    alignment: Alignment.bottomLeft,
-                //    child: Column(
-                //      children: [MusicPlayer(key: key)],
-                //    ),
-                //  ),
-                //)
               ],
             );
           } else if (trendingsState is TrendingsLoading) {

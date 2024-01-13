@@ -1,6 +1,6 @@
 import 'package:sign_in_bloc/infrastructure/mappers/song/song_mapper.dart';
-
 import '../../../domain/artist/artist.dart';
+import '../../helpers/image_convertert.dart';
 import '../album/album_mapper.dart';
 
 class ArtistMapper {
@@ -8,7 +8,9 @@ class ArtistMapper {
     return Artist(
       id: json['id'],
       name: json['name'],
-      image: json['image'],
+      image: json['image'] != null
+          ? ImageConverter.convert(json['image']['data'])
+          : null,
       albums: json['albums'] != null
           ? AlbumMapper.fromJsonList(json['albums'])
           : null,

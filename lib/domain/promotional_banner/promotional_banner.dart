@@ -1,8 +1,8 @@
 class PromotionalBanner {
   final String id;
-  final String pathRedirection;
+  final String? pathRedirection;
   final List<int> image;
 
   PromotionalBanner(
-      {required this.id, required this.pathRedirection, required this.image});
+      {required this.id, this.pathRedirection, required this.image});
 }

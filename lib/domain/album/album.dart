@@ -6,6 +6,7 @@ class Album {
   final List<int>? image;
   final List<String>? artistName;
   final List<Song>? songs;
+  final String? duration;
 
   Album({
     required this.id,
@@ -13,5 +14,6 @@ class Album {
     this.image,
     this.artistName,
     this.songs,
+    this.duration,
   });
 }

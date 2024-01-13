@@ -46,7 +46,8 @@ class ArtistDetail extends IPage {
                           const CustomAppBar(),
                           // TODO: implementar ArtistInfo
                           ArtistInfo(artist: artistState.artist),
-                          AlbumsCarousel(albums: artistState.artist.albums!),
+                          if (artistState.artist.albums!.length >= 3)
+                            AlbumsCarousel(albums: artistState.artist.albums!),
                           Tracklist(songs: artistState.artist.songs!),
                           const Divider(
                             color: Color.fromARGB(18, 142, 139, 139),

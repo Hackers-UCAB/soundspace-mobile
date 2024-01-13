@@ -38,9 +38,10 @@ class PlaylistDetail extends IPage {
                     children: [
                       ImageCover(image: playlistState.playlist.image),
                       Info(
-                        name: playlistState.playlist.name,
+                        name: playlistState.playlist.name!,
                         artistName: playlistState.playlist.artistName,
-                        songs: playlistState.playlist.songs,
+                        songs: playlistState.playlist.songs!,
+                        duration: playlistState.playlist.duration!,
                       ),
                       const SizedBox(height: 25),
                       Tracklist(songs: playlistState.playlist.songs!),

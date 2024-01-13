@@ -43,9 +43,10 @@ class AlbumDetail extends IPage {
                         children: [
                           ImageCover(image: albumState.album.image),
                           Info(
-                            name: albumState.album.name,
+                            name: albumState.album.name!,
                             artistName: albumState.album.artistName,
-                            songs: albumState.album.songs,
+                            songs: albumState.album.songs!,
+                            duration: albumState.album.duration!,
                           ),
                           //TODO: Player ()
                           const SizedBox(height: 20),
