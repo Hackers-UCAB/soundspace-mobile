@@ -1,5 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gallery_3d/gallery3d.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/config/router/app_router.dart';
 import '../../../domain/album/album.dart';
 
 class AlbumsCarousel extends StatefulWidget {
@@ -20,11 +24,23 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
     List<_AlbumCard> albumsCard =
         widget.albums.map((album) => _AlbumCard(album: album)).toList();
 
+    //FIXME: esto es un parche para que no se rompa la galeria
+    if (albumsCard.length < 3) {
+      albumsCard = [
+        ...albumsCard,
+        ...albumsCard,
+        ...albumsCard,
+      ];
+    }
+
     return Gallery3D(
       controller:
           Gallery3DController(itemCount: widget.albums.length, autoLoop: false),
       width: size.width,
       height: 150,
+      onClickItem: (index) => GetIt.instance
+          .get<AppNavigator>()
+          .navigateTo('/album/${widget.albums[index].id}'),
       onItemChanged: (index) {
         setState(() {
           currentIndex = index;
@@ -51,20 +67,11 @@ class _AlbumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool imageMethod = false;
-
-    if (album.id == 'id') imageMethod = true;
-
     return ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
-        child: imageMethod
-            ? Image(
-                image: AssetImage(album.imageURL),
-                fit: BoxFit.cover,
-              )
-            : Image.network(
-                album.imageURL,
-                fit: BoxFit.cover,
-              ));
+        child: Image.memory(
+          Uint8List.fromList(album.image!),
+          fit: BoxFit.cover,
+        ));
   }
 }

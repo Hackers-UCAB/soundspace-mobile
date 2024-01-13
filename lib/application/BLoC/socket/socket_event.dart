@@ -4,16 +4,18 @@ abstract class SocketEvent {
   const SocketEvent();
 }
 
-class SocketConnected extends SocketEvent {}
-
-class SocketDisconnected extends SocketEvent {}
-
-class SocketReceive extends SocketEvent {
-  final SocketChunck chunck;
-  const SocketReceive(this.chunck);
+class SocketReceiveChunk extends SocketEvent {
+  final SocketChunk chunck;
+  const SocketReceiveChunk(this.chunck);
 }
 
-class SocketSend extends SocketEvent {
+class SendIdSong extends SocketEvent {
   final String idSong;
-  const SocketSend(this.idSong);
+  final int second;
+  const SendIdSong(this.idSong, this.second);
+}
+
+class SendRequiredChunkToPlayer extends SocketEvent {
+  final SocketChunk chunck;
+  SendRequiredChunkToPlayer(this.chunck);
 }

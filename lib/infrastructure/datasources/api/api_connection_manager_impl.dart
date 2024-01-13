@@ -11,11 +11,15 @@ class ApiConnectionManagerImpl extends IApiConnectionManager {
   }) : _dio = Dio(BaseOptions(baseUrl: baseUrl));
 
   @override
-  Future<Result> request(String path, String method, {dynamic body}) async {
+  Future<Result<T>> request<T>(
+      String path, String method, T Function(dynamic) mapper,
+      {dynamic body, Map<String, dynamic>? queryParameters}) async {
     try {
       final response = await _dio.request(path,
-          data: body, options: Options(method: method));
-      return Result(value: response);
+          data: body,
+          options: Options(method: method),
+          queryParameters: queryParameters);
+      return Result<T>(value: mapper(response.data['data']));
     } on DioException catch (e) {
       return Result(failure: handleException(e));
     } catch (e) {
@@ -28,7 +32,8 @@ class ApiConnectionManagerImpl extends IApiConnectionManager {
       case DioExceptionType
                 .connectionTimeout || //TODO: Ver si todo esto se relaciona a fallas de internet
             DioExceptionType.sendTimeout ||
-            DioExceptionType.receiveTimeout:
+            DioExceptionType.receiveTimeout ||
+            DioExceptionType.connectionError:
         return const NoInternetFailure();
       case DioExceptionType
             .badResponse: //TODO: Esto no siempre es porque no este autorizado, definir el resto de Failures

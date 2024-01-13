@@ -12,6 +12,11 @@ class LandingPage extends IPage {
   const LandingPage({super.key});
 
   @override
+  Future<void> onRefresh() {
+    return Future<void>.value(); //TODO: Pensar en una mejor idea que esto
+  }
+
+  @override
   Widget child(BuildContext context) {
     final getIt = GetIt.instance;
     final appNavigator = getIt.get<AppNavigator>();
@@ -20,7 +25,7 @@ class LandingPage extends IPage {
     return BlocListener<UserPermissionsBloc, UserPermissionsState>(
       listener: (context, state) {
         if (state.isAuthenticated) {
-          appNavigator.replaceWith('/home');
+          appNavigator.go('/home');
         }
       },
       child: BlocBuilder<LogInGuestBloc, LogInGuestState>(

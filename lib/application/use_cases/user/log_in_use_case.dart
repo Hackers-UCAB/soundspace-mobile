@@ -2,10 +2,17 @@ import 'package:sign_in_bloc/application/services/foreground_notifications/local
 import 'package:sign_in_bloc/common/failure.dart';
 import 'package:sign_in_bloc/domain/user/user.dart';
 import '../../../common/result.dart';
+import '../../../common/use_case.dart';
 import '../../../domain/user/repository/user_repository.dart';
 import '../../datasources/local/local_storage.dart';
 
-class LogInUseCase {
+class LogInUseCaseInput extends IUseCaseInput {
+  final String number;
+
+  LogInUseCaseInput({required this.number});
+}
+
+class LogInUseCase extends IUseCase<LogInUseCaseInput, User> {
   //TODO: Poner todas estas propiedades privadas
   final UserRepository userRepository;
   final LocalStorage localStorage;
@@ -15,16 +22,18 @@ class LogInUseCase {
       required this.localStorage,
       required this.localNotifications});
 
-  Future<Result<User>> execute(String number) async {
+  @override
+  Future<Result<User>> execute(LogInUseCaseInput params) async {
     final notificationsToken = await localNotifications.getToken();
     if (notificationsToken != null) {
-      final result = await userRepository.logInUser(number, notificationsToken);
+      final result =
+          await userRepository.logInUser(params.number, notificationsToken);
       if (result.hasValue()) {
-        //TODO: Hay una forma de mejorar esto un pelin fumada
-        await localStorage.setKeyValue('appToken', result.value!.id!.id);
+        final user = result.value!;
+        await localStorage.setKeyValue('appToken', user.id);
         await localStorage.setKeyValue(
             'notificationsToken', notificationsToken);
-        await localStorage.setKeyValue('role', 'subscriber');
+        await localStorage.setKeyValue('role', user.role.toString());
       }
       return result;
     } else {

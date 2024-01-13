@@ -8,9 +8,9 @@ class AppTheme {
           bodySmall:
               GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 17),
           bodyLarge:
-              GoogleFonts.roboto().copyWith(color: Colors.white, fontSize: 24),
+              GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 24),
           bodyMedium:
-              GoogleFonts.roboto().copyWith(color: Colors.white, fontSize: 18),
+              GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 18),
         ),
       );
 }

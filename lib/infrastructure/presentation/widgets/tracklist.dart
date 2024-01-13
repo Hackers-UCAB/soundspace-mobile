@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../../../application/BLoC/player/player_bloc.dart';
@@ -46,9 +47,8 @@ class _TracklistItem extends StatelessWidget {
                 //imagen
                 width: size.width * 0.2,
                 height: size.width * 0.2,
-
-                child: Image.network(
-                  song.imageURL,
+                child: Image.memory(
+                  Uint8List.fromList(song.image!),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -67,11 +67,13 @@ class _TracklistItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(song.duration), //duracion total de la cancion
+                  Text(song.duration!), //duracion total de la cancion
                   const SizedBox(width: 6),
                   IconButton(
-                    onPressed: () =>
-                        playerBloc.add(PlayingStartedEvent(song: song)),
+                    onPressed: () {
+                      //TODO: socket.sendIdSong(song.id);
+                      // playerBloc.add(PlayingStartedEvent(song: song)),
+                    },
                     icon: const Icon(
                       Icons.play_arrow_sharp,
                       color: Color(0xff1de1ee),

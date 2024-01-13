@@ -9,18 +9,22 @@ class PlaylistRepositoryImpl extends PlaylistRepository {
 
   PlaylistRepositoryImpl({required IApiConnectionManager apiConnectionManager})
       : _apiConnectionManager = apiConnectionManager;
-  //mejorar esto
 
   @override
   Future<Result<List<Playlist>>> getPlayList() async {
-    final result =
-        await _apiConnectionManager.request('playlist/top_playlists', 'GET');
-    if (result.hasValue()) {
-      return Result<List<Playlist>>(
-        value: PlaylistMapper.fromJsonList(result.value.data['data']),
-      );
-    } else {
-      return Result<List<Playlist>>(failure: result.failure);
-    }
+    return await _apiConnectionManager.request<List<Playlist>>(
+      'playlist/top_playlist',
+      'GET',
+      (data) => PlaylistMapper.fromJsonList(data['playlists']),
+    );
+  }
+
+  @override
+  Future<Result<Playlist>> getPlaylitsById(String playlitsId) async {
+    return await _apiConnectionManager.request<Playlist>(
+      'playlist/$playlitsId',
+      'GET',
+      (data) => PlaylistMapper.fromJson(data),
+    );
   }
 }

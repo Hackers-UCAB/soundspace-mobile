@@ -12,14 +12,18 @@ class ArtistRepositoryImpl extends ArtistRepository {
 
   @override
   Future<Result<List<Artist>>> getTrendingArtists() async {
-    final result =
-        await _apiConnectionManager.request('artists/top_artists', 'GET');
-    if (result.hasValue()) {
-      return Result<List<Artist>>(
-        value: ArtistMapper.fromJsonList(result.value.data['data']),
-      );
-    } else {
-      return Result<List<Artist>>(failure: result.failure);
-    }
+    return await _apiConnectionManager.request<List<Artist>>(
+        'artists/top_artists',
+        'GET',
+        (data) => ArtistMapper.fromJsonList(data['data']));
+  }
+
+  @override
+  Future<Result<Artist>> getArtistById(String artistId) async {
+    return await _apiConnectionManager.request<Artist>(
+      'artists/$artistId',
+      'GET',
+      (data) => ArtistMapper.fromJson(data['data']),
+    );
   }
 }

@@ -9,18 +9,23 @@ class AlbumRepositoryImpl extends AlbumRepository {
 
   AlbumRepositoryImpl({required IApiConnectionManager apiConnectionManager})
       : _apiConnectionManager = apiConnectionManager;
-//mejorar esto
 
   @override
   Future<Result<List<Album>>> getTrendingAlbums() async {
-    final result = await _apiConnectionManager.request(
-        'playlist/top_playlists?type=album',
-        'GET'); //TODO: el type seria un query param? hacer prueba
-    if (result.hasValue()) {
-      return Result<List<Album>>(
-          value: AlbumMapper.fromJsonList(result.value.data['data']));
-    } else {
-      return Result<List<Album>>(failure: result.failure);
-    }
+    final result = await _apiConnectionManager.request<List<Album>>(
+        'album/top_album', //TODO: el type es un query param
+        'GET',
+        (data) => AlbumMapper.fromJsonList(data['playlists']));
+    return result;
+  }
+
+  @override
+  Future<Result<Album>> getAlbumById(String albumId) async {
+    return await _apiConnectionManager.request<Album>(
+      //FIXME: Javier
+      'album/$albumId',
+      'GET',
+      (data) => AlbumMapper.fromJson(data),
+    );
   }
 }

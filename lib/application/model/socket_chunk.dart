@@ -1,6 +1,10 @@
-class SocketChunck {
-  dynamic secuence;
-  dynamic data;
+class SocketChunk {
+  int sequence;
+  List<int> data;
 
-  SocketChunck({required this.secuence, required this.data});
+  SocketChunk(this.sequence, this.data);
+
+  factory SocketChunk.fromJson(Map<String, dynamic> json) {
+    return SocketChunk(json['secuencia'], json['chunk']);
+  }
 }

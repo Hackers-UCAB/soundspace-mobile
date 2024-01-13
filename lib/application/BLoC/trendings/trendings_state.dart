@@ -11,14 +11,14 @@ abstract class TrendingsState extends Equatable {
 class TrendingsLoading extends TrendingsState {}
 
 class TrendingsLoaded extends TrendingsState {
-  final List<Artist> trendingArtists;
+  // final List<Artist> trendingArtists;
   final List<Album> trendingAlbums;
   final PromotionalBanner promotionalBanner;
   final List<Playlist> trendingPlaylists;
   final List<Song> trendingSongs;
 
   const TrendingsLoaded({
-    required this.trendingArtists,
+    // required this.trendingArtists,
     required this.trendingAlbums,
     required this.promotionalBanner,
     required this.trendingPlaylists,
@@ -27,7 +27,7 @@ class TrendingsLoaded extends TrendingsState {
 
   @override
   List<Object?> get props => [
-        trendingArtists,
+        // trendingArtists,
         trendingAlbums,
         promotionalBanner,
         trendingPlaylists,

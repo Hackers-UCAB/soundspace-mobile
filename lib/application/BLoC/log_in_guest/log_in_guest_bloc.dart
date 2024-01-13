@@ -17,8 +17,9 @@ class LogInGuestBloc extends Bloc<LogInGuestEvent, LogInGuestState> {
 
   Future<void> _onSubmited(
       LogInGuestEvent event, Emitter<LogInGuestState> emit) async {
-    final logInResult = await _logInGuestUseCase.execute();
     emit(LogInGuestPosting());
+    final logInResult =
+        await _logInGuestUseCase.execute(LogInGuestUseCaseInput());
 
     if (logInResult.hasValue()) {
       GetIt.instance.get<UserPermissionsBloc>().add(

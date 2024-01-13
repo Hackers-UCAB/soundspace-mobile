@@ -5,9 +5,11 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/home_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/landing/landing_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/pages/profilePage/user_profile_page.dart';
-import '../../pages/album/album_detail.dart';
-import '../../pages/artist/artist_detail.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/pages/playlist_detail/playlist_detail.dart';
+import '../../pages/album_detail/album_detail.dart';
+import '../../pages/artist_detail/artist_detail.dart';
+import '../../pages/profile/user_profile_page.dart';
+import '../../pages/search/search_page.dart';
 
 part 'route_guard.dart';
 
@@ -16,6 +18,7 @@ class AppNavigator {
   final AuthRouteGuard authRouteGuard;
   final SubscriptionRouteGuard subscriptionRouteGuard;
   final getIt = GetIt.instance;
+  late String currentLocation;
   AppNavigator(
       {required this.authRouteGuard, required this.subscriptionRouteGuard}) {
     _routes = GoRouter(
@@ -23,38 +26,68 @@ class AppNavigator {
       routes: [
         GoRoute(
           path: '/',
+<<<<<<< HEAD
           builder: (context, state) => const LandingPage(),
+=======
+          builder: (context, state) {
+            currentLocation = '/';
+            return const LandingPage();
+          },
+>>>>>>> dev-javi
           redirect: _authProtectedNavigation,
         ),
         GoRoute(
           path: '/logIn',
-          builder: (context, state) => const RegisterScreen(),
+          builder: (context, state) {
+            currentLocation = '/logIn';
+            return const RegisterScreen();
+          },
           redirect: _authProtectedNavigation,
         ),
         GoRoute(
           path: '/home',
-          builder: (context, state) => const HomePage(),
-        ),
-        GoRoute(
-          path: '/profile',
-          builder: (context, state) => const UserProfilePage(),
+          builder: (context, state) {
+            currentLocation = '/home';
+            return HomePage();
+          },
         ),
         GoRoute(
           path: '/artist/:id',
           builder: (context, state) {
             final artistId = state.pathParameters['id']!;
-            return ArtistDetail(
-              artistId: artistId,
-            );
+            currentLocation = '/artist/$artistId';
+            return ArtistDetail(artistId: artistId);
           },
         ),
         GoRoute(
           path: '/album/:id',
           builder: (context, state) {
             final albumId = state.pathParameters['id']!;
-            return AlbumDetail(
-              albumId: albumId,
-            );
+            currentLocation = '/album/$albumId';
+            return AlbumDetail(albumId: albumId);
+          },
+        ),
+        GoRoute(
+            path: '/playlist/:id',
+            builder: (context, state) {
+              final playlistId = state.pathParameters['id']!;
+              currentLocation = '/playlist/$playlistId';
+              return PlaylistDetail(
+                playlistId: playlistId,
+              );
+            }),
+        GoRoute(
+          path: '/search',
+          builder: (context, state) {
+            currentLocation = '/search';
+            return SearchPage();
+          },
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) {
+            currentLocation = '/profile';
+            return ProfilePage();
           },
         ),
       ],
@@ -82,9 +115,9 @@ class AppNavigator {
   }
 
   void navigateTo(String routeName) {
-    if (subscriptionRouteGuard.canNavigate(routeName)) {
-      _routes.push(routeName);
-    }
+    // if (subscriptionRouteGuard.canNavigate(routeName)) {
+    _routes.push(routeName);
+    // }
   }
 
   void replaceWith(String routeName) {
@@ -93,6 +126,7 @@ class AppNavigator {
 
   String? _authProtectedNavigation(BuildContext context, GoRouterState state) {
     if (authRouteGuard.canNavigate()) {
+      currentLocation = '/home';
       return '/home';
     }
     return null;

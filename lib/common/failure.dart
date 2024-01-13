@@ -27,6 +27,11 @@ class NoInternetFailure extends Failure {
       : super(message);
 }
 
+class UnnableToCheckLocationFailure extends Failure {
+  const UnnableToCheckLocationFailure({required String message})
+      : super(message);
+}
+
 class UnknownFailure extends Failure {
   const UnknownFailure({required String message}) : super(message);
 }

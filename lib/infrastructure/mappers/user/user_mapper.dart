@@ -1,19 +1,19 @@
 import '../../../domain/user/user.dart';
-import '../../../domain/user/valueObjects/birth_day_value_object.dart';
-import '../../../domain/user/valueObjects/email_address_value_object.dart';
-import '../../../domain/user/valueObjects/gender_value_object.dart';
-import '../../../domain/user/valueObjects/id_user_value_object.dart';
-import '../../../domain/user/valueObjects/name_value_object.dart';
-import '../../../domain/user/valueObjects/phone_value_object.dart';
-import '../../../domain/user/valueObjects/user_role_value_object.dart';
 
 class UserMapper {
   static User fromJson(Map<String, dynamic> json) {
     return User(
-        id: IdUser(id: json['id']),
-        name: UserName(json['name']),
-        email: EmailAddress(json['email']),
-        gender: Gender(json['genre']));
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      birthdate:
+          json['birthdate'] != null ? DateTime.parse(json['birthdate']) : null,
+      phone: json['phone'],
+      token: json['token'],
+      genre: json['gender'],
+      role:
+          json['role'] == 'subscriber' ? UserRoles.subscriber : UserRoles.guest,
+    );
   }
 
   static Map<String, dynamic> toJson(User user) {
@@ -24,7 +24,7 @@ class UserMapper {
       'telefono': user.phone,
       'rol': user.role,
       'fecha_nac': user.birthdate,
-      'genero': user.gender,
+      'genero': user.genre,
     };
   }
 }

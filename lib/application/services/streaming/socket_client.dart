@@ -1,7 +1,6 @@
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-
 abstract class SocketClient {
   void inicializeSocket();
-  void sendMessage(String message);
-  IO.Socket getSocket();
+  void sendIdSongToServer(
+      bool isPreview, String songId, int second, bool isStreaming);
+  void receiveChunkFromServer();
 }

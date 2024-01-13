@@ -1,11 +1,17 @@
+import '../song/song.dart';
+
 class Playlist {
   final String id;
-  final String name;
-  final String iconPath;
+  final String? name;
+  final List<int>? image;
+  final List<String>? artistName;
+  final List<Song>? songs;
 
   Playlist({
     required this.id,
-    required this.name,
-    required this.iconPath,
+    this.name,
+    this.image,
+    this.artistName,
+    this.songs,
   });
 }

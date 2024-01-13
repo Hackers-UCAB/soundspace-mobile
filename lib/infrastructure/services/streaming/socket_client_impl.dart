@@ -1,35 +1,74 @@
+import 'dart:async';
+import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/datasources/local/local_storage.dart';
+import 'package:sign_in_bloc/application/model/socket_chunk.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import '../../../application/BLoC/socket/socket_bloc.dart';
 import '../../../application/services/streaming/socket_client.dart';
 
 class SocketClientImpl extends SocketClient {
-  late final IO.Socket socket = IO.io(
-      'http://192.168.1.102:5000',
-      IO.OptionBuilder().setTransports(['websocket']) // for Flutter or Dart VM
-          .setExtraHeaders({'foo': 'bar'}) // optional
-          .build());
+  LocalStorage localStorage;
+
+  SocketClientImpl({required this.localStorage});
+
+  late final IO.Socket socket; // = IO.io(
+  //'https://soundspace-api-production-3d1f.up.railway.app/socket.io/socket.io.js',
+  //IO.OptionBuilder().setTransports(['websocket']).build());
 
   @override
-  void inicializeSocket() {
+  void inicializeSocket() async {
+    //socket = IO.io('http://192.168.1.103:5000',
+    //    IO.OptionBuilder().setTransports(['websocket']).build());
+
+    String url = 'https://soundspace-api-production-3d1f.up.railway.app';
+
+    //socket = IO.io(url, <String, dynamic>{
+    //  'transports': ['websocket', 'polling'],
+    //  'path': '/socket.io',
+    //  'auth': ''
+    //});
+
+    print(localStorage.getValue('appToken'));
+
+    socket = IO.io(
+        url,
+        IO.OptionBuilder()
+            .setTransports(['websocket', 'polling'])
+            .setPath('/socket.io')
+            .setAuth({'token': localStorage.getValue('appToken')})
+            .build());
+
     socket.connect();
+
+    socket.onError((data) => print('error de socket ${data}'));
+
     socket.onConnect((_) {
       print('connect');
     });
   }
 
-  void handleReceive(data, chunck, state) {
-    print(data);
-    chunck.secuence = data['secuence'];
-    chunck.data = data['payload'];
-    //emit(state.copyWith(buffer: [chunck, ...state.buffer]));
+  @override
+  void sendIdSongToServer(
+      bool isPreview, String songId, int second, bool isStreaming) {
+    socket.emit('message-from-client', {
+      'preview': isPreview,
+      'songId': songId,
+      'second': second,
+      'streaming': isStreaming
+    });
   }
 
   @override
-  void sendMessage(String message) {
-    socket.emit('idSong', message);
-  }
+  void receiveChunkFromServer() async {
+    final streamController = StreamController<SocketChunk>();
 
-  @override
-  IO.Socket getSocket() {
-    return socket;
+    socket.on('message-from-server', (data) {
+      streamController.add(SocketChunk.fromJson(data));
+    });
+
+    streamController.stream.listen((chunk) async {
+      print('LLEGANDO LA SECUENCIA ${chunk.sequence}');
+      GetIt.instance.get<SocketBloc>().add(SocketReceiveChunk(chunk));
+    });
   }
 }

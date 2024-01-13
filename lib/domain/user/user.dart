@@ -1,48 +1,51 @@
-import 'valueObjects/birth_day_value_object.dart';
-import 'valueObjects/email_address_value_object.dart';
-import 'valueObjects/id_user_value_object.dart';
-import 'valueObjects/name_value_object.dart';
-import 'valueObjects/phone_value_object.dart';
-import 'valueObjects/user_role_value_object.dart';
-import 'valueObjects/gender_value_object.dart';
+// ignore_for_file: prefer_final_fields
+import '../../application/services/internet_connection/connection_manager.dart';
+import '../services/location_checker.dart';
+
+enum UserRoles { guest, subscriber }
 
 class User {
-  final IdUser? _id;
-  final UserName? _name;
-  final EmailAddress? _email;
-  final PhoneNumber? _phone;
-  final UserRole? _role;
-  final BirthDate? _birthdate;
-  final Gender? gender;
-  final String? _appToken;
-  final String? _notificationsToken;
+  String id;
+  String? name;
+  String? email;
+  String? phone;
+  UserRoles role;
+  DateTime? birthdate;
+  String? token;
+  String? genre;
+  late String country;
 
-  const User(
-      {IdUser? id,
-      UserName? name,
-      EmailAddress? email,
-      PhoneNumber? phone,
-      UserRole? role,
-      BirthDate? birthdate,
-      //! change
-      this.gender,
-      String? appToken,
-      String? notificationsToken})
-      : _id = id,
-        _name = name,
-        _email = email,
-        _phone = phone,
-        _role = role,
-        _birthdate = birthdate,
-        _appToken = appToken,
-        _notificationsToken = notificationsToken;
+  User({
+    required this.id,
+    this.name,
+    this.email,
+    this.phone,
+    this.role = UserRoles.guest,
+    this.birthdate,
+    this.token,
+    this.genre,
+  });
 
-  IdUser? get id => _id;
-  UserName? get name => _name;
-  EmailAddress? get email => _email;
-  PhoneNumber? get phone => _phone;
-  UserRole? get role => _role;
-  BirthDate? get birthdate => _birthdate;
-  String? get appToken => _appToken;
-  String? get notificationsToken => _notificationsToken;
+  Future<void> checkLocation(ILocationChecker locationChecker,
+      IConnectionManager connectionManager) async {
+    if (role == UserRoles.subscriber) {
+      try {
+        await connectionManager
+            .checkConnectionStream()
+            .firstWhere((isConnected) => isConnected);
+
+        final actualCountry = await locationChecker.getCountry();
+        if (actualCountry != 'Venezuela') {
+          role = UserRoles.guest;
+        }
+        country = actualCountry;
+      } catch (e) {
+        rethrow;
+      }
+    }
+  }
+
+  bool validLocation() {
+    return country == 'Venezuela';
+  }
 }

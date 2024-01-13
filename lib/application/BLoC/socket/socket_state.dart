@@ -1,14 +1,17 @@
 part of 'socket_bloc.dart';
 
 class SocketState extends Equatable {
-  final List<dynamic> buffer;
   final String idSong;
+  final bool streamingMode;
 
-  const SocketState({this.buffer = const [], this.idSong = 'test'});
+  const SocketState({this.idSong = 'empty', this.streamingMode = false});
 
-  SocketState copyWith({List<dynamic>? buffer, String? idSong}) =>
-      SocketState(buffer: buffer ?? this.buffer, idSong: idSong ?? this.idSong);
+  SocketState copyWith({
+    bool? streamingMode,
+    String? idSong,
+  }) =>
+      SocketState(idSong: idSong ?? this.idSong);
 
   @override
-  List<Object> get props => [buffer, idSong];
+  List<Object> get props => [idSong, streamingMode];
 }
