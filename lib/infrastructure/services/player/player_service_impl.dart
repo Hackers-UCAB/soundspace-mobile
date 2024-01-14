@@ -91,34 +91,34 @@ class PlayerServiceImpl extends PlayerService {
 
     player.positionStream.listen((position) async {
       //print(playerBloc.state.position);
-      if (player.duration != null) {
-        if (((player.duration!.inSeconds - position.inSeconds) == 4) &&
-            playerBloc.state.isRequired) {
-          if (player.sequence != null && player.currentIndex != null) {
-            var totalDuration = Duration.zero;
-            for (var i = 0; i < player.currentIndex!; i++) {
-              totalDuration += player.sequence![i].duration!;
-            }
-            totalDuration += player.position + playerBloc.state.seekPosition;
-            GetIt.instance.get<PlayerBloc>().add(UpdateRequiredState(
-                !GetIt.instance.get<PlayerBloc>().state.isRequired));
-            print("TOTAL DURATION ${totalDuration}");
-            print("TOTAL DURATION ${playerBloc.state.position}");
-            GetIt.instance
-                .get<PlayerBloc>()
-                .add(AskForChunk(totalDuration.inSeconds));
-          }
-        }
-      }
+      //if (player.duration != null) {
+      //  if (((player.duration!.inSeconds - position.inSeconds) == 4) &&
+      //      playerBloc.state.isRequired) {
+      //    if (player.sequence != null && player.currentIndex != null) {
+      //      var totalDuration = Duration.zero;
+      //      for (var i = 0; i < player.currentIndex!; i++) {
+      //        totalDuration += player.sequence![i].duration!;
+      //      }
+      //      totalDuration += player.position + playerBloc.state.seekPosition;
+      //      GetIt.instance.get<PlayerBloc>().add(UpdateRequiredState(
+      //          !GetIt.instance.get<PlayerBloc>().state.isRequired));
+      //      print("TOTAL DURATION ${totalDuration}");
+      //      print("TOTAL DURATION ${playerBloc.state.position}");
+      //      GetIt.instance
+      //          .get<PlayerBloc>()
+      //          .add(AskForChunk(totalDuration.inSeconds));
+      //    }
+      //  }
+      //}
 
-      if (player.sequence != null && player.currentIndex != null) {
-        var totalDuration = Duration.zero;
-        for (var i = 0; i < player.currentIndex!; i++) {
-          totalDuration += player.sequence![i].duration!;
-        }
-        totalDuration += player.position + playerBloc.state.seekPosition;
-        playerBloc.add(TrackingCurrentPosition(totalDuration));
-      }
+      //if (player.sequence != null && player.currentIndex != null) {
+      //  var totalDuration = Duration.zero;
+      //  for (var i = 0; i < player.currentIndex!; i++) {
+      //    totalDuration += player.sequence![i].duration!;
+      //  }
+      //  totalDuration += player.position + playerBloc.state.seekPosition;
+      //  playerBloc.add(TrackingCurrentPosition(totalDuration));
+      //}
     });
   }
 
