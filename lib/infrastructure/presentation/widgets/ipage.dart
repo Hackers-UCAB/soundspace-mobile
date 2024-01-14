@@ -21,7 +21,7 @@ abstract class IPage extends StatelessWidget {
     final playerBloc = GetIt.instance.get<PlayerBloc>();
     return Scaffold(
       body: Stack(children: [
-        _GradientBackground(),
+        const GradientBackground(),
         RefreshIndicator(
             onRefresh: onRefresh,
             child: ListView(children: [
@@ -57,7 +57,9 @@ abstract class IPage extends StatelessWidget {
   }
 }
 
-class _GradientBackground extends StatelessWidget {
+class GradientBackground extends StatelessWidget {
+  const GradientBackground({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

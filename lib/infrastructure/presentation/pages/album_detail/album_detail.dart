@@ -32,6 +32,8 @@ class AlbumDetail extends IPage {
       return albumBloc;
     }, child: BlocBuilder<AlbumDetailBloc, AlbumDetailState>(
       builder: (context, albumState) {
+        final size = MediaQuery.of(context).size;
+
         if (albumState is AlbumDetailLoaded) {
           return Stack(
             children: [
@@ -40,8 +42,8 @@ class AlbumDetail extends IPage {
                   children: [
                     ImageCover(
                         image: albumState.album.image,
-                        height: 250,
-                        width: 250,
+                        height: size.width * 0.6,
+                        width: size.width * 0.6,
                         bottomPadding: 40),
                     Info(
                       name: albumState.album.name!,

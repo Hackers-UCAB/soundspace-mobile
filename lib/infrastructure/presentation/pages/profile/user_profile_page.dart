@@ -74,9 +74,8 @@ class ProfilePage extends IPage {
   }
 
   @override
-  Future<void> onRefresh() {
-    // TODO: implement onRefresh
-    throw UnimplementedError();
+  Future<void> onRefresh() async {
+    userBloc.add(FetchUserProfileDataEvent());
   }
 }
 
@@ -143,7 +142,6 @@ class ProfileForm extends StatelessWidget {
                   .add(EmailEditedEvent(user: state.user, email: value)),
               validator: validateEmail,
             ),
-            //EmailTextFormField(state: state, userBloc: userBloc),
 
             const SizedBox(height: 30),
             Row(

@@ -65,7 +65,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              if (userPermissions.state.isSubscribed)
+              if (userPermissions.state.isSubscribed &&
+                  navigator.currentLocation != '/profile')
                 PopupMenuItem<String>(
                   value: 'Perfil',
                   child: Text('Perfil', style: bodySmallStyle),

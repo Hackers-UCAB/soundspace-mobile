@@ -39,7 +39,7 @@ class SubscribeUseCase extends IUseCase<SubscribeUseCaseInput, User> {
 
       return result;
     } else {
-      return Result<User>(failure: const UnknownFailure(message: 'No token'));
+      return Result<User>(failure: const UnknownFailure());
     }
   }
 }

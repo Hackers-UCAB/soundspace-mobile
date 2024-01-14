@@ -13,8 +13,6 @@ class DatePickerField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       flex: 3,
-      //TODO: Separar en otro widget - Jorge
-      // FECHA DE NACIMIENTO
       child: TextFormField(
         enabled: state.editable,
         controller: TextEditingController(
@@ -46,10 +44,6 @@ class DatePickerField extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide:
                 BorderSide(width: 1, color: Color.fromARGB(0, 85, 51, 51)),
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0)),
-            borderSide: BorderSide(width: 1, color: Colors.black),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
