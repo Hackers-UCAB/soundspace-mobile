@@ -53,19 +53,19 @@ class _TracklistItem extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(children: [
-                Text(
+            SizedBox(
+              width: size.width * 0.4,
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Text(
                   song.name,
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall!
-                      .copyWith(fontSize: 15),
-                ), //song.artist
-              ]),
+                      .copyWith(fontSize: size.width * 0.04),
+                ),
+              ),
             ),
-            Expanded(child: Container()),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Row(
@@ -76,9 +76,9 @@ class _TracklistItem extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!
-                        .copyWith(fontSize: 12),
+                        .copyWith(fontSize: size.width * 0.035),
                   ), //duracion total de la cancion
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 5),
                   IconButton(
                     onPressed: () {
                       playerBloc.add(InitStream(

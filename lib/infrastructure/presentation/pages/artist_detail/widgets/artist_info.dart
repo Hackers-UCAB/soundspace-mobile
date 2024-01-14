@@ -24,28 +24,36 @@ class ArtistInfo extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flex(direction: Axis.horizontal, children: [
-              Text(artist.name,
-                  style: bodyMedium!.copyWith(fontSize: size.width * 0.07)),
-            ]),
-            Text(
-              'Genero',
-              style: bodyMedium.copyWith(fontSize: size.width * 0.05),
-            ),
-            const SizedBox(height: 20),
-            Text(
-                '${artist.albums?.length.toString()} Album${artist.albums!.length > 1 ? 's' : ''}',
-                style: bodyMedium.copyWith(
-                    fontSize: size.width * 0.04, fontWeight: FontWeight.bold)),
-            Text(
-                '${artist.songs?.length.toString()} Canci${artist.songs!.length > 1 ? 'ones' : 'ón'}',
-                style: bodyMedium.copyWith(
-                    fontSize: size.width * 0.04, fontWeight: FontWeight.bold)),
-          ],
+        SizedBox(
+          width: size.width * 0.3,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 80,
+                child: Flexible(
+                  child: Text(artist.name,
+                      style: bodyMedium!.copyWith(fontSize: size.width * 0.07)),
+                ),
+              ),
+              Text(
+                'Genero',
+                style: bodyMedium.copyWith(fontSize: size.width * 0.05),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                  '${artist.albums?.length.toString()} Album${artist.albums!.length > 1 ? 's' : ''}',
+                  style: bodyMedium.copyWith(
+                      fontSize: size.width * 0.04,
+                      fontWeight: FontWeight.bold)),
+              Text(
+                  '${artist.songs?.length.toString()} Canci${artist.songs!.length > 1 ? 'ones' : 'ón'}',
+                  style: bodyMedium.copyWith(
+                      fontSize: size.width * 0.04,
+                      fontWeight: FontWeight.bold)),
+            ],
+          ),
         )
       ],
     );

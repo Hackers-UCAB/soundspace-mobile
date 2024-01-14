@@ -21,7 +21,7 @@ class UserPermissionsListener
                         'Ahora eres un invitado, solo en Venezuela tienes acceso premium',
                     barrierDismissible: true);
               } else if (state.isSubscribed == false && state.isAuthenticated) {
-                GetIt.instance.get<AppNavigator>().pop();
+                GetIt.instance.get<AppNavigator>().go('/home');
                 CustomDialog().show(
                     context: context,
                     title: 'Una lastima...',
