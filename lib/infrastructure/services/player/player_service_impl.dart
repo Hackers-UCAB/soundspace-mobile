@@ -76,9 +76,6 @@ class PlayerServiceImpl extends PlayerService {
 
   @override
   void trackingDuration() {
-    GetIt.instance.get<PlayerBloc>().add(
-        UpdatingDuration(Duration(minutes: 3, seconds: 13, milliseconds: 54)));
-
     // TODO es realmente necesario??
     player.durationStream.listen((duration) {
       print('DURACION ACTUAL ${duration?.inSeconds}');

@@ -64,7 +64,14 @@ class SearchListState extends State<SearchList> {
               name: widget.items[index]['name']!,
               onTap: widget.items[index]['filter'] == 'song'
                   ? () => playerBloc.add(InitStream(
-                      widget.items[index]['id']!, 10)) //TODO: Javi revisa esto
+                      widget.items[index]['id']!,
+                      10,
+                      widget.items[index]['name']!,
+                      Duration(
+                          minutes: int.parse(
+                              widget.items[index]['duration']!.split(':')[0]),
+                          seconds: int.parse(widget.items[index]['duration']!
+                              .split(':')[1])))) //TODO: Javi revisa esto
                   : () => appNavigator.navigateTo(
                       '/${widget.items[index]['filter']}/${widget.items[index]['id']}'),
               filter: widget.items[index]['filter']!,
