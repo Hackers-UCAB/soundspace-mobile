@@ -5,17 +5,19 @@ class ImageCover extends StatelessWidget {
   final List<int>? image;
   final double width;
   final double height;
+  final double bottomPadding;
 
   const ImageCover(
       {super.key,
       required this.image,
       required this.width,
-      required this.height});
+      required this.height,
+      required this.bottomPadding});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
+      padding: EdgeInsets.only(bottom: bottomPadding),
       child: SizedBox(
         width: double.infinity,
         height: 250,

@@ -39,7 +39,10 @@ class AlbumDetail extends IPage {
                 child: Column(
                   children: [
                     ImageCover(
-                        image: albumState.album.image, height: 250, width: 250),
+                        image: albumState.album.image,
+                        height: 250,
+                        width: 250,
+                        bottomPadding: 40),
                     Info(
                       name: albumState.album.name!,
                       artistName: albumState.album.artistName,
@@ -47,7 +50,7 @@ class AlbumDetail extends IPage {
                       duration: albumState.album.duration!,
                     ),
                     //TODO: Player ()
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     Tracklist(songs: albumState.album.songs!),
                     const SizedBox(height: 100),
                   ],

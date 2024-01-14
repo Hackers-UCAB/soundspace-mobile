@@ -66,6 +66,7 @@ class _TracklistItem extends StatelessWidget {
                 ),
               ),
             ),
+            Expanded(child: Container()),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Row(
