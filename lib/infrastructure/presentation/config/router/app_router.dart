@@ -19,6 +19,8 @@ class AppNavigator {
   final SubscriptionRouteGuard subscriptionRouteGuard;
   final getIt = GetIt.instance;
   String currentLocation = '/';
+  final List<String> _previousLocations = [];
+
   AppNavigator(
       {required this.authRouteGuard, required this.subscriptionRouteGuard}) {
     _routes = GoRouter(
@@ -98,20 +100,28 @@ class AppNavigator {
   }
 
   bool canPop() {
-    return _routes.canPop();
+    if (currentLocation == '/' ||
+        currentLocation == '/home' ||
+        currentLocation == '/logIn') return false;
+    return true;
   }
 
   void pop() {
-    _routes.pop();
+    if (_previousLocations.isNotEmpty) {
+      currentLocation = _previousLocations.removeLast();
+      _routes.pop();
+    }
   }
 
   void go(String routeName) {
     currentLocation = routeName;
+    _previousLocations.clear();
     _routes.go(routeName);
   }
 
   void navigateTo(String routeName) {
     if (subscriptionRouteGuard.canNavigate(routeName)) {
+      _previousLocations.add(currentLocation);
       currentLocation = routeName;
       _routes.push(routeName);
     }

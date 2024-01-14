@@ -38,9 +38,8 @@ class LogInUseCase extends IUseCase<LogInUseCaseInput, User> {
       return result;
     } else {
       return Result<User>(
-          failure: const UnknownFailure(
-              message:
-                  'No token')); //TODO: Personalizar este error en base al Failure que retorne getToken?
+          failure:
+              const UnknownFailure()); //TODO: Personalizar este error en base al Failure que retorne getToken?
     }
   }
 }

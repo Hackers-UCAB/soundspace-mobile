@@ -25,8 +25,6 @@ class UserProfileFormTextField extends StatelessWidget {
       validator: validator,
       initialValue: initialValue,
       onChanged: onChanged,
-      //(value) =>
-      //userBloc.add(NameEditedEvent(user: state.user, name: value)),
       style: const TextStyle(color: Colors.white, fontSize: 18),
       decoration: InputDecoration(
           hintStyle: const TextStyle(color: Color.fromARGB(146, 0, 0, 0)),
@@ -37,9 +35,6 @@ class UserProfileFormTextField extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(15.0)),
               borderSide:
                   BorderSide(width: 1, color: Color.fromARGB(0, 85, 51, 51))),
-          disabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              borderSide: BorderSide(width: 1, color: Colors.black)),
           focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(15.0)),
               borderSide: BorderSide(width: 2, color: Colors.white)),

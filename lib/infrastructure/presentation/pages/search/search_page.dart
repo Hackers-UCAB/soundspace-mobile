@@ -20,7 +20,6 @@ class SearchPage extends IPage {
 
   @override
   Future<void> onRefresh() async {
-    //TODO: Aqui queda algo por revisar
     searchBloc.add(FetchSearchedData(
         page: 0, scrollPosition: searchBloc.state.scrollPosition));
   }
@@ -38,7 +37,6 @@ class SearchPage extends IPage {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomTextFormField(
-                  hint: "",
                   onChanged: searchBloc.onChangeData,
                 ),
                 const SizedBox(height: 10),

@@ -7,6 +7,7 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bodyLarge = Theme.of(context).textTheme.bodyLarge;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -16,14 +17,11 @@ class MyButton extends StatelessWidget {
           color: const Color.fromARGB(255, 7, 212, 239),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
             "Iniciar sesión",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            ),
+            style: bodyLarge!
+                .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
       ),

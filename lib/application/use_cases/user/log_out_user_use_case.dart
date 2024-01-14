@@ -18,7 +18,7 @@ class LogOutUserUseCase extends IUseCase<LogOutUserUseCaseInput, bool> {
       await _localStorage.removeKey('role');
       return Result<bool>(value: true);
     } catch (e) {
-      return Result<bool>(failure: UnknownFailure(message: e.toString()));
+      return Result<bool>(failure: const UnknownFailure());
     }
   }
 }

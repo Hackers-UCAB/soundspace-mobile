@@ -13,6 +13,7 @@ class RegisterButtom extends StatefulWidget {
 class _RegisterButtomState extends State<RegisterButtom> {
   @override
   Widget build(BuildContext context) {
+    final bodyMedium = Theme.of(context).textTheme.bodyMedium;
     return ElevatedButton(
       onPressed: () {
         GetIt.instance.get<AppNavigator>().navigateTo('/logIn');
@@ -25,15 +26,11 @@ class _RegisterButtomState extends State<RegisterButtom> {
         foregroundColor: Colors.black,
         padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 18),
       ),
-      child: const Text(
+      child: Text(
         //TODO: Poner el text style en el theme
         'REGÍSTRATE AQUÍ',
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w600,
-          fontSize: 20,
-        ),
+        style: bodyMedium!
+            .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
       ),
     );
   }
