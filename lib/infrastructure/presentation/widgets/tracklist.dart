@@ -83,7 +83,7 @@ class _TracklistItem extends StatelessWidget {
                     onPressed: () {
                       playerBloc.add(InitStream(
                           song.id,
-                          10,
+                          0,
                           song.name,
                           Duration(
                               minutes: int.parse(song.duration!.split(':')[0]),

@@ -46,6 +46,20 @@ class PlaylistDetail extends IPage {
                     duration: playlistState.playlist.duration!,
                   ),
                   const SizedBox(height: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      BlocBuilder<PlayerBloc, PlayerState>(
+                          builder: (contex, state) {
+                        return Visibility(
+                            visible: state.isUsed,
+                            child: MusicWavePlayer(
+                                playerBloc: GetIt.instance.get<PlayerBloc>(),
+                                playerState: state));
+                      }),
+                    ],
+                  ),
+                  const SizedBox(height: 25),
                   Tracklist(songs: playlistState.playlist.songs!),
                 ],
               ),

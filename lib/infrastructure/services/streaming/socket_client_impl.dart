@@ -20,6 +20,7 @@ class SocketClientImpl extends SocketClient {
     //socket = IO.io('http://192.168.1.101:5000',
     //    IO.OptionBuilder().setTransports(['websocket']).build());
 
+    String url = 'https://soundspace-api-production-3d1f.up.railway.app';
     //socket = IO.io(url, <String, dynamic>{
     //  'transports': ['websocket', 'polling'],
     //  'path': '/socket.io',
@@ -28,20 +29,19 @@ class SocketClientImpl extends SocketClient {
 
     print(localStorage.getValue('appToken'));
 
-    //String url = 'https://soundspace-api-production-3d1f.up.railway.app';
-    String url = 'http://streaming-api.eastus.azurecontainer.io:3000';
+    //String url = 'http://streaming-api.eastus.azurecontainer.io:3000';
+//
+    //socket = IO.io(url, <String, dynamic>{
+    //  'transports': ['websocket']
+    //});
 
-    socket = IO.io(url, <String, dynamic>{
-      'transports': ['websocket']
-    });
-
-    //socket = IO.io(
-    //    url,
-    //    IO.OptionBuilder()
-    //        .setTransports(['websocket', 'polling'])
-    //        .setPath('/socket.io')
-    //        .setAuth({'token': localStorage.getValue('appToken')})
-    //        .build());
+    socket = IO.io(
+        url,
+        IO.OptionBuilder()
+            .setTransports(['websocket', 'polling'])
+            .setPath('/socket.io')
+            .setAuth({'token': localStorage.getValue('appToken')})
+            .build());
 
     socket.connect();
 

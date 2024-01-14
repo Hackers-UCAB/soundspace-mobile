@@ -49,6 +49,7 @@ class MusicPlayer extends StatelessWidget {
                   playerState.currentNameSong, playerState.duration));
             },
           ),
+
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 8),
             child: Row(
