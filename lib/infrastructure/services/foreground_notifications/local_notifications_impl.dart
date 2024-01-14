@@ -30,7 +30,8 @@ class LocalNotificationsImpl extends LocalNotifications {
 
   @override
   Future<void> inicializeLocalNotifications() async {
-    const initializationSettingsAndroid = AndroidInitializationSettings('logo');
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
 
     const initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
@@ -46,7 +47,8 @@ class LocalNotificationsImpl extends LocalNotifications {
   }
 
   Future<void> _requestPermissionLocalNotifications() async {
-    const initializationSettingsAndroid = AndroidInitializationSettings('logo');
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
 
     const initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
@@ -96,7 +98,7 @@ class LocalNotificationsImpl extends LocalNotifications {
         playSound: true,
         importance: Importance.max,
         priority: Priority.high,
-        icon: 'logo');
+        icon: 'app_icon');
 
     const notificationDetails = NotificationDetails(
       android: androidDetails,

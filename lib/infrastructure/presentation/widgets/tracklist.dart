@@ -90,8 +90,6 @@ class _TracklistItem extends StatelessWidget {
                               minutes: int.parse(song.duration!.split(':')[0]),
                               seconds:
                                   int.parse(song.duration!.split(':')[1]))));
-                      //TODO: socket.sendIdSong(song.id);
-                      // playerBloc.add(PlayingStartedEvent(song: song)),
                     },
                     icon: const Icon(
                       Icons.play_arrow_sharp,

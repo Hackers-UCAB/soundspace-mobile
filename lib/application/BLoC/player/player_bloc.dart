@@ -73,8 +73,13 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       duration: event.durationSong,
       isInit: false,
     ));
-    add(UpdateSeekPosition(
-        Duration(minutes: (event.second) ~/ 60, seconds: (event.second) % 60)));
+    if (event.second == 0) {
+      add(UpdateSeekPosition(Duration.zero));
+    } else {
+      add(UpdateSeekPosition(Duration(
+          minutes: (event.second) ~/ 60, seconds: (event.second) % 60)));
+    }
+
     add(UpdateWaveForm());
     add(UpdateUse());
     GetIt.instance
