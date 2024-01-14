@@ -58,54 +58,6 @@ class PlaylistDetail extends IPage {
         return const CustomCircularProgressIndicator();
       }
     }));
-    final playerBloc = GetIt.instance.get<PlayerBloc>();
-    return BlocProvider(
-        create: (context) => playlistBloc,
-        child: BlocBuilder<PlaylistDetailBloc, PlaylistDetailState>(
-            builder: (contex, playlistState) {
-          if (playlistState is PlaylistDetailLoaded) {
-            return Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ImageCover(
-                          image: playlistState.playlist.image,
-                          height: 150,
-                          width: 300),
-                      Info(
-                        name: playlistState.playlist.name!,
-                        artistName: playlistState.playlist.artistName,
-                        songs: playlistState.playlist.songs!,
-                        duration: playlistState.playlist.duration!,
-                      ),
-                      const SizedBox(height: 25),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          BlocBuilder<PlayerBloc, PlayerState>(
-                              builder: (context, state) {
-                            return MusicWavePlayer(
-                              playerBloc: playerBloc,
-                              playerState: state,
-                            );
-                          }),
-                        ],
-                      ),
-                      const SizedBox(height: 25),
-                      Tracklist(songs: playlistState.playlist.songs!),
-                    ],
-                  ),
-                )
-              ],
-            );
-          } else if (playlistState is PlaylistDetailFailed) {
-            return ErrorPage(failure: playlistState.failure);
-          } else {
-            return const CustomCircularProgressIndicator();
-          }
-        }));
   }
 
   @override
