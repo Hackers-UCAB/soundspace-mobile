@@ -24,7 +24,7 @@ class EntitiesByName {
     List<Playlist>? playlists,
     List<Song>? songs,
   }) {
-    entitiesMap['albums'] = albums ?? [];
+    entitiesMap['album'] = albums ?? [];
     entitiesMap['artist'] = artists ?? [];
     entitiesMap['playlist'] = playlists ?? [];
     entitiesMap['song'] = songs ?? [];

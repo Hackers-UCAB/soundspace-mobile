@@ -5,9 +5,10 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/infrastructure/presentation/pages/home/home_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/landing/landing_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/logIn/log_in_page.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/profile_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/pages/playlist_detail/playlist_detail.dart';
 import '../../pages/album_detail/album_detail.dart';
 import '../../pages/artist_detail/artist_detail.dart';
+import '../../pages/profile/user_profile_page.dart';
 import '../../pages/search/search_page.dart';
 
 part 'route_guard.dart';
@@ -17,7 +18,7 @@ class AppNavigator {
   final AuthRouteGuard authRouteGuard;
   final SubscriptionRouteGuard subscriptionRouteGuard;
   final getIt = GetIt.instance;
-  late String currentLocation;
+  String currentLocation = '/';
   AppNavigator(
       {required this.authRouteGuard, required this.subscriptionRouteGuard}) {
     _routes = GoRouter(
@@ -25,9 +26,7 @@ class AppNavigator {
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) 
-          {
-            currentLocation = '/';
+          builder: (context, state) {
             return LandingPage();
           },
           redirect: _authProtectedNavigation,
@@ -35,7 +34,6 @@ class AppNavigator {
         GoRoute(
           path: '/logIn',
           builder: (context, state) {
-            currentLocation = '/logIn';
             return RegisterScreen();
           },
           redirect: _authProtectedNavigation,
@@ -43,7 +41,6 @@ class AppNavigator {
         GoRoute(
           path: '/home',
           builder: (context, state) {
-            currentLocation = '/home';
             return HomePage();
           },
         ),
@@ -64,16 +61,23 @@ class AppNavigator {
           },
         ),
         GoRoute(
+            path: '/playlist/:id',
+            builder: (context, state) {
+              final playlistId = state.pathParameters['id']!;
+              currentLocation = '/playlist/$playlistId';
+              return PlaylistDetail(
+                playlistId: playlistId,
+              );
+            }),
+        GoRoute(
           path: '/search',
           builder: (context, state) {
-            currentLocation = '/search';
             return SearchPage();
           },
         ),
         GoRoute(
           path: '/profile',
           builder: (context, state) {
-            currentLocation = '/profile';
             return ProfilePage();
           },
         ),
@@ -93,18 +97,24 @@ class AppNavigator {
     return _routes.routeInformationProvider;
   }
 
+  bool canPop() {
+    return _routes.canPop();
+  }
+
   void pop() {
-    _routes.canPop() ? _routes.pop() : _routes.go('/');
+    _routes.pop();
   }
 
   void go(String routeName) {
+    currentLocation = routeName;
     _routes.go(routeName);
   }
 
   void navigateTo(String routeName) {
-    // if (subscriptionRouteGuard.canNavigate(routeName)) {
-    _routes.push(routeName);
-    // }
+    if (subscriptionRouteGuard.canNavigate(routeName)) {
+      currentLocation = routeName;
+      _routes.push(routeName);
+    }
   }
 
   void replaceWith(String routeName) {

@@ -13,8 +13,11 @@ class AlbumMapper {
           ? ImageConverter.convert(json['image']['data'])
           : null,
       artistName: json['creators'] != null
-          ? json['creators'].map<String>((e) => e['creatorName']).toList()
+          ? (json['creators'] as List<dynamic>)
+              .map<String>((e) => e['creatorName'])
+              .toList()
           : null,
+      duration: json['duration'],
       songs: json['songs'] != null
           ? SongMapper.fromJsonList(json['songs'])
           : null, //TODO: Ver que esta shit funcione

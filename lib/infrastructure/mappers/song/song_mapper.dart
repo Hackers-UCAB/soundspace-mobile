@@ -8,7 +8,8 @@ class SongMapper {
     return Song(
       id: json['id'],
       name: json['name'],
-      duration: json['duration'],
+      duration:
+          json['duration'] != null ? formatDuration(json['duration']) : null,
       image: json['image'] != null
           ? ImageConverter.convert(json['image']['data'])
           : null,
@@ -29,5 +30,16 @@ class SongMapper {
 
   static List<Song> fromJsonList(dynamic jsonList) {
     return jsonList.map<Song>((json) => fromJson(json)).toList();
+  }
+
+  static String formatDuration(String duration) {
+    String newDuration =
+        duration.split(':').map((part) => part == '00' ? '' : part).join(':');
+
+    if (newDuration.startsWith(':')) {
+      newDuration = newDuration.substring(1);
+    }
+
+    return newDuration;
   }
 }

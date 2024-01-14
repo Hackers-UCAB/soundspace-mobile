@@ -1,10 +1,8 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import '../../../../../domain/album/album.dart';
 
 class AlbumClipRRect extends StatelessWidget {
-  final Album album;
+  final dynamic album;
 
   const AlbumClipRRect({super.key, required this.album});
 

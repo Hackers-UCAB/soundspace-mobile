@@ -6,20 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sign_in_bloc/application/BLoC/album_detail/album_detail_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/artist_detail/artist_detail_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
-import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_trending_playlists_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/song/get_trending_songs_use_case.dart';
+import 'package:sign_in_bloc/application/use_cases/user/cancel_user_subscription_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_local_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/get_user_profile_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/user/log_out_user_use_case.dart';
@@ -37,9 +34,7 @@ import 'package:sign_in_bloc/infrastructure/services/location/location_checker_i
 import 'package:sign_in_bloc/infrastructure/services/notifications/notification_actions_manager.dart';
 import 'package:sign_in_bloc/infrastructure/services/search_entities_by_name_impl.dart';
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
-import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import '../../../application/BLoC/socket/socket_bloc.dart';
-import '../../../application/BLoC/trendings/trendings_bloc.dart';
 import '../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
 import '../../../application/use_cases/user/log_in_guest_use_case.dart';
@@ -93,10 +88,7 @@ class InjectManager {
     final token = localStorage.getValue('appToken');
     if (token != null) {
       apiConnectionManagerImpl.setHeaders('Authorization', 'Bearer $token');
-      print(token);
     }
-    final firebaseToken = await localNotifications.getToken();
-    print(firebaseToken);
     //repositories
     final userRepository =
         UserRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
@@ -128,6 +120,8 @@ class InjectManager {
             promotionalBannerRepository: promotionalBannerRepository);
     final GetTrendingPlaylistsUseCase getTrendingPlaylistsUseCase =
         GetTrendingPlaylistsUseCase(playlistRepository: playlistRepository);
+    final GetPlaylistDataUseCase getPlaylistDataUseCase =
+        GetPlaylistDataUseCase(playlistRepository: playlistRepository);
     final GetTrendingAlbumsUseCase getTrendingAlbumsUseCase =
         GetTrendingAlbumsUseCase(albumRepository: albumRepository);
     final GetTrendingArtistsUseCase getTrendingArtistsUseCase =
@@ -141,13 +135,17 @@ class InjectManager {
     final GetAlbumDataUseCase getAlbumDataUseCase =
         GetAlbumDataUseCase(albumRepository: albumRepository);
     final FetchUserProfileDataUseCase fetchUserProfileDataUseCase =
-        FetchUserProfileDataUseCase(
-            userRepository: userRepository, localStorage: localStorage);
+        FetchUserProfileDataUseCase(userRepository: userRepository);
     final SaveUserProfileDataUseCase saveUserProfileDataUseCase =
-        SaveUserProfileDataUseCase(
+        SaveUserProfileDataUseCase(userRepository: userRepository);
+    final CancelSubscriptionUseCase cancelSubscriptionUseCase =
+        CancelSubscriptionUseCase(
             userRepository: userRepository, localStorage: localStorage);
 
     final getIt = GetIt.instance;
+    getIt.registerSingleton<LogInUseCase>(logInUseCase);
+    getIt.registerSingleton<LogInGuestUseCase>(logInGuestUseCase);
+    getIt.registerSingleton<SubscribeUseCase>(subscribeUseCase);
     getIt.registerSingleton<GetTrendingArtistsUseCase>(
         getTrendingArtistsUseCase);
     getIt.registerSingleton<GetTrendingAlbumsUseCase>(getTrendingAlbumsUseCase);
@@ -155,13 +153,20 @@ class InjectManager {
         getPromotionalBannerUseCase);
     getIt.registerSingleton<GetTrendingPlaylistsUseCase>(
         getTrendingPlaylistsUseCase);
+    getIt.registerSingleton<GetPlaylistDataUseCase>(getPlaylistDataUseCase);
     getIt.registerSingleton<GetTrendingSongsUseCase>(getTrendingSongsUseCase);
     getIt.registerSingleton<GetArtistDataUseCase>(getArtistDataUseCase);
     getIt.registerSingleton<GetAlbumDataUseCase>(getAlbumDataUseCase);
     getIt.registerSingleton<SearchEntitiesByName>(SearchEntitiesByNameImpl(
         apiConnectionManager: apiConnectionManagerImpl));
+    getIt.registerSingleton<FetchUserProfileDataUseCase>(
+        fetchUserProfileDataUseCase);
+    getIt.registerSingleton<SaveUserProfileDataUseCase>(
+        saveUserProfileDataUseCase);
+    getIt.registerSingleton<CancelSubscriptionUseCase>(
+        cancelSubscriptionUseCase);
 
-    //blocs
+    //common blocs
     getIt.registerSingleton<UserPermissionsBloc>(UserPermissionsBloc(
         getUserLocalDataUseCase: getUserLocalDataUseCase,
         connectionManager: connectionManager,
@@ -170,14 +175,9 @@ class InjectManager {
         PlayerBloc(playerService: playerService));
     getIt.registerSingleton<SocketBloc>(SocketBloc(socketClient: socketClient));
     playerService.initialize();
-    getIt.registerSingleton<LogInSubscriberBloc>(LogInSubscriberBloc(
-        logInUseCase: logInUseCase,
-        subscribeUseCase: subscribeUseCase,
-        logOutUseCase: logOutUserUseCase));
-    getIt.registerSingleton<LogInGuestBloc>(
-        LogInGuestBloc(logInGuestUseCase: logInGuestUseCase));
     getIt.registerSingleton<LogOutBloc>(
         LogOutBloc(logOutUserUseCase: logOutUserUseCase));
+
     //check if user has a session
     final userPermissionsBloc = getIt.get<UserPermissionsBloc>()
       ..add(UserPermissionsRequested());
@@ -185,9 +185,6 @@ class InjectManager {
         ConnectivityBloc(connectionManager: connectionManager));
     getIt.registerSingleton<NotificationsBloc>(
         NotificationsBloc(localNotifications: localNotifications));
-    getIt.registerSingleton<UserBloc>(UserBloc(
-        fetchUserProfileDataUseCase: fetchUserProfileDataUseCase,
-        saveUserProfileDataUseCase: saveUserProfileDataUseCase));
     //router config
     final authGuard = AuthRouteGuard(userPermissionsBloc: userPermissionsBloc);
     final subscriptionGuard =

@@ -17,11 +17,10 @@ class SocketClientImpl extends SocketClient {
 
   @override
   void inicializeSocket() async {
-    //socket = IO.io('http://192.168.1.103:5000',
+    //socket = IO.io('http://192.168.1.101:5000',
     //    IO.OptionBuilder().setTransports(['websocket']).build());
 
     String url = 'https://soundspace-api-production-3d1f.up.railway.app';
-
     //socket = IO.io(url, <String, dynamic>{
     //  'transports': ['websocket', 'polling'],
     //  'path': '/socket.io',
@@ -29,6 +28,12 @@ class SocketClientImpl extends SocketClient {
     //});
 
     print(localStorage.getValue('appToken'));
+
+    //String url = 'http://streaming-api.eastus.azurecontainer.io:3000';
+//
+    //socket = IO.io(url, <String, dynamic>{
+    //  'transports': ['websocket']
+    //});
 
     socket = IO.io(
         url,
@@ -51,7 +56,7 @@ class SocketClientImpl extends SocketClient {
   void sendIdSongToServer(
       bool isPreview, String songId, int second, bool isStreaming) {
     socket.emit('message-from-client', {
-      'preview': isPreview,
+      'preview': false,
       'songId': songId,
       'second': second,
       'streaming': isStreaming
@@ -67,7 +72,6 @@ class SocketClientImpl extends SocketClient {
     });
 
     streamController.stream.listen((chunk) async {
-      print('LLEGANDO LA SECUENCIA ${chunk.sequence}');
       GetIt.instance.get<SocketBloc>().add(SocketReceiveChunk(chunk));
     });
   }

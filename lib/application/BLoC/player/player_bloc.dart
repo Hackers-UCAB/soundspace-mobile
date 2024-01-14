@@ -69,6 +69,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     playerService.clean();
     emit(state.copyWith(
       currentIdSong: event.songId,
+      currentNameSong: event.nameSong,
+      duration: event.durationSong,
       isInit: false,
     ));
     add(UpdateSeekPosition(
@@ -87,7 +89,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _resetPlayer(ResetPlayer event, Emitter<PlayerState> emit) {
-    add(UpdateWaveForm());
     emit(state.copyWith(position: Duration.zero));
     playerService.reset();
   }

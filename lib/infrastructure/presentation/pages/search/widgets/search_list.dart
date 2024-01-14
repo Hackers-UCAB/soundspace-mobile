@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
-import '../../../../../application/BLoC/socket/socket_bloc.dart';
 import '../../../config/router/app_router.dart';
 
 class SearchList extends StatefulWidget {
   final List<Map<String, String>> items;
+  final SearchBloc searchBloc;
 
-  const SearchList({super.key, required this.items});
+  const SearchList({super.key, required this.items, required this.searchBloc});
 
   @override
   SearchListState createState() => SearchListState();
@@ -21,9 +21,8 @@ class SearchListState extends State<SearchList> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final searchBloc = GetIt.instance.get<SearchBloc>();
-      if (searchBloc.state.page > 0) {
-        _scrollToIndex(searchBloc.state.scrollPosition);
+      if (widget.searchBloc.state.page > 0) {
+        _scrollToIndex(widget.searchBloc.state.scrollPosition);
       }
     });
   }
@@ -51,9 +50,9 @@ class SearchListState extends State<SearchList> {
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-            final searchBloc = getIt.get<SearchBloc>();
-            final page = searchBloc.state.page + 1;
-            searchBloc.add(FetchSearchedData(page: page, scrollPosition: page));
+            final page = widget.searchBloc.state.page + 1;
+            widget.searchBloc
+                .add(FetchSearchedData(page: page, scrollPosition: page));
           }
           return true;
         },
@@ -65,7 +64,14 @@ class SearchListState extends State<SearchList> {
               name: widget.items[index]['name']!,
               onTap: widget.items[index]['filter'] == 'song'
                   ? () => playerBloc.add(InitStream(
-                      widget.items[index]['id']!, 0)) //TODO: Javi revisa esto
+                      widget.items[index]['id']!,
+                      10,
+                      widget.items[index]['name']!,
+                      Duration(
+                          minutes: int.parse(
+                              widget.items[index]['duration']!.split(':')[0]),
+                          seconds: int.parse(widget.items[index]['duration']!
+                              .split(':')[1])))) //TODO: Javi revisa esto
                   : () => appNavigator.navigateTo(
                       '/${widget.items[index]['filter']}/${widget.items[index]['id']}'),
               filter: widget.items[index]['filter']!,
@@ -91,12 +97,10 @@ class _SearchListItem extends StatelessWidget {
         return const Icon(Icons.music_note, size: 15);
       case 'artist':
         return const Icon(Icons.person, size: 15);
-      case 'album':
-        return const Icon(Icons.album);
       case 'playlist':
         return const Icon(Icons.playlist_play, size: 15);
       default:
-        return const Icon(Icons.error, size: 15);
+        return const Icon(Icons.album);
     }
   }
 

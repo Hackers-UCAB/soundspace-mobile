@@ -34,7 +34,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     add(FetchSearchedData(page: 0, scrollPosition: 0));
   }
 
-  //cada vez que cambia el Texfield
   Future<void> _searchDataChanged(
       SearchDataChanged event, Emitter<SearchState> emit) async {
     emit(state.copyWith(
@@ -77,6 +76,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
                             'filter': entity.key,
                             'id': e.id,
                             'name': e.name,
+                            if (entity.key == 'song') 'duration': e.duration,
                           })
                       .toList();
                 }

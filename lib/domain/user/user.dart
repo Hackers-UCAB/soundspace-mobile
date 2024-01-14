@@ -5,58 +5,40 @@ import '../services/location_checker.dart';
 enum UserRoles { guest, subscriber }
 
 class User {
-  String _id;
-  String? _name;
-  String? _email;
-  String? _phone;
-  UserRoles _role;
-  DateTime? _birthdate;
-  String? _gender;
-  String? _token;
-  late String _country;
+  String id;
+  String? name;
+  String? email;
+  String? phone;
+  UserRoles role;
+  DateTime? birthdate;
+  String? token;
+  String? genre;
+  late String country;
 
   User({
-    required String id,
-    String? name,
-    String? email,
-    String? phone,
-    required UserRoles role,
-    DateTime? birthdate,
-    String? gender,
-    String? token,
-    String? country,
-  })  : _id = id,
-        _name = name,
-        _email = email,
-        _phone = phone,
-        _role = role,
-        _birthdate = birthdate,
-        _gender = gender,
-        _token = token;
-
-  String get id => _id;
-  String? get name => _name;
-  String? get email => _email;
-  String? get phone => _phone;
-  UserRoles get role => _role;
-  DateTime? get birthdate => _birthdate;
-  String? get gender => _gender;
-  String? get token => _token;
-  String get country => _country;
+    required this.id,
+    this.name,
+    this.email,
+    this.phone,
+    this.role = UserRoles.guest,
+    this.birthdate,
+    this.token,
+    this.genre,
+  });
 
   Future<void> checkLocation(ILocationChecker locationChecker,
       IConnectionManager connectionManager) async {
-    if (_role == UserRoles.subscriber) {
+    if (role == UserRoles.subscriber) {
       try {
         await connectionManager
             .checkConnectionStream()
             .firstWhere((isConnected) => isConnected);
 
-        final country = await locationChecker.getCountry();
-        if (country != 'Venezuela') {
-          _role = UserRoles.guest;
+        final actualCountry = await locationChecker.getCountry();
+        if (actualCountry != 'Venezuela') {
+          role = UserRoles.guest;
         }
-        _country = country;
+        country = actualCountry;
       } catch (e) {
         rethrow;
       }
@@ -64,6 +46,6 @@ class User {
   }
 
   bool validLocation() {
-    return _country == 'Venezuela';
+    return country == 'Venezuela';
   }
 }

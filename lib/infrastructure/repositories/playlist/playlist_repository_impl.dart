@@ -13,9 +13,18 @@ class PlaylistRepositoryImpl extends PlaylistRepository {
   @override
   Future<Result<List<Playlist>>> getPlayList() async {
     return await _apiConnectionManager.request<List<Playlist>>(
-      'playlist/top_playlist',
+      'playlist/top_playlists',
       'GET',
       (data) => PlaylistMapper.fromJsonList(data['playlists']),
+    );
+  }
+
+  @override
+  Future<Result<Playlist>> getPlaylitsById(String playlitsId) async {
+    return await _apiConnectionManager.request<Playlist>(
+      'playlist/$playlitsId',
+      'GET',
+      (data) => PlaylistMapper.fromJson(data),
     );
   }
 }
