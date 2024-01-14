@@ -16,6 +16,9 @@ class Info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final bodyMedium = Theme.of(context).textTheme.bodyMedium;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -27,28 +30,20 @@ class Info extends StatelessWidget {
             children: [
               Text(
                 name,
-                style: const TextStyle(
-                  fontSize: 30,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: bodyMedium!.copyWith(fontSize: size.width * 0.1),
               ),
+              const SizedBox(height: 5),
+              if (artistName != null)
+                Text(
+                  artistName!.join(', '),
+                  style: bodyMedium.copyWith(fontSize: size.width * 0.06),
+                ),
+              const SizedBox(height: 5),
               Text(
-                artistName == null ? '' : artistName.toString(),
-                style: const TextStyle(
-                  fontSize: 25,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+                '${songs.length.toString()} cancion${songs.length > 1 ? 'es' : ''}',
+                style: bodyMedium.copyWith(fontSize: size.width * 0.05),
               ),
-              Text(
-                '${songs.length.toString()} CANCION${songs.length > 1 ? 'ES' : ''}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
+              const SizedBox(height: 5),
               Row(
                 children: [
                   const Icon(
@@ -56,12 +51,8 @@ class Info extends StatelessWidget {
                     color: Colors.white,
                   ),
                   Text(
-                    ' $duration MIN',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                    ),
+                    ' $duration min${duration.startsWith('0') || duration.startsWith('1') ? '' : 's'}',
+                    style: bodyMedium.copyWith(fontSize: size.width * 0.05),
                   ),
                 ],
               ),

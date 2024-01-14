@@ -1,6 +1,5 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:general_audio_waveforms/general_audio_waveforms.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 
 class MusicPlayer extends StatelessWidget {
