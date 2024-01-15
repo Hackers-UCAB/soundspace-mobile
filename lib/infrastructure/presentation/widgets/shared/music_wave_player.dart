@@ -49,13 +49,14 @@ class MusicWavePlayer extends StatelessWidget {
                         ? playerBloc.state.position
                         : playerState.duration,
                 elapsedIsChanged: (d) {
-                  print(d);
-                  playerBloc.add(UpdateSeekPosition(d));
-                  playerBloc.add(InitStream(
-                      playerState.currentIdSong,
-                      d.inSeconds,
-                      playerState.currentNameSong,
-                      playerState.duration));
+                  if (playerState.isFinished) {
+                    playerBloc.add(UpdateSeekPosition(d));
+                    playerBloc.add(InitStream(
+                        playerState.currentIdSong,
+                        d.inSeconds,
+                        playerState.currentNameSong,
+                        playerState.duration));
+                  }
                 },
                 scrollable: true,
                 waveformStyle: WaveformStyle(

@@ -46,9 +46,14 @@ class MusicPlayer extends StatelessWidget {
             thumbRadius: 0,
             timeLabelLocation: TimeLabelLocation.none,
             onSeek: (d) {
-              playerBloc.add(UpdateSeekPosition(d));
-              playerBloc.add(InitStream(playerState.currentIdSong, d.inSeconds,
-                  playerState.currentNameSong, playerState.duration));
+              if (playerState.isFinished) {
+                playerBloc.add(UpdateSeekPosition(d));
+                playerBloc.add(InitStream(
+                    playerState.currentIdSong,
+                    d.inSeconds,
+                    playerState.currentNameSong,
+                    playerState.duration));
+              }
             },
           ),
 
