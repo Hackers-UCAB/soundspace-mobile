@@ -5,11 +5,12 @@ abstract class PlayerService {
   Future<void> setAudioSource(SocketChunk chunk);
   Future<void> play();
   Future<void> pause();
+  void setVolume(double volume);
+  void setSpeed(double speed);
   void trackingPosition();
-  void trackingDuration();
+  void trackingBufferedDuration();
   void trackingState();
   void trackingProccesingState();
   void reset();
   void clean();
-  void seek(Duration duration);
 }

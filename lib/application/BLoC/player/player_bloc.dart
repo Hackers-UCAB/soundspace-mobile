@@ -27,6 +27,18 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<UpdateUse>(_updateUserUse);
     on<UpdateLoading>(_updateLoading);
     on<UpdateSeekPosition>(_updateSeekPosition);
+    on<UpdateSpeed>(_updateSpeed);
+    on<UpdateVolume>(_updateVolume);
+  }
+
+  void _updateSpeed(UpdateSpeed event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(speed: event.speed));
+    playerService.setSpeed(event.speed);
+  }
+
+  void _updateVolume(UpdateVolume event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(volume: event.volume));
+    playerService.setVolume(event.volume);
   }
 
   void _updateSeekPosition(

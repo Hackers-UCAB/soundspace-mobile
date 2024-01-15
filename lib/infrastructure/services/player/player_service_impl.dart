@@ -9,9 +9,8 @@ import '../../../application/services/player/player_services.dart';
 
 class PlayerServiceImpl extends PlayerService {
   late final AudioPlayer player;
-  late final ByteDataSource byteDataSource;
+  late ByteDataSource byteDataSource;
 
-  final streamController = StreamController<List<int>>.broadcast();
   ConcatenatingAudioSource concatenatingAudioSource = ConcatenatingAudioSource(
       children: [],
       shuffleOrder: DefaultShuffleOrder(),
@@ -20,8 +19,7 @@ class PlayerServiceImpl extends PlayerService {
   @override
   void initialize() async {
     player = AudioPlayer();
-    byteDataSource = ByteDataSource(streamController);
-    trackingDuration();
+    trackingBufferedDuration();
     trackingPosition();
     trackingState();
     trackingProccesingState();
@@ -42,21 +40,17 @@ class PlayerServiceImpl extends PlayerService {
   }
 
   @override
-  void seek(Duration duration) {
-    player.seek(duration);
-  }
-
-  @override
   Future<void> setAudioSource(SocketChunk chunk) async {
     try {
-      if (chunk.data.isNotEmpty) {
-        streamController.add(chunk.data);
-      }
-
       if (!GetIt.instance.get<PlayerBloc>().state.isInit) {
         GetIt.instance.get<PlayerBloc>().add(UpdateInitState(true));
+        byteDataSource = ByteDataSource();
         await player.setAudioSource(byteDataSource);
         await player.play();
+      } else {
+        if (chunk.data.isNotEmpty) {
+          byteDataSource.add(chunk.data);
+        }
       }
     } on PlayerInterruptedException catch (e) {
       print("Connection aborted: ${e.message}");
@@ -69,10 +63,11 @@ class PlayerServiceImpl extends PlayerService {
   void reset() {
     player.seek(Duration.zero);
     player.stop();
+    byteDataSource.clean();
   }
 
   @override
-  void trackingDuration() {
+  void trackingBufferedDuration() {
     final playerBloc = GetIt.instance.get<PlayerBloc>();
     // TODO es realmente necesario??
     player.bufferedPositionStream.listen((event) async {
@@ -117,8 +112,23 @@ class PlayerServiceImpl extends PlayerService {
     });
   }
 
+  @override
   void clean() {
-    player.pause();
+    if (GetIt.instance.get<PlayerBloc>().state.isInit) {
+      byteDataSource.clean();
+    }
+
+    player.stop();
+  }
+
+  @override
+  void setSpeed(double speed) {
+    player.setSpeed(speed);
+  }
+
+  @override
+  void setVolume(double volume) {
+    player.setVolume(volume);
   }
 
   @override

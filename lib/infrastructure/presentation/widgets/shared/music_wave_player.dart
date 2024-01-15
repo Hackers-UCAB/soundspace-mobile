@@ -71,30 +71,64 @@ class MusicWavePlayer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if ((playerState.position.inSeconds - 10) > 0) {
+                          playerBloc.add(InitStream(
+                              playerState.currentIdSong,
+                              playerState.position.inSeconds - 10,
+                              playerState.currentNameSong,
+                              playerState.duration));
+                        }
+                      },
                       icon: Icon(
                         Icons.replay_10_outlined,
-                        color: Colors.white,
+                        color: playerState.position.inSeconds - 10 > 0
+                            ? Colors.white
+                            : Colors.grey,
                         size: 35,
                       )),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if ((playerState.position.inSeconds + 10) <
+                            playerState.duration.inSeconds) {
+                          playerBloc.add(InitStream(
+                              playerState.currentIdSong,
+                              playerState.position.inSeconds + 10,
+                              playerState.currentNameSong,
+                              playerState.duration));
+                        }
+                      },
                       icon: Icon(
                         Icons.replay_30_outlined,
+                        color: playerState.position.inSeconds + 10 <
+                                playerState.duration.inSeconds
+                            ? Colors.white
+                            : Colors.grey,
+                        size: 35,
+                      )),
+                  IconButton(
+                      onPressed: () {
+                        playerState.speed == 1.0
+                            ? playerBloc.add(UpdateSpeed(1.5))
+                            : playerBloc.add(UpdateSpeed(1.0));
+                      },
+                      icon: Icon(
+                        playerState.speed == 1.0
+                            ? Icons.one_k_outlined
+                            : Icons.two_k_outlined,
                         color: Colors.white,
                         size: 35,
                       )),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        playerState.volume == 1.0
+                            ? playerBloc.add(UpdateVolume(0.0))
+                            : playerBloc.add(UpdateVolume(1.0));
+                      },
                       icon: Icon(
-                        Icons.one_x_mobiledata_outlined,
-                        color: Colors.white,
-                        size: 35,
-                      )),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.volume_up_outlined,
+                        playerState.volume == 1.0
+                            ? Icons.volume_up_outlined
+                            : Icons.volume_mute_outlined,
                         color: Colors.white,
                         size: 35,
                       ))

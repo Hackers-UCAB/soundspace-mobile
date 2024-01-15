@@ -12,20 +12,23 @@ class PlayerState extends Equatable {
   final String currentIdSong;
   final String currentNameSong;
   final bool isLoading;
+  final double volume;
+  final double speed;
 
-  const PlayerState({
-    this.seekPosition = Duration.zero,
-    this.isLoading = false,
-    this.waveForm = const [0],
-    this.isInit = false,
-    this.currentIdSong = 'empty',
-    this.currentNameSong = 'empty',
-    this.duration = const Duration(seconds: 1),
-    this.bufferedDuration = Duration.zero,
-    this.position = Duration.zero,
-    this.playbackState = false,
-    this.isUsed = false,
-  });
+  const PlayerState(
+      {this.seekPosition = Duration.zero,
+      this.isLoading = false,
+      this.waveForm = const [0],
+      this.isInit = false,
+      this.currentIdSong = 'empty',
+      this.currentNameSong = 'empty',
+      this.duration = const Duration(seconds: 1),
+      this.bufferedDuration = Duration.zero,
+      this.position = Duration.zero,
+      this.playbackState = false,
+      this.isUsed = false,
+      this.speed = 1.0,
+      this.volume = 1.0});
 
   PlayerState copyWith(
           {bool? isLoading,
@@ -39,6 +42,8 @@ class PlayerState extends Equatable {
           Duration? position,
           Duration? seekPosition,
           bool? playbackState,
+          double? speed,
+          double? volume,
           bool? isUsed}) =>
       PlayerState(
           waveForm: waveForm ?? this.waveForm,
@@ -51,7 +56,9 @@ class PlayerState extends Equatable {
           seekPosition: seekPosition ?? this.seekPosition,
           playbackState: playbackState ?? this.playbackState,
           isUsed: isUsed ?? this.isUsed,
-          isLoading: isLoading ?? this.isLoading);
+          isLoading: isLoading ?? this.isLoading,
+          speed: speed ?? this.speed,
+          volume: volume ?? this.volume);
 
   @override
   List<Object> get props => [
@@ -65,6 +72,8 @@ class PlayerState extends Equatable {
         playbackState,
         waveForm,
         isUsed,
-        isLoading
+        isLoading,
+        volume,
+        speed
       ];
 }
