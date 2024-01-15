@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:general_audio_waveforms/general_audio_waveforms.dart';
 import 'package:get/get.dart';
-import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 
 class MusicWavePlayer extends StatelessWidget {
@@ -13,7 +12,7 @@ class MusicWavePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = context.mediaQuery.size;
-    return Container(
+    return SizedBox(
       width: size.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
