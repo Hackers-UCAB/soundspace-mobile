@@ -60,7 +60,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     } else if (state.waveForm.length == 1) {
       emit(state.copyWith(
           waveForm: List<double>.generate(
-              250,
+              220,
               (i) =>
                   (Random().nextBool() ? 1 : -1) * Random().nextDouble() * 100)
             ..shuffle()));

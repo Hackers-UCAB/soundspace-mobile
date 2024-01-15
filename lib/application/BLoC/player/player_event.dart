@@ -73,3 +73,8 @@ class UpdateSpeed extends PlayerEvent {
   final double speed;
   UpdateSpeed(this.speed);
 }
+
+class UpdateFinish extends PlayerEvent {
+  final bool isFinished;
+  UpdateFinish(this.isFinished);
+}

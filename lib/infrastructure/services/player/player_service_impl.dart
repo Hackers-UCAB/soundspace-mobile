@@ -50,6 +50,8 @@ class PlayerServiceImpl extends PlayerService {
       } else {
         if (chunk.data.isNotEmpty) {
           byteDataSource.add(chunk.data);
+        } else {
+          print('finaliza');
         }
       }
     } on PlayerInterruptedException catch (e) {
@@ -111,9 +113,8 @@ class PlayerServiceImpl extends PlayerService {
   @override
   void clean() async {
     await player.pause();
-    if (GetIt.instance.get<PlayerBloc>().state.isInit) {
-      byteDataSource = ByteDataSource();
-    }
+    await player.stop();
+    byteDataSource = ByteDataSource();
   }
 
   @override
