@@ -39,15 +39,17 @@ class MusicWavePlayer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               GeneralAudioWaveform(
-                scalingAlgorithmType: ScalingAlgorithmType.median,
                 waveformType: WaveformType.rectangle,
-                height: 50,
+                height: 70,
                 width: size.width * 0.7,
-                maxSamples: playerState.waveForm.length,
                 source: AudioDataSource(samples: playerState.waveForm),
                 maxDuration: playerState.duration,
-                elapsedDuration: playerBloc.state.position,
+                elapsedDuration:
+                    playerState.duration > playerBloc.state.position
+                        ? playerBloc.state.position
+                        : playerState.duration,
                 elapsedIsChanged: (d) {
+                  print(d);
                   playerBloc.add(UpdateSeekPosition(d));
                   playerBloc.add(InitStream(
                       playerState.currentIdSong,

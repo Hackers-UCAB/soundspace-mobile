@@ -49,7 +49,9 @@ class PlayerServiceImpl extends PlayerService {
   @override
   Future<void> setAudioSource(SocketChunk chunk) async {
     try {
-      streamController.add(chunk.data);
+      if (chunk.data.isNotEmpty) {
+        streamController.add(chunk.data);
+      }
 
       if (!GetIt.instance.get<PlayerBloc>().state.isInit) {
         GetIt.instance.get<PlayerBloc>().add(UpdateInitState(true));
@@ -72,9 +74,26 @@ class PlayerServiceImpl extends PlayerService {
   @override
   void trackingDuration() {
     // TODO es realmente necesario??
-    player.durationStream.listen((duration) {
-      print('DURACION ACTUAL ${duration?.inSeconds}');
+    player.bufferedPositionStream.listen((event) {
+      if (event == Duration.zero) {
+        GetIt.instance
+            .get<PlayerBloc>()
+            .add(UpdatingDuration(Duration(seconds: 1)));
+      } else {
+        GetIt.instance.get<PlayerBloc>().add(UpdatingDuration(event));
+      }
+
+      if (player.position == event) {
+        player.pause();
+        GetIt.instance.get<PlayerBloc>().add(ResetPlayer());
+      }
     });
+    //player.durationStream.listen((duration) {
+    //  print('DURACION ACTUAL ${duration?.inSeconds}');
+    //  if (duration != null) {
+    //    GetIt.instance.get<PlayerBloc>().add(UpdatingDuration(duration));
+    //  }
+    //});
   }
 
   @override
@@ -127,6 +146,7 @@ class PlayerServiceImpl extends PlayerService {
       GetIt.instance
           .get<PlayerBloc>()
           .add(PlayerPlaybackStateChanged(event.playing));
+      if (!event.playing) {}
     });
 
     player.playbackEventStream.listen((event) {
@@ -139,8 +159,10 @@ class PlayerServiceImpl extends PlayerService {
     player.processingStateStream.listen((event) async {
       if (event == ProcessingState.ready) {
         GetIt.instance.get<PlayerBloc>().add(UpdateLoading(false));
-      } else if (event != ProcessingState.completed) {
-        GetIt.instance.get<PlayerBloc>().add(UpdateLoading(true));
+      }
+
+      if (event == ProcessingState.idle) {
+        GetIt.instance.get<PlayerBloc>().add(UpdateLoading(false));
       }
     });
   }
