@@ -38,7 +38,10 @@ class MusicPlayer extends StatelessWidget {
           ProgressBar(
             progress: playerState.position,
             total: playerState.duration,
+            buffered: playerState.bufferedDuration,
+            bufferedBarColor: Colors.red,
             barHeight: 5,
+            baseBarColor: Colors.black,
             thumbCanPaintOutsideBar: false,
             thumbRadius: 0,
             timeLabelLocation: TimeLabelLocation.none,

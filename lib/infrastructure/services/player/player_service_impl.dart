@@ -73,27 +73,16 @@ class PlayerServiceImpl extends PlayerService {
 
   @override
   void trackingDuration() {
+    final playerBloc = GetIt.instance.get<PlayerBloc>();
     // TODO es realmente necesario??
-    player.bufferedPositionStream.listen((event) {
-      if (event == Duration.zero) {
-        GetIt.instance
-            .get<PlayerBloc>()
-            .add(UpdatingDuration(Duration(seconds: 1)));
-      } else {
-        GetIt.instance.get<PlayerBloc>().add(UpdatingDuration(event));
-      }
-
-      if (event.inSeconds - player.position.inSeconds == 1) {
-        player.pause();
-        GetIt.instance.get<PlayerBloc>().add(ResetPlayer());
+    player.bufferedPositionStream.listen((event) async {
+      if (event > Duration.zero) {
+        print('BUFFEREDDDDDD');
+        print(event + playerBloc.state.seekPosition);
+        playerBloc.add(
+            UpdatingBufferedDuration(event + playerBloc.state.seekPosition));
       }
     });
-    //player.durationStream.listen((duration) {
-    //  print('DURACION ACTUAL ${duration?.inSeconds}');
-    //  if (duration != null) {
-    //    GetIt.instance.get<PlayerBloc>().add(UpdatingDuration(duration));
-    //  }
-    //});
   }
 
   @override
@@ -101,38 +90,30 @@ class PlayerServiceImpl extends PlayerService {
     final playerBloc = GetIt.instance.get<PlayerBloc>();
 
     player.positionStream.listen((position) async {
-      //sprint(playerBloc.state.position);
-      //if (player.duration != null) {
-      //  if (((player.duration!.inSeconds - position.inSeconds) == 4) &&
-      //      playerBloc.state.isRequired) {
-      //    if (player.sequence != null && player.currentIndex != null) {
-      //      var totalDuration = Duration.zero;
-      //      for (var i = 0; i < player.currentIndex!; i++) {
-      //        totalDuration += player.sequence![i].duration!;
-      //      }
-      //      totalDuration += player.position + playerBloc.state.seekPosition;
-      //      GetIt.instance.get<PlayerBloc>().add(UpdateRequiredState(
-      //          !GetIt.instance.get<PlayerBloc>().state.isRequired));
-      //      print("TOTAL DURATION ${totalDuration}");
-      //      print("TOTAL POSITION ${playerBloc.state.position}");
-      //      GetIt.instance
-      //          .get<PlayerBloc>()
-      //          .add(AskForChunk(totalDuration.inSeconds));
-      //    }
-      //  }
-      //}
+      if (player.bufferedPosition > Duration.zero) {
+        if ((playerBloc.state.bufferedDuration.inSeconds -
+                playerBloc.state.position.inSeconds) ==
+            10) {
+          print('ENTRAAAAAA');
+          playerBloc.add(AskForChunk(player.bufferedPosition.inSeconds));
+        }
+
+        if ((playerBloc.state.bufferedDuration.inSeconds -
+                playerBloc.state.position.inSeconds) ==
+            1) {
+          player.pause();
+          playerBloc.add(ResetPlayer());
+        }
+
+        if ((player.bufferedPosition.inSeconds ==
+            playerBloc.state.duration.inSeconds)) {
+          player.pause();
+          playerBloc.add(ResetPlayer());
+        }
+      }
 
       playerBloc.add(
           TrackingCurrentPosition(position + playerBloc.state.seekPosition));
-
-      //if (player.sequence != null && player.currentIndex != null) {
-      //  var totalDuration = Duration.zero;
-      //  for (var i = 0; i < player.currentIndex!; i++) {
-      //    totalDuration += player.sequence![i].duration!;
-      //  }
-      //  totalDuration += player.position + playerBloc.state.seekPosition;
-      //  playerBloc.add(TrackingCurrentPosition(totalDuration));
-      //}
     });
   }
 
@@ -159,6 +140,14 @@ class PlayerServiceImpl extends PlayerService {
     player.processingStateStream.listen((event) async {
       if (event == ProcessingState.ready) {
         GetIt.instance.get<PlayerBloc>().add(UpdateLoading(false));
+      }
+
+      if (event == ProcessingState.buffering) {
+        GetIt.instance.get<PlayerBloc>().add(UpdateLoading(true));
+      }
+
+      if (event == ProcessingState.loading) {
+        GetIt.instance.get<PlayerBloc>().add(UpdateLoading(true));
       }
 
       if (event == ProcessingState.idle) {

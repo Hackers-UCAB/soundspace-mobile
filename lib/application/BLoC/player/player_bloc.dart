@@ -18,12 +18,11 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<ReceiveChunkFromSocket>(_setChunkToJustAudio);
     on<PlayerPlaybackStateChanged>(_playbackStateChanged);
     on<TrackingCurrentPosition>(_updatingCurrentPosition);
-    on<UpdatingDuration>(_updateDuration);
+    on<UpdatingBufferedDuration>(_updateDuration);
     on<ResetPlayer>(_resetPlayer);
     on<AskForChunk>(_askForChunk);
     on<InitStream>(_initStream);
     on<UpdateInitState>(_updateInitState);
-    on<UpdateRequiredState>(_updateRequiredState);
     on<UpdateWaveForm>(_updateWaveForm);
     on<UpdateUse>(_updateUserUse);
     on<UpdateLoading>(_updateLoading);
@@ -54,11 +53,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
                   (Random().nextBool() ? 1 : -1) * Random().nextDouble() * 100)
             ..shuffle()));
     }
-  }
-
-  void _updateRequiredState(
-      UpdateRequiredState event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(isRequired: event.isRequired));
   }
 
   void _updateInitState(UpdateInitState event, Emitter<PlayerState> emit) {
@@ -94,12 +88,16 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _resetPlayer(ResetPlayer event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(position: Duration.zero));
+    emit(state.copyWith(
+        position: Duration.zero,
+        seekPosition: Duration.zero,
+        bufferedDuration: Duration.zero));
     playerService.reset();
   }
 
-  void _updateDuration(UpdatingDuration event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(duration: event.duration));
+  void _updateDuration(
+      UpdatingBufferedDuration event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(bufferedDuration: event.bufferedDuration));
   }
 
   void _updatingCurrentPosition(
@@ -120,8 +118,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   Future<void> _setChunkToJustAudio(
       ReceiveChunkFromSocket event, Emitter<PlayerState> emit) async {
-    add(UpdateRequiredState(true));
-
     await playerService.setAudioSource(event.chunk);
   }
 

@@ -3,10 +3,10 @@ part of 'player_bloc.dart';
 class PlayerState extends Equatable {
   final List<double> waveForm;
   final Duration duration;
+  final Duration bufferedDuration;
   final Duration position;
   final Duration seekPosition;
   final bool isInit;
-  final bool isRequired;
   final bool playbackState;
   final bool isUsed;
   final String currentIdSong;
@@ -18,10 +18,10 @@ class PlayerState extends Equatable {
     this.isLoading = false,
     this.waveForm = const [0],
     this.isInit = false,
-    this.isRequired = false,
     this.currentIdSong = 'empty',
     this.currentNameSong = 'empty',
     this.duration = const Duration(seconds: 1),
+    this.bufferedDuration = Duration.zero,
     this.position = Duration.zero,
     this.playbackState = false,
     this.isUsed = false,
@@ -31,22 +31,22 @@ class PlayerState extends Equatable {
           {bool? isLoading,
           List<double>? waveForm,
           bool? isInit,
-          bool? isRequired,
           bool? userIsPlaying,
           String? currentIdSong,
           String? currentNameSong,
           Duration? duration,
+          Duration? bufferedDuration,
           Duration? position,
           Duration? seekPosition,
           bool? playbackState,
           bool? isUsed}) =>
       PlayerState(
           waveForm: waveForm ?? this.waveForm,
-          isRequired: isRequired ?? this.isRequired,
           isInit: isInit ?? this.isInit,
           currentIdSong: currentIdSong ?? this.currentIdSong,
           currentNameSong: currentNameSong ?? this.currentNameSong,
           duration: duration ?? this.duration,
+          bufferedDuration: bufferedDuration ?? this.bufferedDuration,
           position: position ?? this.position,
           seekPosition: seekPosition ?? this.seekPosition,
           playbackState: playbackState ?? this.playbackState,
@@ -59,10 +59,10 @@ class PlayerState extends Equatable {
         currentIdSong,
         currentNameSong,
         duration,
+        bufferedDuration,
         position,
         seekPosition,
         playbackState,
-        isRequired,
         waveForm,
         isUsed,
         isLoading
