@@ -18,7 +18,9 @@ class AppNavigator {
   final AuthRouteGuard authRouteGuard;
   final SubscriptionRouteGuard subscriptionRouteGuard;
   final getIt = GetIt.instance;
-  late String currentLocation;
+  String currentLocation = '/';
+  final List<String> _previousLocations = [];
+
   AppNavigator(
       {required this.authRouteGuard, required this.subscriptionRouteGuard}) {
     _routes = GoRouter(
@@ -30,8 +32,7 @@ class AppNavigator {
           builder: (context, state) => const LandingPage(),
 =======
           builder: (context, state) {
-            currentLocation = '/';
-            return const LandingPage();
+            return LandingPage();
           },
 >>>>>>> dev-javi
           redirect: _authProtectedNavigation,
@@ -39,15 +40,13 @@ class AppNavigator {
         GoRoute(
           path: '/logIn',
           builder: (context, state) {
-            currentLocation = '/logIn';
-            return const RegisterScreen();
+            return RegisterScreen();
           },
           redirect: _authProtectedNavigation,
         ),
         GoRoute(
           path: '/home',
           builder: (context, state) {
-            currentLocation = '/home';
             return HomePage();
           },
         ),
@@ -79,14 +78,12 @@ class AppNavigator {
         GoRoute(
           path: '/search',
           builder: (context, state) {
-            currentLocation = '/search';
             return SearchPage();
           },
         ),
         GoRoute(
           path: '/profile',
           builder: (context, state) {
-            currentLocation = '/profile';
             return ProfilePage();
           },
         ),
@@ -106,18 +103,32 @@ class AppNavigator {
     return _routes.routeInformationProvider;
   }
 
+  bool canPop() {
+    if (currentLocation == '/' ||
+        currentLocation == '/home' ||
+        currentLocation == '/logIn') return false;
+    return true;
+  }
+
   void pop() {
-    _routes.canPop() ? _routes.pop() : _routes.go('/');
+    if (_previousLocations.isNotEmpty) {
+      currentLocation = _previousLocations.removeLast();
+      _routes.pop();
+    }
   }
 
   void go(String routeName) {
+    currentLocation = routeName;
+    _previousLocations.clear();
     _routes.go(routeName);
   }
 
   void navigateTo(String routeName) {
-    // if (subscriptionRouteGuard.canNavigate(routeName)) {
-    _routes.push(routeName);
-    // }
+    if (subscriptionRouteGuard.canNavigate(routeName)) {
+      _previousLocations.add(currentLocation);
+      currentLocation = routeName;
+      _routes.push(routeName);
+    }
   }
 
   void replaceWith(String routeName) {

@@ -11,6 +11,7 @@ class ArtistsCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final List<_ArtistCard> artistCards = artists
         .map((artist) => _ArtistCard(
               artist: artist,
@@ -20,7 +21,7 @@ class ArtistsCarousel extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0),
       child: SizedBox(
-        height: 150,
+        height: size.width * 0.4,
         child: PageView.builder(
           controller: PageController(viewportFraction: 0.38, initialPage: 0),
           itemCount: artists.length,
@@ -61,7 +62,10 @@ class _ArtistCard extends StatelessWidget {
           ),
         ),
       ),
-      Text(artist.name)
+      Text(
+        artist.name,
+        style: Theme.of(context).textTheme.bodySmall,
+      )
     ]);
   }
 }

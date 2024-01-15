@@ -8,6 +8,7 @@ class UserProfileFormTextField extends StatelessWidget {
   final String? initialValue;
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
+  final String? errorMessage;
 
   const UserProfileFormTextField(
       {super.key,
@@ -16,37 +17,38 @@ class UserProfileFormTextField extends StatelessWidget {
       this.labelText,
       this.initialValue,
       required this.onChanged,
-      this.validator});
+      this.validator,
+      this.errorMessage});
 
   @override
   Widget build(BuildContext context) {
+    final bodyMedium = Theme.of(context).textTheme.bodyMedium;
+    final size = MediaQuery.of(context).size;
     return TextFormField(
       enabled: state.editable,
       validator: validator,
       initialValue: initialValue,
       onChanged: onChanged,
-      //(value) =>
-      //userBloc.add(NameEditedEvent(user: state.user, name: value)),
-      style: const TextStyle(color: Colors.white, fontSize: 18),
+      style: bodyMedium!.copyWith(fontSize: size.width * 0.045),
       decoration: InputDecoration(
-          hintStyle: const TextStyle(color: Color.fromARGB(146, 0, 0, 0)),
-          border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              borderSide: BorderSide(width: 1, color: Colors.transparent)),
-          enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              borderSide:
-                  BorderSide(width: 1, color: Color.fromARGB(0, 85, 51, 51))),
-          disabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              borderSide: BorderSide(width: 1, color: Colors.black)),
-          focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              borderSide: BorderSide(width: 2, color: Colors.white)),
-          fillColor: const Color.fromARGB(82, 129, 118, 160),
-          filled: true,
-          labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.white, fontSize: 18)),
+        hintStyle: bodyMedium.copyWith(fontSize: size.width * 0.045),
+        border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            borderSide: BorderSide(width: 1, color: Colors.transparent)),
+        enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            borderSide:
+                BorderSide(width: 1, color: Color.fromARGB(0, 85, 51, 51))),
+        focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            borderSide: BorderSide(width: 2, color: Colors.white)),
+        fillColor: const Color.fromARGB(82, 129, 118, 160),
+        filled: true,
+        labelText: labelText,
+        labelStyle: bodyMedium.copyWith(fontSize: size.width * 0.045),
+        errorStyle: bodyMedium.copyWith(
+            fontSize: size.width * 0.035, color: Colors.redAccent),
+      ),
     );
   }
 }

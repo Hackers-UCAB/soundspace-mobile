@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
@@ -7,17 +9,18 @@ import '../../../application/services/player/player_services.dart';
 
 class PlayerServiceImpl extends PlayerService {
   late final AudioPlayer player;
-  late final ConcatenatingAudioSource concatenatingAudioSource =
-      ConcatenatingAudioSource(
-          children: [],
-          shuffleOrder: DefaultShuffleOrder(),
-          useLazyPreparation: true);
-  late final MyCustomSource mySource;
+  late final ByteDataSource byteDataSource;
+
+  final streamController = StreamController<List<int>>.broadcast();
+  ConcatenatingAudioSource concatenatingAudioSource = ConcatenatingAudioSource(
+      children: [],
+      shuffleOrder: DefaultShuffleOrder(),
+      useLazyPreparation: true);
 
   @override
   void initialize() async {
     player = AudioPlayer();
-    mySource = MyCustomSource();
+    byteDataSource = ByteDataSource(streamController);
     trackingDuration();
     trackingPosition();
     trackingState();
@@ -45,26 +48,13 @@ class PlayerServiceImpl extends PlayerService {
 
   @override
   Future<void> setAudioSource(SocketChunk chunk) async {
-    if (chunk.sequence == 10) {
-      print('llega');
-    }
-    print('SECUENCIA ACTUAL ${chunk.sequence}');
     try {
-      concatenatingAudioSource
-          .add(AudioSource.uri(Uri.dataFromBytes(chunk.data)));
+      streamController.add(chunk.data);
 
       if (!GetIt.instance.get<PlayerBloc>().state.isInit) {
         GetIt.instance.get<PlayerBloc>().add(UpdateInitState(true));
-        await player.setAudioSource(concatenatingAudioSource,
-            preload: true,
-            initialIndex: 0,
-            initialPosition:
-                GetIt.instance.get<PlayerBloc>().state.seekPosition);
-        await player.load();
-
-        if (player.processingState == ProcessingState.ready) {
-          play();
-        }
+        await player.setAudioSource(byteDataSource);
+        await player.play();
       }
     } on PlayerInterruptedException catch (e) {
       print("Connection aborted: ${e.message}");
@@ -81,9 +71,6 @@ class PlayerServiceImpl extends PlayerService {
 
   @override
   void trackingDuration() {
-    GetIt.instance.get<PlayerBloc>().add(
-        UpdatingDuration(Duration(minutes: 3, seconds: 13, milliseconds: 54)));
-
     // TODO es realmente necesario??
     player.durationStream.listen((duration) {
       print('DURACION ACTUAL ${duration?.inSeconds}');
@@ -95,31 +82,43 @@ class PlayerServiceImpl extends PlayerService {
     final playerBloc = GetIt.instance.get<PlayerBloc>();
 
     player.positionStream.listen((position) async {
-      if (player.duration != null) {
-        if (((player.duration!.inSeconds - position.inSeconds) == 3) &&
-            playerBloc.state.isRequired) {
-          GetIt.instance.get<PlayerBloc>().add(UpdateRequiredState(
-              !GetIt.instance.get<PlayerBloc>().state.isRequired));
-          GetIt.instance
-              .get<PlayerBloc>()
-              .add(AskForChunk(playerBloc.state.position.inSeconds + 5));
-        }
-      }
+      //sprint(playerBloc.state.position);
+      //if (player.duration != null) {
+      //  if (((player.duration!.inSeconds - position.inSeconds) == 4) &&
+      //      playerBloc.state.isRequired) {
+      //    if (player.sequence != null && player.currentIndex != null) {
+      //      var totalDuration = Duration.zero;
+      //      for (var i = 0; i < player.currentIndex!; i++) {
+      //        totalDuration += player.sequence![i].duration!;
+      //      }
+      //      totalDuration += player.position + playerBloc.state.seekPosition;
+      //      GetIt.instance.get<PlayerBloc>().add(UpdateRequiredState(
+      //          !GetIt.instance.get<PlayerBloc>().state.isRequired));
+      //      print("TOTAL DURATION ${totalDuration}");
+      //      print("TOTAL POSITION ${playerBloc.state.position}");
+      //      GetIt.instance
+      //          .get<PlayerBloc>()
+      //          .add(AskForChunk(totalDuration.inSeconds));
+      //    }
+      //  }
+      //}
 
-      if (player.sequence != null && player.currentIndex != null) {
-        var totalDuration = Duration.zero;
-        for (var i = 0; i < player.currentIndex!; i++) {
-          totalDuration += player.sequence![i].duration!;
-        }
-        totalDuration += player.position + playerBloc.state.seekPosition;
-        playerBloc.add(TrackingCurrentPosition(totalDuration));
-      }
+      playerBloc.add(
+          TrackingCurrentPosition(position + playerBloc.state.seekPosition));
+
+      //if (player.sequence != null && player.currentIndex != null) {
+      //  var totalDuration = Duration.zero;
+      //  for (var i = 0; i < player.currentIndex!; i++) {
+      //    totalDuration += player.sequence![i].duration!;
+      //  }
+      //  totalDuration += player.position + playerBloc.state.seekPosition;
+      //  playerBloc.add(TrackingCurrentPosition(totalDuration));
+      //}
     });
   }
 
   void clean() {
     player.pause();
-    concatenatingAudioSource.clear();
   }
 
   @override

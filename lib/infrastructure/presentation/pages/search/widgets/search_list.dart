@@ -64,7 +64,14 @@ class SearchListState extends State<SearchList> {
               name: widget.items[index]['name']!,
               onTap: widget.items[index]['filter'] == 'song'
                   ? () => playerBloc.add(InitStream(
-                      widget.items[index]['id']!, 0)) //TODO: Javi revisa esto
+                      widget.items[index]['id']!,
+                      10,
+                      widget.items[index]['name']!,
+                      Duration(
+                          minutes: int.parse(
+                              widget.items[index]['duration']!.split(':')[0]),
+                          seconds: int.parse(widget.items[index]['duration']!
+                              .split(':')[1])))) //TODO: Javi revisa esto
                   : () => appNavigator.navigateTo(
                       '/${widget.items[index]['filter']}/${widget.items[index]['id']}'),
               filter: widget.items[index]['filter']!,
@@ -90,12 +97,10 @@ class _SearchListItem extends StatelessWidget {
         return const Icon(Icons.music_note, size: 15);
       case 'artist':
         return const Icon(Icons.person, size: 15);
-      case 'album':
-        return const Icon(Icons.album);
       case 'playlist':
         return const Icon(Icons.playlist_play, size: 15);
       default:
-        return const Icon(Icons.error, size: 15);
+        return const Icon(Icons.album);
     }
   }
 
@@ -104,17 +109,27 @@ class _SearchListItem extends StatelessWidget {
     return SizedBox(
       height: 65,
       child: ListTile(
-        title: Text(
-          name,
-          style: Theme.of(context).textTheme.bodyMedium,
+        title: SizedBox(
+          height: 30,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                name,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          ),
         ),
         subtitle: Row(
           children: [
             icon,
+            const SizedBox(width: 3),
             Text(
               filter,
-              style:
-                  Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 15),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontSize: MediaQuery.of(context).size.width * 0.04),
             )
           ],
         ),

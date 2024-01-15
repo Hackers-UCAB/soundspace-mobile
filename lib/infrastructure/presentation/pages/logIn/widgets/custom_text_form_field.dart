@@ -8,6 +8,7 @@ class CustomTextFormField extends StatelessWidget {
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
   final IconData? icon;
+  final TextEditingController? controller;
 
   const CustomTextFormField({
     super.key,
@@ -18,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onChanged,
     this.validator,
     this.icon,
+    this.controller,
   });
 
   @override
@@ -30,6 +32,7 @@ class CustomTextFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: TextFormField(
+        controller: controller,
         style: Theme.of(context).textTheme.bodySmall,
         onChanged: onChanged,
         validator: validator,

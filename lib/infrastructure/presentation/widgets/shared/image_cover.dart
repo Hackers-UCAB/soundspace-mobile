@@ -3,21 +3,29 @@ import 'clip_rect_cover.dart';
 
 class ImageCover extends StatelessWidget {
   final List<int>? image;
+  final double width;
+  final double height;
+  final double bottomPadding;
 
-  const ImageCover({super.key, required this.image});
+  const ImageCover(
+      {super.key,
+      required this.image,
+      required this.width,
+      required this.height,
+      required this.bottomPadding});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
+      padding: EdgeInsets.only(bottom: bottomPadding),
       child: SizedBox(
         width: double.infinity,
-        height: 200,
+        height: 250,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ClipRRectCover(image: image),
+            ClipRRectCover(image: image, width: width, height: height),
           ],
         ),
       ),

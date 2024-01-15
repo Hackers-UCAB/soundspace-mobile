@@ -69,10 +69,17 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     playerService.clean();
     emit(state.copyWith(
       currentIdSong: event.songId,
+      currentNameSong: event.nameSong,
+      duration: event.durationSong,
       isInit: false,
     ));
-    add(UpdateSeekPosition(
-        Duration(minutes: (event.second) ~/ 60, seconds: (event.second) % 60)));
+    if (event.second == 0) {
+      add(UpdateSeekPosition(Duration.zero));
+    } else {
+      add(UpdateSeekPosition(Duration(
+          minutes: (event.second) ~/ 60, seconds: (event.second) % 60)));
+    }
+
     add(UpdateWaveForm());
     add(UpdateUse());
     GetIt.instance
@@ -87,7 +94,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _resetPlayer(ResetPlayer event, Emitter<PlayerState> emit) {
-    add(UpdateWaveForm());
     emit(state.copyWith(position: Duration.zero));
     playerService.reset();
   }

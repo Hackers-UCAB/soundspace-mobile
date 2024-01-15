@@ -18,9 +18,10 @@ abstract class IPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final navigator = GetIt.instance.get<AppNavigator>();
+    final playerBloc = GetIt.instance.get<PlayerBloc>();
     return Scaffold(
       body: Stack(children: [
-        _GradientBackground(),
+        const GradientBackground(),
         RefreshIndicator(
             onRefresh: onRefresh,
             child: ListView(children: [
@@ -37,25 +38,28 @@ abstract class IPage extends StatelessWidget {
                       )),
                     ],
                   ),
-                  BlocBuilder<PlayerBloc, PlayerState>(
-                      builder: (context, state) {
-                    return Visibility(
-                      visible: GetIt.instance.get<PlayerBloc>().state.isUsed,
-                      child: const Align(
-                        alignment: Alignment.bottomLeft,
-                        child: MusicPlayer(),
-                      ),
-                    );
-                  })
                 ],
               )
             ])),
+        BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
+          return Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Visibility(
+              visible: state.isUsed,
+              child: MusicPlayer(playerBloc: playerBloc, playerState: state),
+            ),
+          );
+        })
       ]),
     );
   }
 }
 
-class _GradientBackground extends StatelessWidget {
+class GradientBackground extends StatelessWidget {
+  const GradientBackground({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

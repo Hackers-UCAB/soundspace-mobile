@@ -10,6 +10,7 @@ class PlayerState extends Equatable {
   final bool playbackState;
   final bool isUsed;
   final String currentIdSong;
+  final String currentNameSong;
   final bool isLoading;
 
   const PlayerState({
@@ -19,6 +20,7 @@ class PlayerState extends Equatable {
     this.isInit = false,
     this.isRequired = false,
     this.currentIdSong = 'empty',
+    this.currentNameSong = 'empty',
     this.duration = const Duration(seconds: 1),
     this.position = Duration.zero,
     this.playbackState = false,
@@ -32,6 +34,7 @@ class PlayerState extends Equatable {
           bool? isRequired,
           bool? userIsPlaying,
           String? currentIdSong,
+          String? currentNameSong,
           Duration? duration,
           Duration? position,
           Duration? seekPosition,
@@ -42,6 +45,7 @@ class PlayerState extends Equatable {
           isRequired: isRequired ?? this.isRequired,
           isInit: isInit ?? this.isInit,
           currentIdSong: currentIdSong ?? this.currentIdSong,
+          currentNameSong: currentNameSong ?? this.currentNameSong,
           duration: duration ?? this.duration,
           position: position ?? this.position,
           seekPosition: seekPosition ?? this.seekPosition,
@@ -53,6 +57,7 @@ class PlayerState extends Equatable {
   List<Object> get props => [
         isInit,
         currentIdSong,
+        currentNameSong,
         duration,
         position,
         seekPosition,

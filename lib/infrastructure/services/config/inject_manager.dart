@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
@@ -35,7 +34,6 @@ import 'package:sign_in_bloc/infrastructure/services/location/location_checker_i
 import 'package:sign_in_bloc/infrastructure/services/notifications/notification_actions_manager.dart';
 import 'package:sign_in_bloc/infrastructure/services/search_entities_by_name_impl.dart';
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
-import '../../../application/BLoC/logInSubs/log_in_subscriber_bloc.dart';
 import '../../../application/BLoC/socket/socket_bloc.dart';
 import '../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
@@ -90,10 +88,7 @@ class InjectManager {
     final token = localStorage.getValue('appToken');
     if (token != null) {
       apiConnectionManagerImpl.setHeaders('Authorization', 'Bearer $token');
-      print(token);
     }
-    final firebaseToken = await localNotifications.getToken();
-    print(firebaseToken);
     //repositories
     final userRepository =
         UserRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
@@ -148,6 +143,9 @@ class InjectManager {
             userRepository: userRepository, localStorage: localStorage);
 
     final getIt = GetIt.instance;
+    getIt.registerSingleton<LogInUseCase>(logInUseCase);
+    getIt.registerSingleton<LogInGuestUseCase>(logInGuestUseCase);
+    getIt.registerSingleton<SubscribeUseCase>(subscribeUseCase);
     getIt.registerSingleton<GetTrendingArtistsUseCase>(
         getTrendingArtistsUseCase);
     getIt.registerSingleton<GetTrendingAlbumsUseCase>(getTrendingAlbumsUseCase);
@@ -168,7 +166,7 @@ class InjectManager {
     getIt.registerSingleton<CancelSubscriptionUseCase>(
         cancelSubscriptionUseCase);
 
-    //blocs
+    //common blocs
     getIt.registerSingleton<UserPermissionsBloc>(UserPermissionsBloc(
         getUserLocalDataUseCase: getUserLocalDataUseCase,
         connectionManager: connectionManager,
@@ -177,14 +175,9 @@ class InjectManager {
         PlayerBloc(playerService: playerService));
     getIt.registerSingleton<SocketBloc>(SocketBloc(socketClient: socketClient));
     playerService.initialize();
-    getIt.registerSingleton<LogInSubscriberBloc>(LogInSubscriberBloc(
-        logInUseCase: logInUseCase,
-        subscribeUseCase: subscribeUseCase,
-        logOutUseCase: logOutUserUseCase));
-    getIt.registerSingleton<LogInGuestBloc>(
-        LogInGuestBloc(logInGuestUseCase: logInGuestUseCase));
     getIt.registerSingleton<LogOutBloc>(
         LogOutBloc(logOutUserUseCase: logOutUserUseCase));
+
     //check if user has a session
     final userPermissionsBloc = getIt.get<UserPermissionsBloc>()
       ..add(UserPermissionsRequested());

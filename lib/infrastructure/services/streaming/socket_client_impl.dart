@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/datasources/local/local_storage.dart';
 import 'package:sign_in_bloc/application/model/socket_chunk.dart';
@@ -11,32 +12,24 @@ class SocketClientImpl extends SocketClient {
 
   SocketClientImpl({required this.localStorage});
 
-  late final IO.Socket socket; // = IO.io(
-  //'https://soundspace-api-production-3d1f.up.railway.app/socket.io/socket.io.js',
-  //IO.OptionBuilder().setTransports(['websocket']).build());
+  late final IO.Socket socket;
 
   @override
   void inicializeSocket() async {
-    //socket = IO.io('http://192.168.1.103:5000',
-    //    IO.OptionBuilder().setTransports(['websocket']).build());
-
-    String url = 'https://soundspace-api-production-3d1f.up.railway.app';
-
-    //socket = IO.io(url, <String, dynamic>{
-    //  'transports': ['websocket', 'polling'],
-    //  'path': '/socket.io',
-    //  'auth': ''
-    //});
-
-    print(localStorage.getValue('appToken'));
-
-    socket = IO.io(
-        url,
-        IO.OptionBuilder()
-            .setTransports(['websocket', 'polling'])
-            .setPath('/socket.io')
-            .setAuth({'token': localStorage.getValue('appToken')})
-            .build());
+    // NO MUY HEXAGONAL LO SE PERO HAY QUE RESOLVER, ME ENTIENDEN?
+    if (dotenv.env['TEAM']! == 'HACKERS') {
+      socket = IO.io(
+          dotenv.env['SOCKET_SERVER']!,
+          IO.OptionBuilder()
+              .setTransports(['websocket', 'polling'])
+              .setPath('/socket.io')
+              .setAuth({'token': localStorage.getValue('appToken')})
+              .build());
+    } else if (dotenv.env['TEAM']! == 'GEEKS') {
+      socket = IO.io(dotenv.env['SOCKET_SERVER']!, <String, dynamic>{
+        'transports': ['websocket']
+      });
+    }
 
     socket.connect();
 
@@ -51,7 +44,7 @@ class SocketClientImpl extends SocketClient {
   void sendIdSongToServer(
       bool isPreview, String songId, int second, bool isStreaming) {
     socket.emit('message-from-client', {
-      'preview': isPreview,
+      'preview': false,
       'songId': songId,
       'second': second,
       'streaming': isStreaming
@@ -67,7 +60,6 @@ class SocketClientImpl extends SocketClient {
     });
 
     streamController.stream.listen((chunk) async {
-      print('LLEGANDO LA SECUENCIA ${chunk.sequence}');
       GetIt.instance.get<SocketBloc>().add(SocketReceiveChunk(chunk));
     });
   }

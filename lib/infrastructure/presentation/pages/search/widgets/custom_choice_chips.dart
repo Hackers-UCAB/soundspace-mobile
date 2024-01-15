@@ -29,7 +29,8 @@ class _CustomChoiceChipsState extends State<CustomChoiceChips> {
                   style: widget.searchBloc.state.filter.contains(choice)
                       ? textTheme?.copyWith(color: Colors.black)
                       : textTheme),
-              selected: widget.searchBloc.state.filter.contains(choice),
+              selected:
+                  widget.searchBloc.state.filter.contains(choice.toLowerCase()),
               onSelected: (bool selected) {
                 if (_debounce?.isActive ?? false) _debounce?.cancel();
                 _lastFilter = _mapChoiceToFilter(choice);

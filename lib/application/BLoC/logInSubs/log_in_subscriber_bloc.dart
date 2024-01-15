@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/common/failure.dart';
 import '../../use_cases/user/log_in_use_case.dart';
-import '../../use_cases/user/log_out_user_use_case.dart';
 import '../../use_cases/user/subscribe_use_case.dart';
 import '../user_permissions/user_permissions_bloc.dart';
 
@@ -14,17 +13,15 @@ class LogInSubscriberBloc
     extends Bloc<LogInSubscriberEvent, LogInSubscriberState> {
   final LogInUseCase logInUseCase;
   final SubscribeUseCase subscribeUseCase;
-  final LogOutUserUseCase logOutUseCase;
   final UserPermissionsBloc _userPermissionsBloc =
       GetIt.instance.get<UserPermissionsBloc>();
   LogInSubscriberBloc(
-      {required this.logInUseCase,
-      required this.subscribeUseCase,
-      required this.logOutUseCase})
+      {required this.logInUseCase, required this.subscribeUseCase})
       : super(LogInSubscriberInitial()) {
     on<LogInSubscriberSubmitted>(_onSubmited);
     on<LogInSubscriberPhoneChanged>(_phoneChanged);
     on<OperatorSubmittedEvent>(_onSubscribe);
+    on<LogInEntered>(_onEnter);
   }
 
   Future<void> _onSubmited(
@@ -63,8 +60,8 @@ class LogInSubscriberBloc
     }
   }
 
-  Future<void> _phoneChanged(
-      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
+  void _phoneChanged(
+      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) {
     if (event.phone.isEmpty || event.phone.trim().isEmpty) {
       emit(LogInSubscriberInvalid(
           errorMessage: 'Ingresa tu número de teléfono.'));
@@ -81,6 +78,11 @@ class LogInSubscriberBloc
         emit(LogInSubscriberValid(phone: event.phone));
       }
     }
+  }
+
+  Future<void> _onEnter(
+      LogInSubscriberEvent event, Emitter<LogInSubscriberState> emit) async {
+    emit(LogInSubscriberInitial());
   }
 
   void onPhoneChanged(String value) {

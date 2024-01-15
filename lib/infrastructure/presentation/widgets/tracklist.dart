@@ -53,13 +53,18 @@ class _TracklistItem extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(children: [
-                Text(
+            SizedBox(
+              width: size.width * 0.4,
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Text(
                   song.name,
-                ), //song.artist
-              ]),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontSize: size.width * 0.035),
+                ),
+              ),
             ),
             Expanded(child: Container()),
             Padding(
@@ -67,12 +72,24 @@ class _TracklistItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(song.duration!), //duracion total de la cancion
-                  const SizedBox(width: 6),
+                  Text(
+                    song.duration!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(fontSize: size.width * 0.035),
+                  ), //duracion total de la cancion
+                  const SizedBox(width: 5),
                   IconButton(
                     onPressed: () {
-                      //TODO: socket.sendIdSong(song.id);
-                      // playerBloc.add(PlayingStartedEvent(song: song)),
+                      playerBloc.add(InitStream(
+                          song.id,
+                          0,
+                          song.name,
+                          Duration(
+                              minutes: int.parse(song.duration!.split(':')[0]),
+                              seconds:
+                                  int.parse(song.duration!.split(':')[1]))));
                     },
                     icon: const Icon(
                       Icons.play_arrow_sharp,

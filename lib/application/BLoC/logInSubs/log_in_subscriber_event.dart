@@ -13,6 +13,11 @@ class LogInSubscriberSubmitted extends LogInSubscriberEvent {
   const LogInSubscriberSubmitted({required super.phone});
 }
 
+//Evento al entrar en la log in page
+class LogInEntered extends LogInSubscriberEvent {
+  const LogInEntered({required super.phone});
+}
+
 //Evento al cambiar el telefono
 class LogInSubscriberPhoneChanged extends LogInSubscriberEvent {
   const LogInSubscriberPhoneChanged({required super.phone});

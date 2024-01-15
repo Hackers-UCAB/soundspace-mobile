@@ -33,5 +33,5 @@ class UnnableToCheckLocationFailure extends Failure {
 }
 
 class UnknownFailure extends Failure {
-  const UnknownFailure({required String message}) : super(message);
+  const UnknownFailure() : super('Oppss!! Algo salió mal, inténtalo de nuevo');
 }
