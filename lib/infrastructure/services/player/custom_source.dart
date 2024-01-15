@@ -7,12 +7,9 @@ class ByteDataSource extends StreamAudioSource {
       StreamController<List<int>>.broadcast();
 
   void add(List<int> data) {
-    streamControllerBuffer.add(data);
-  }
-
-  void clean() {
-    streamControllerBuffer.close();
-    streamControllerBuffer = StreamController<List<int>>.broadcast();
+    if (data.isNotEmpty) {
+      streamControllerBuffer.add(data);
+    }
   }
 
   @override

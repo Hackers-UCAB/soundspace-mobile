@@ -8,7 +8,7 @@ import 'package:sign_in_bloc/infrastructure/services/player/custom_source.dart';
 import '../../../application/services/player/player_services.dart';
 
 class PlayerServiceImpl extends PlayerService {
-  late final AudioPlayer player;
+  late AudioPlayer player;
   late ByteDataSource byteDataSource;
 
   ConcatenatingAudioSource concatenatingAudioSource = ConcatenatingAudioSource(
@@ -63,7 +63,6 @@ class PlayerServiceImpl extends PlayerService {
   void reset() {
     player.seek(Duration.zero);
     player.stop();
-    byteDataSource.clean();
   }
 
   @override
@@ -72,8 +71,6 @@ class PlayerServiceImpl extends PlayerService {
     // TODO es realmente necesario??
     player.bufferedPositionStream.listen((event) async {
       if (event > Duration.zero) {
-        print('BUFFEREDDDDDD');
-        print(event + playerBloc.state.seekPosition);
         playerBloc.add(
             UpdatingBufferedDuration(event + playerBloc.state.seekPosition));
       }
@@ -89,7 +86,6 @@ class PlayerServiceImpl extends PlayerService {
         if ((playerBloc.state.bufferedDuration.inSeconds -
                 playerBloc.state.position.inSeconds) ==
             10) {
-          print('ENTRAAAAAA');
           playerBloc.add(AskForChunk(player.bufferedPosition.inSeconds));
         }
 
@@ -113,12 +109,11 @@ class PlayerServiceImpl extends PlayerService {
   }
 
   @override
-  void clean() {
+  void clean() async {
+    await player.pause();
     if (GetIt.instance.get<PlayerBloc>().state.isInit) {
-      byteDataSource.clean();
+      byteDataSource = ByteDataSource();
     }
-
-    player.stop();
   }
 
   @override
