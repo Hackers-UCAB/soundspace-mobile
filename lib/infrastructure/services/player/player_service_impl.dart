@@ -83,7 +83,7 @@ class PlayerServiceImpl extends PlayerService {
         GetIt.instance.get<PlayerBloc>().add(UpdatingDuration(event));
       }
 
-      if (player.position == event) {
+      if (event.inSeconds - player.position.inSeconds == 1) {
         player.pause();
         GetIt.instance.get<PlayerBloc>().add(ResetPlayer());
       }
