@@ -46,8 +46,7 @@ class ArtistDetail extends IPage {
                     const SizedBox(
                       height: 40,
                     ),
-                    if (artistState.artist.albums!.isNotEmpty)
-                      AlbumsCarousel(albums: artistState.artist.albums!),
+                    AlbumsCarousel(albums: artistState.artist.albums!),
                     const SizedBox(
                       height: 40,
                     ),

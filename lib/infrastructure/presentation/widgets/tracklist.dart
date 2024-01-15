@@ -63,7 +63,7 @@ class _TracklistItem extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall!
-                      .copyWith(fontSize: size.width * 0.04),
+                      .copyWith(fontSize: size.width * 0.035),
                 ),
               ),
             ),

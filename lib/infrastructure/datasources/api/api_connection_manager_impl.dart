@@ -23,7 +23,7 @@ class ApiConnectionManagerImpl extends IApiConnectionManager {
     } on DioException catch (e) {
       return Result(failure: handleException(e));
     } catch (e) {
-      return Result(failure: UnknownFailure(message: e.toString()));
+      return Result(failure: const UnknownFailure());
     }
   }
 
@@ -39,7 +39,7 @@ class ApiConnectionManagerImpl extends IApiConnectionManager {
             .badResponse: //TODO: Esto no siempre es porque no este autorizado, definir el resto de Failures
         return NoAuthorizeFailure(message: e.response?.data['message']);
       default:
-        return UnknownFailure(message: e.toString());
+        return const UnknownFailure();
     }
   }
 

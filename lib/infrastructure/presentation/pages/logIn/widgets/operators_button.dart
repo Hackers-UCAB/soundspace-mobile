@@ -9,6 +9,7 @@ class ImageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
       width: MediaQuery.of(context).size.width * 0.90,
       height: MediaQuery.of(context).size.width * 0.23,
@@ -25,7 +26,7 @@ class ImageContainer extends StatelessWidget {
       ),
       child: ElevatedButton.icon(
           onPressed: onTap,
-          icon: Image.asset(imagePath, width: 280),
+          icon: Image.asset(imagePath, width: size.width * 0.7),
           label: const Text(''),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors
