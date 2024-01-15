@@ -51,6 +51,7 @@ class PlayerServiceImpl extends PlayerService {
         if (chunk.data.isNotEmpty) {
           byteDataSource.add(chunk.data);
         } else {
+          GetIt.instance.get<PlayerBloc>().add(UpdateFinish(true));
           print('finaliza');
         }
       }
@@ -62,9 +63,9 @@ class PlayerServiceImpl extends PlayerService {
   }
 
   @override
-  void reset() {
+  void reset() async {
     player.seek(Duration.zero);
-    player.stop();
+    await player.stop();
   }
 
   @override

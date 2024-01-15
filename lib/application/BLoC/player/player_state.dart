@@ -28,7 +28,7 @@ class PlayerState extends Equatable {
       this.position = Duration.zero,
       this.playbackState = false,
       this.isUsed = false,
-      this.isFinished = false,
+      this.isFinished = true,
       this.speed = 1.0,
       this.volume = 1.0});
 

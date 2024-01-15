@@ -29,6 +29,11 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<UpdateSeekPosition>(_updateSeekPosition);
     on<UpdateSpeed>(_updateSpeed);
     on<UpdateVolume>(_updateVolume);
+    on<UpdateFinish>(_updateFinish);
+  }
+
+  void _updateFinish(UpdateFinish event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(isFinished: event.isFinished));
   }
 
   void _updateSpeed(UpdateSpeed event, Emitter<PlayerState> emit) {
@@ -72,12 +77,12 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _initStream(InitStream event, Emitter<PlayerState> emit) {
-    playerService.clean();
     emit(state.copyWith(
       currentIdSong: event.songId,
       currentNameSong: event.nameSong,
       duration: event.durationSong,
       isInit: false,
+      isFinished: false,
     ));
     if (event.second == 0) {
       add(UpdateSeekPosition(Duration.zero));
@@ -88,6 +93,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
     add(UpdateWaveForm());
     add(UpdateUse());
+
+    playerService.clean();
     GetIt.instance
         .get<SocketBloc>()
         .add(SendIdSong(event.songId, event.second));

@@ -72,7 +72,8 @@ class MusicWavePlayer extends StatelessWidget {
                 children: [
                   IconButton(
                       onPressed: () {
-                        if ((playerState.position.inSeconds - 10) > 0) {
+                        if ((playerState.position.inSeconds - 10 > 0) &&
+                            (playerState.isFinished)) {
                           playerBloc.add(InitStream(
                               playerState.currentIdSong,
                               playerState.position.inSeconds - 10,
@@ -82,15 +83,17 @@ class MusicWavePlayer extends StatelessWidget {
                       },
                       icon: Icon(
                         Icons.replay_10_outlined,
-                        color: playerState.position.inSeconds - 10 > 0
+                        color: ((playerState.position.inSeconds - 10 > 0) &&
+                                (playerState.isFinished))
                             ? Colors.white
                             : Colors.grey,
                         size: 35,
                       )),
                   IconButton(
                       onPressed: () {
-                        if ((playerState.position.inSeconds + 10) <
-                            playerState.duration.inSeconds) {
+                        if ((playerState.position.inSeconds + 10 <
+                                playerState.duration.inSeconds) &&
+                            (playerState.isFinished)) {
                           playerBloc.add(InitStream(
                               playerState.currentIdSong,
                               playerState.position.inSeconds + 10,
@@ -100,8 +103,9 @@ class MusicWavePlayer extends StatelessWidget {
                       },
                       icon: Icon(
                         Icons.replay_30_outlined,
-                        color: playerState.position.inSeconds + 10 <
-                                playerState.duration.inSeconds
+                        color: ((playerState.position.inSeconds + 10 <
+                                    playerState.duration.inSeconds) &&
+                                (playerState.isFinished))
                             ? Colors.white
                             : Colors.grey,
                         size: 35,
