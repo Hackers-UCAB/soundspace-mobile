@@ -41,7 +41,7 @@ class GenderPickerField extends StatelessWidget {
         ),
         enabled: state.editable,
         enableSearch: false,
-        textStyle: bodySmall!.copyWith(fontSize: size.width * 0.045),
+        textStyle: bodySmall.copyWith(fontSize: size.width * 0.045),
         menuStyle: const MenuStyle(
             backgroundColor: MaterialStatePropertyAll<Color>(
           Color.fromARGB(255, 129, 118, 160),

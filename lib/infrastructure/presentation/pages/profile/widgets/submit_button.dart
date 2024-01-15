@@ -6,11 +6,12 @@ class SubmitButton extends StatelessWidget {
   final UserBloc userBloc;
   final GlobalKey<FormState> formKey;
 
-  const SubmitButton(
-      {super.key,
-      required this.state,
-      required this.userBloc,
-      required this.formKey});
+  const SubmitButton({
+    super.key,
+    required this.state,
+    required this.userBloc,
+    required this.formKey,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +23,7 @@ class SubmitButton extends StatelessWidget {
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     userBloc.add(SubmitChangesEvent(user: state.user));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                            'Por favor, rellene correctamente todos los campos'),
-                      ),
-                    );
-                  }
+                  } else {}
                 },
                 style: const ButtonStyle(
                   minimumSize: MaterialStatePropertyAll<Size>(Size(1, 50)),

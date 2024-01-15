@@ -37,7 +37,7 @@ class DatePickerField extends StatelessWidget {
         style: bodySmall!.copyWith(fontSize: size.width * 0.045),
         decoration: InputDecoration(
           hintText: 'DD/MM/YYYY',
-          hintStyle: bodySmall!.copyWith(fontSize: size.width * 0.045),
+          hintStyle: bodySmall.copyWith(fontSize: size.width * 0.045),
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide: BorderSide(width: 1, color: Colors.transparent),
@@ -54,7 +54,7 @@ class DatePickerField extends StatelessWidget {
           fillColor: const Color.fromARGB(82, 129, 118, 160),
           filled: true,
           labelText: 'Fecha de Nacimiento',
-          labelStyle: bodySmall!.copyWith(fontSize: size.width * 0.045),
+          labelStyle: bodySmall.copyWith(fontSize: size.width * 0.045),
         ),
       ),
     );

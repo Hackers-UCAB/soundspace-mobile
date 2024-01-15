@@ -26,7 +26,7 @@ String? validateEmail(String? value) {
   final regex = RegExp(pattern);
 
   return value!.isNotEmpty && !regex.hasMatch(value)
-      ? 'Enter a valid email address'
+      ? 'Ingrese un correo válido'
       : null;
 }
 
@@ -141,6 +141,7 @@ class ProfileForm extends StatelessWidget {
               onChanged: (value) => userBloc
                   .add(EmailEditedEvent(user: state.user, email: value)),
               validator: validateEmail,
+              errorMessage: "Por favor, ingrese un correo válido",
             ),
 
             const SizedBox(height: 30),
@@ -169,7 +170,7 @@ class ProfileForm extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Si deseas cancelar tu suscripción',
-                style: bodyMedium!.copyWith(fontSize: size.width * 0.045),
+                style: bodyMedium.copyWith(fontSize: size.width * 0.045),
               ),
             ),
 
@@ -181,7 +182,7 @@ class ProfileForm extends StatelessWidget {
                     userBloc.add(CanceledSubscripcionEvent(user: state.user)),
                 child: Text(
                   'Haz Click Aquí',
-                  style: bodyMedium!.copyWith(
+                  style: bodyMedium.copyWith(
                       fontSize: size.width * 0.045,
                       color: Colors.lightBlueAccent),
                 ),
