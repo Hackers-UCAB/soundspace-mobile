@@ -82,10 +82,13 @@ class ProfilePage extends IPage {
 class ProfileForm extends StatelessWidget {
   final UserProfileLoadedState state;
   final UserBloc userBloc;
+
   ProfileForm({required this.state, required this.userBloc, super.key});
 
   @override
   Widget build(BuildContext context) {
+    final bodyMedium = Theme.of(context).textTheme.bodyMedium;
+    final size = MediaQuery.of(context).size;
     return Form(
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -94,15 +97,12 @@ class ProfileForm extends StatelessWidget {
             const SizedBox(height: 30),
 
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
                   'Perfil',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: bodyMedium!.copyWith(
+                      fontSize: size.width * 0.12, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -156,14 +156,20 @@ class ProfileForm extends StatelessWidget {
             const SizedBox(height: 30),
 
             Row(
-              children: [SubmitButton(state: state, userBloc: userBloc)],
+              children: [
+                SubmitButton(
+                  state: state,
+                  userBloc: userBloc,
+                  formKey: _formKey,
+                )
+              ],
             ),
             const SizedBox(height: 80),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Si deseas cancelar tu suscripción',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: bodyMedium!.copyWith(fontSize: size.width * 0.045),
               ),
             ),
 
@@ -173,9 +179,11 @@ class ProfileForm extends StatelessWidget {
               child: GestureDetector(
                 onTap: () =>
                     userBloc.add(CanceledSubscripcionEvent(user: state.user)),
-                child: const Text(
+                child: Text(
                   'Haz Click Aquí',
-                  style: TextStyle(color: Colors.lightBlue, fontSize: 16),
+                  style: bodyMedium!.copyWith(
+                      fontSize: size.width * 0.045,
+                      color: Colors.lightBlueAccent),
                 ),
               ),
             ),

@@ -20,29 +20,28 @@ class GenderPickerField extends StatelessWidget {
       child: DropdownMenu<String>(
         label: Text(
           "Género",
-          style: bodySmall!.copyWith(fontSize: size.width * 0.032),
+          style: bodySmall!.copyWith(fontSize: size.width * 0.045),
         ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: const OutlineInputBorder(
+        inputDecorationTheme: const InputDecorationTheme(
+          border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide: BorderSide(width: 1, color: Colors.transparent),
           ),
-          enabledBorder: const OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide:
                 BorderSide(width: 1, color: Color.fromARGB(0, 85, 51, 51)),
           ),
-          focusedBorder: const OutlineInputBorder(
+          focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide: BorderSide(width: 2, color: Colors.white),
           ),
-          constraints: BoxConstraints.loose(const Size.fromWidth(200)),
-          fillColor: const Color.fromARGB(82, 129, 118, 160),
+          fillColor: Color.fromARGB(82, 129, 118, 160),
           filled: true,
         ),
         enabled: state.editable,
         enableSearch: false,
-        textStyle: const TextStyle(color: Colors.white, fontSize: 17),
+        textStyle: bodySmall!.copyWith(fontSize: size.width * 0.045),
         menuStyle: const MenuStyle(
             backgroundColor: MaterialStatePropertyAll<Color>(
           Color.fromARGB(255, 129, 118, 160),

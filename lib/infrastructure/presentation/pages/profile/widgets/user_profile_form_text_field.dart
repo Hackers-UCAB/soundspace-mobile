@@ -20,14 +20,16 @@ class UserProfileFormTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bodyMedium = Theme.of(context).textTheme.bodyMedium;
+    final size = MediaQuery.of(context).size;
     return TextFormField(
       enabled: state.editable,
       validator: validator,
       initialValue: initialValue,
       onChanged: onChanged,
-      style: const TextStyle(color: Colors.white, fontSize: 18),
+      style: bodyMedium!.copyWith(fontSize: size.width * 0.045),
       decoration: InputDecoration(
-          hintStyle: const TextStyle(color: Color.fromARGB(146, 0, 0, 0)),
+          hintStyle: bodyMedium!.copyWith(fontSize: size.width * 0.045),
           border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(15.0)),
               borderSide: BorderSide(width: 1, color: Colors.transparent)),
@@ -41,7 +43,7 @@ class UserProfileFormTextField extends StatelessWidget {
           fillColor: const Color.fromARGB(82, 129, 118, 160),
           filled: true,
           labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.white, fontSize: 18)),
+          labelStyle: bodyMedium!.copyWith(fontSize: size.width * 0.045)),
     );
   }
 }

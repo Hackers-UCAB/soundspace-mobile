@@ -4,12 +4,13 @@ import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
 class SubmitButton extends StatelessWidget {
   final UserProfileLoadedState state;
   final UserBloc userBloc;
+  final GlobalKey<FormState> formKey;
 
-  const SubmitButton({
-    super.key,
-    required this.state,
-    required this.userBloc,
-  });
+  const SubmitButton(
+      {super.key,
+      required this.state,
+      required this.userBloc,
+      required this.formKey});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,16 @@ class SubmitButton extends StatelessWidget {
             visible: state.editable,
             child: ElevatedButton(
                 onPressed: () {
-                  userBloc.add(SubmitChangesEvent(user: state.user));
+                  if (formKey.currentState!.validate()) {
+                    userBloc.add(SubmitChangesEvent(user: state.user));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            'Por favor, rellene correctamente todos los campos'),
+                      ),
+                    );
+                  }
                 },
                 style: const ButtonStyle(
                   minimumSize: MaterialStatePropertyAll<Size>(Size(1, 50)),
