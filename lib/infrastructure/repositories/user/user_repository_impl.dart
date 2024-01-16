@@ -97,7 +97,6 @@ class UserRepositoryImpl extends UserRepository {
 
   @override
   Future<Result<String>> saveUserData(Map<String, String> userData) async {
-    print(userData);
     final response = await _apiConnectionManager
         .request<String>('user', 'PATCH', (data) => 'success', body: userData);
 
