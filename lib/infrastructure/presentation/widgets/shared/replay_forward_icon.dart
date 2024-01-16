@@ -22,12 +22,14 @@ class ReplayForwardIcon extends StatelessWidget {
     if (replay) {
       return ((playerState.position.inSeconds - 10 > 0) &&
           (playerState.isFinished) &&
-          userPermissionsBloc.state.isSubscribed);
+          (userPermissionsBloc.state.isSubscribed) &&
+          (playerState.isConnected));
     } else {
       return ((playerState.position.inSeconds + 10 <
               playerState.duration.inSeconds) &&
           (playerState.isFinished) &&
-          userPermissionsBloc.state.isSubscribed);
+          (userPermissionsBloc.state.isSubscribed) &&
+          (playerState.isConnected));
     }
   }
 

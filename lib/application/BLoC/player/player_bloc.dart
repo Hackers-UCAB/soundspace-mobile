@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:bloc/bloc.dart';
@@ -5,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/socket/socket_bloc.dart';
 import 'package:sign_in_bloc/application/model/socket_chunk.dart';
+import 'package:sign_in_bloc/application/services/internet_connection/connection_manager.dart';
 
 import '../../services/player/player_services.dart';
 
@@ -13,8 +15,10 @@ part 'player_state.dart';
 
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   PlayerService playerService;
+  final IConnectionManager connectionManager;
 
-  PlayerBloc({required this.playerService}) : super(const PlayerState()) {
+  PlayerBloc({required this.playerService, required this.connectionManager})
+      : super(const PlayerState()) {
     on<ReceiveChunkFromSocket>(_setChunkToJustAudio);
     on<PlayerPlaybackStateChanged>(_playbackStateChanged);
     on<TrackingCurrentPosition>(_updatingCurrentPosition);
@@ -30,6 +34,40 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<UpdateSpeed>(_updateSpeed);
     on<UpdateVolume>(_updateVolume);
     on<UpdateFinish>(_updateFinish);
+    on<ConnectivityCheckRequestedPlayer>(_checkInitialConnection);
+    on<UpdateConnection>(_updateConnection);
+
+    add(ConnectivityCheckRequestedPlayer());
+  }
+
+  void handleDisconnection() {
+    //primer paso pausa el stream
+    pause();
+
+    //se bloquean los botones
+    add(UpdateConnection(false));
+  }
+
+  void handleReconnection() {
+    //se pregunta si estaba iniciado el stream
+    if (state.isInit) {
+      add(InitStream(state.currentIdSong, state.position.inSeconds,
+          state.currentNameSong, state.duration));
+    }
+
+    add(UpdateConnection(true));
+  }
+
+  void _updateConnection(UpdateConnection event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(isConnected: event.isConnected));
+  }
+
+  void _checkInitialConnection(
+      ConnectivityCheckRequestedPlayer event, Emitter<PlayerState> emit) async {
+    final subscriptionStream = connectionManager.checkConnectionStream();
+    await for (final isConnected in subscriptionStream) {
+      isConnected ? handleReconnection() : handleDisconnection();
+    }
   }
 
   void _updateFinish(UpdateFinish event, Emitter<PlayerState> emit) {

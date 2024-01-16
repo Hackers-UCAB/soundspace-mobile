@@ -171,8 +171,8 @@ class InjectManager {
         getUserLocalDataUseCase: getUserLocalDataUseCase,
         connectionManager: connectionManager,
         locationChecker: locationChecker));
-    getIt.registerSingleton<PlayerBloc>(
-        PlayerBloc(playerService: playerService));
+    getIt.registerSingleton<PlayerBloc>(PlayerBloc(
+        playerService: playerService, connectionManager: connectionManager));
     getIt.registerSingleton<SocketBloc>(SocketBloc(socketClient: socketClient));
     playerService.initialize();
     getIt.registerSingleton<LogOutBloc>(
