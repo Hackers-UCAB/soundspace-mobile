@@ -4,8 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/bloc_listeners/log_out_listener.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/bloc_listeners/user_permissions_listener.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/music_player.dart';
-import '../config/router/app_router.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/music_player.dart';
+import '../../config/router/app_router.dart';
 import 'custom_app_bar.dart';
 
 abstract class IPage extends StatelessWidget {

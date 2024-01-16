@@ -18,9 +18,8 @@ class AlbumMapper {
               .toList()
           : null,
       duration: json['duration'],
-      songs: json['songs'] != null
-          ? SongMapper.fromJsonList(json['songs'])
-          : null, //TODO: Ver que esta shit funcione
+      songs:
+          json['songs'] != null ? SongMapper.fromJsonList(json['songs']) : null,
     );
   }
 

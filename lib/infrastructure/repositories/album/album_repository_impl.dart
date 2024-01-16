@@ -22,7 +22,6 @@ class AlbumRepositoryImpl extends AlbumRepository {
   @override
   Future<Result<Album>> getAlbumById(String albumId) async {
     return await _apiConnectionManager.request<Album>(
-      //FIXME: Javier
       'album/$albumId',
       'GET',
       (data) => AlbumMapper.fromJson(data),

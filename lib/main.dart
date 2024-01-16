@@ -14,7 +14,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'infrastructure/presentation/widgets/bloc_listeners/connection_listener.dart';
 
 Future<void> main() async {
-  //TODO: en vez de tener el main como Future hacer un splash screen con future builder
   await InjectManager.setUpInjections();
 
   runApp(const MyApp());

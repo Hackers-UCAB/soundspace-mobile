@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/custom_circular_progress_indicator.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/error_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/ipage.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/image_cover.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/info.dart';
 import '../../../../application/BLoC/album_detail/album_detail_bloc.dart';
-import '../../widgets/tracklist.dart';
+import '../../widgets/shared/tracklist.dart';
 
 class AlbumDetail extends IPage {
   final String albumId;
@@ -51,7 +51,7 @@ class AlbumDetail extends IPage {
                       songs: albumState.album.songs!,
                       duration: albumState.album.duration!,
                     ),
-                    //TODO: Player ()
+                    //TODO: Wave  ()
                     const SizedBox(height: 30),
                     Tracklist(songs: albumState.album.songs!),
                     const SizedBox(height: 100),

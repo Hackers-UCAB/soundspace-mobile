@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
@@ -6,9 +8,9 @@ import 'package:sign_in_bloc/application/use_cases/user/get_user_profile_data_us
 import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/widgets/date_picker_field.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/widgets/gender_dropdown_field.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/widgets/submit_button.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/custom_circular_progress_indicator.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/error_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/ipage.dart';
 import '../../../../application/use_cases/user/cancel_user_subscription_use_case.dart';
 import '../../../../application/use_cases/user/save_user_profile_data_use_case.dart';
 import 'widgets/user_profile_form_text_field.dart';

@@ -15,6 +15,7 @@ class PlayerState extends Equatable {
   final double volume;
   final double speed;
   final bool isFinished;
+  final bool isConnected;
 
   const PlayerState(
       {this.seekPosition = Duration.zero,
@@ -29,6 +30,7 @@ class PlayerState extends Equatable {
       this.playbackState = false,
       this.isUsed = false,
       this.isFinished = true,
+      this.isConnected = true,
       this.speed = 1.0,
       this.volume = 1.0});
 
@@ -47,6 +49,7 @@ class PlayerState extends Equatable {
           double? speed,
           double? volume,
           bool? isFinished,
+          bool? isConnected,
           bool? isUsed}) =>
       PlayerState(
           waveForm: waveForm ?? this.waveForm,
@@ -61,6 +64,7 @@ class PlayerState extends Equatable {
           isUsed: isUsed ?? this.isUsed,
           isLoading: isLoading ?? this.isLoading,
           speed: speed ?? this.speed,
+          isConnected: isConnected ?? this.isConnected,
           isFinished: isFinished ?? this.isFinished,
           volume: volume ?? this.volume);
 
@@ -75,6 +79,7 @@ class PlayerState extends Equatable {
         seekPosition,
         playbackState,
         isFinished,
+        isConnected,
         waveForm,
         isUsed,
         isLoading,

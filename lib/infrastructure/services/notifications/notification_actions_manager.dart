@@ -43,7 +43,6 @@ class NotificationActionManager {
 
   static _navigateToHandler(Map<String, dynamic> data) {
     final navigator = GetIt.instance.get<AppNavigator>();
-    print('navigateTo: ${data['navigateToRoute']}]}');
     navigator.navigateTo(data['navigateToRoute']);
   }
 }

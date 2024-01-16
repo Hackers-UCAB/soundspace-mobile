@@ -1,6 +1,8 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/play_pause_icon.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/replay_forward_icon.dart';
 
 class MusicPlayer extends StatelessWidget {
   final PlayerBloc playerBloc;
@@ -33,9 +35,9 @@ class MusicPlayer extends StatelessWidget {
     final bodySmall = Theme.of(context).textTheme.bodySmall;
 
     return Container(
-      height: 102, //TODO: Cuidado con esto y la onda comentada
+      height: 105, //TODO: Cuidado con esto
       decoration: BoxDecoration(
-          color: Color.fromARGB(255, 24, 15, 35),
+          color: const Color.fromARGB(255, 24, 15, 35),
           borderRadius: BorderRadius.circular(15)),
       child: Column(
         children: [
@@ -81,60 +83,25 @@ class MusicPlayer extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .bodySmall!
-                .copyWith(fontSize: size.width * 0.03),
+                .copyWith(fontSize: size.width * 0.025),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                  padding: const EdgeInsets.all(0),
-                  onPressed: () {
-                    if ((playerState.position.inSeconds - 10 > 0) &&
-                        (playerState.isFinished)) {
-                      playerBloc.add(InitStream(
-                          playerState.currentIdSong,
-                          playerState.position.inSeconds - 10,
-                          playerState.currentNameSong,
-                          playerState.duration));
-                    }
-                  },
-                  icon: Image.asset(
-                    'images/replay-10.png',
-                    width: size.width * 0.065,
-                  )),
-              playerState.isLoading
-                  ? const CircularProgressIndicator()
-                  : IconButton(
-                      padding: const EdgeInsets.all(0),
-                      onPressed: () {
-                        playerBloc.add(PlayerPlaybackStateChanged(
-                            !playerBloc.state.playbackState));
-                      },
-                      icon: Icon(
-                        playerState.playbackState
-                            ? Icons.pause_circle_outline_outlined
-                            : Icons.play_circle_outline_outlined,
-                        size: size.width * 0.09,
-                        color: Colors.white,
-                      ),
-                    ),
-              IconButton(
-                  padding: const EdgeInsets.all(0),
-                  onPressed: () {
-                    if ((playerState.position.inSeconds + 10 <
-                            playerState.duration.inSeconds) &&
-                        (playerState.isFinished)) {
-                      playerBloc.add(InitStream(
-                          playerState.currentIdSong,
-                          playerState.position.inSeconds + 10,
-                          playerState.currentNameSong,
-                          playerState.duration));
-                    }
-                  },
-                  icon: Image.asset(
-                    'images/forward-10.png',
-                    width: size.width * 0.065,
-                  )),
+              ReplayForwardIcon(
+                  playerBloc: playerBloc,
+                  playerState: playerState,
+                  replay: true,
+                  scale: 0.065),
+              PlayPauseIcon(
+                  playerBloc: playerBloc,
+                  playerState: playerState,
+                  scale: 0.09),
+              ReplayForwardIcon(
+                  playerBloc: playerBloc,
+                  playerState: playerState,
+                  replay: false,
+                  scale: 0.065),
             ],
           ),
         ],

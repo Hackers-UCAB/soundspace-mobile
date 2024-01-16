@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:general_audio_waveforms/general_audio_waveforms.dart';
 import 'package:get/get.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/play_pause_icon.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/replay_forward_icon.dart';
 
 class MusicWavePlayer extends StatelessWidget {
   final PlayerBloc playerBloc;
@@ -21,22 +23,8 @@ class MusicWavePlayer extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          playerState.isLoading
-              ? const CircularProgressIndicator()
-              : IconButton(
-                  padding: const EdgeInsets.all(0),
-                  onPressed: () {
-                    playerBloc.add(PlayerPlaybackStateChanged(
-                        !playerBloc.state.playbackState));
-                  },
-                  icon: Icon(
-                    playerState.playbackState
-                        ? Icons.pause_circle_outline_outlined
-                        : Icons.play_circle_outline_outlined,
-                    size: 90,
-                    color: Colors.white,
-                  ),
-                ),
+          PlayPauseIcon(
+              playerBloc: playerBloc, playerState: playerState, scale: 0.24),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -61,8 +49,9 @@ class MusicWavePlayer extends StatelessWidget {
                         playerState.duration));
                   }
                 },
-                scrollable: true,
+                scrollable: false,
                 waveformStyle: WaveformStyle(
+                  
                     isRoundedRectangle: true,
                     borderWidth: 1,
                     inactiveColor: Colors.grey,
@@ -74,56 +63,35 @@ class MusicWavePlayer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  PlayPauseIcon(
+                      playerBloc: playerBloc,
+                      playerState: playerState,
+                      scale: 0.08),
+                  ReplayForwardIcon(
+                      playerBloc: playerBloc,
+                      playerState: playerState,
+                      replay: true,
+                      scale: 0.08),
+                  ReplayForwardIcon(
+                      playerBloc: playerBloc,
+                      playerState: playerState,
+                      replay: false,
+                      scale: 0.08),
                   IconButton(
-                      onPressed: () {
-                        if ((playerState.position.inSeconds - 10 > 0) &&
-                            (playerState.isFinished)) {
-                          playerBloc.add(InitStream(
-                              playerState.currentIdSong,
-                              playerState.position.inSeconds - 10,
-                              playerState.currentNameSong,
-                              playerState.duration));
-                        }
-                      },
-                      icon: Image.asset('images/replay-10.png',
-                          width: size.width * 0.08,
-                          color: ((playerState.position.inSeconds + 10 <
-                                      playerState.duration.inSeconds) &&
-                                  (playerState.isFinished))
-                              ? Colors.white
-                              : Colors.grey)),
-                  IconButton(
-                      onPressed: () {
-                        if ((playerState.position.inSeconds + 10 <
-                                playerState.duration.inSeconds) &&
-                            (playerState.isFinished)) {
-                          playerBloc.add(InitStream(
-                              playerState.currentIdSong,
-                              playerState.position.inSeconds + 10,
-                              playerState.currentNameSong,
-                              playerState.duration));
-                        }
-                      },
-                      icon: Image.asset('images/forward-10.png',
-                          width: size.width * 0.08,
-                          color: ((playerState.position.inSeconds + 10 <
-                                      playerState.duration.inSeconds) &&
-                                  (playerState.isFinished))
-                              ? Colors.white
-                              : Colors.grey)),
-                  IconButton(
-                      onPressed: () {
-                        playerState.speed == 1.0
-                            ? playerBloc.add(UpdateSpeed(1.5))
-                            : playerBloc.add(UpdateSpeed(1.0));
-                      },
-                      icon: Image.asset(speedImage,
-                          width: size.width * 0.08,
-                          color: ((playerState.position.inSeconds + 10 <
-                                      playerState.duration.inSeconds) &&
-                                  (playerState.isFinished))
-                              ? Colors.white
-                              : Colors.grey)),
+                    onPressed: () {
+                      playerState.speed == 1.0
+                          ? playerBloc.add(UpdateSpeed(1.5))
+                          : playerBloc.add(UpdateSpeed(1.0));
+                    },
+                    icon: Image.asset(speedImage,
+                        width: size.width * 0.08,
+                        color: ((playerState.position.inSeconds +
+                                        10 < //TODO: Revisar esto
+                                    playerState.duration.inSeconds) &&
+                                (playerState.isFinished))
+                            ? Colors.white
+                            : Colors.grey),
+                  ),
                   IconButton(
                       onPressed: () {
                         playerState.volume == 1.0

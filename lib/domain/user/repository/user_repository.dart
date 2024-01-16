@@ -8,5 +8,5 @@ abstract class UserRepository {
   Future<Result<User>> signUpUser(
       String number, String notificationsToken, String operator);
   Future<Result<String>> saveUserData(Map<String, String> userData);
-  Future<Result<bool>> changeUserRole();
+  Future<Result<bool>> cancelUserSubscription();
 }

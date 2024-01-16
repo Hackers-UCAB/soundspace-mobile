@@ -1,5 +1,7 @@
+import 'dart:typed_data';
+
 class SocketChunk {
-  List<int> data;
+  Uint8List data;
 
   SocketChunk(this.data);
 
