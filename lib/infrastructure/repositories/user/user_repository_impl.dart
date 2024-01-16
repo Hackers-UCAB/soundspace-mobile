@@ -89,32 +89,6 @@ class UserRepositoryImpl extends UserRepository {
 
   @override
   Future<Result<User>> fetchUserProfileData() async {
-<<<<<<< HEAD
-    //!TEMPORAL
-    _apiConnectionManager.setHeaders('Authorization',
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFhZGUzZDQ1LTkwYzktNGJjNy1hOWU4LWQxM2E2Nzg2NTc4NCIsImlhdCI6MTcwNDU2NjczNH0.x6VxnP9jmSfD3Zvn2fvJ9eTK1oCWqTcEXO4JTxWVJbU');
-    final response = await _apiConnectionManager.request('user', 'GET');
-    print("repo: " +
-        response.toString() +
-        " , " +
-        response.value.toString() +
-        " end of repo");
-
-    if (response.hasValue()) {
-      return Result<User>(
-          value: UserMapper.fromJson(response.value.data['data']));
-    } else {
-      return Result<User>(failure: response.failure);
-    }
-  }
-
-  @override
-  Future<Result<User>> saveUserData(User user) async {
-    //!TEMPORAL
-    _apiConnectionManager.setHeaders('Authorization',
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFhZGUzZDQ1LTkwYzktNGJjNy1hOWU4LWQxM2E2Nzg2NTc4NCIsImlhdCI6MTcwNDU2NjczNH0.x6VxnP9jmSfD3Zvn2fvJ9eTK1oCWqTcEXO4JTxWVJbU');
-
-=======
     return await _apiConnectionManager.request<User>('user', 'GET', (data) {
       data['role'] = 'subscriber';
       return UserMapper.fromJson(data);
@@ -123,7 +97,6 @@ class UserRepositoryImpl extends UserRepository {
 
   @override
   Future<Result<String>> saveUserData(Map<String, String> userData) async {
->>>>>>> dev-javi
     final response = await _apiConnectionManager
         .request<String>('user', 'PATCH', (data) => 'success', body: userData);
 
