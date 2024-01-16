@@ -13,7 +13,6 @@ class LogInUseCaseInput extends IUseCaseInput {
 }
 
 class LogInUseCase extends IUseCase<LogInUseCaseInput, User> {
-  //TODO: Poner todas estas propiedades privadas
   final UserRepository userRepository;
   final LocalStorage localStorage;
   final LocalNotifications localNotifications;
@@ -37,9 +36,7 @@ class LogInUseCase extends IUseCase<LogInUseCaseInput, User> {
       }
       return result;
     } else {
-      return Result<User>(
-          failure:
-              const UnknownFailure()); //TODO: Personalizar este error en base al Failure que retorne getToken?
+      return Result<User>(failure: const UnknownFailure());
     }
   }
 }

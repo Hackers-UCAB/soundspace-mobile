@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_dialog.dart';
-
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/custom_dialog.dart';
 import '../../../../application/BLoC/player/player_bloc.dart';
 import '../../config/router/app_router.dart';
 
@@ -19,6 +18,7 @@ class LogOutListener extends BlocListener<LogOutBloc, LogOutState> {
               playerBloc.add(ResetPlayer());
               playerBloc.add(const UpdateUse(isUsed: false));
               appNavigator.go('/');
+              getIt.get<LogOutBloc>().add(LogOutReseted());
             } else if (state is LogOutFailed) {
               CustomDialog().show(
                   context: context,

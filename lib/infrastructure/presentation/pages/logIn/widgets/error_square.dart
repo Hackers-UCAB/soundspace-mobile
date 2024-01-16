@@ -5,10 +5,10 @@ class ErrorSquare extends StatelessWidget {
   final String mensaje;
 
   const ErrorSquare({
-    Key? key,
+    super.key,
     required this.invalidData,
     required this.mensaje,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

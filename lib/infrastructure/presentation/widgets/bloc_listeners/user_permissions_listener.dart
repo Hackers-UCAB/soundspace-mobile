@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/router/app_router.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_dialog.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/custom_dialog.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/error_page.dart';
 
 class UserPermissionsListener
     extends BlocListener<UserPermissionsBloc, UserPermissionsState> {

@@ -4,10 +4,10 @@ import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/search/widgets/custom_choice_chips.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/search/widgets/custom_textfield.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/custom_circular_progress_indicator.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/error_page.dart';
 import '../../../../domain/services/search_entities_by_name.dart';
-import '../../widgets/ipage.dart';
+import '../../widgets/shared/ipage.dart';
 import 'widgets/search_list.dart';
 
 class SearchPage extends IPage {

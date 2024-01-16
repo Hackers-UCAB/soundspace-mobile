@@ -18,7 +18,7 @@ class CancelSubscriptionUseCase
 
   @override
   Future<Result<bool>> execute(CancelSubscriptionUseCaseInput params) async {
-    final result = await _userRepository.changeUserRole();
+    final result = await _userRepository.cancelUserSubscription();
     if (result.hasValue()) {
       _localStorage.setKeyValue('role', 'guest');
     }

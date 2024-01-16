@@ -27,7 +27,6 @@ class _RegisterButtomState extends State<RegisterButtom> {
         padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 18),
       ),
       child: Text(
-        //TODO: Poner el text style en el theme
         'REGÍSTRATE AQUÍ',
         style: bodyMedium!
             .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
