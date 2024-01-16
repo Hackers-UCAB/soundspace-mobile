@@ -39,33 +39,29 @@ class MusicPlayer extends StatelessWidget {
           borderRadius: BorderRadius.circular(15)),
       child: Column(
         children: [
-          SizedBox(
-            height: size.width * 0.02,
+          ProgressBar(
+            progress: playerState.position,
+            total: playerState.duration,
+            buffered: playerState.bufferedDuration,
+            bufferedBarColor: Colors.red,
+            barHeight: 5,
+            baseBarColor: Colors.black,
+            thumbCanPaintOutsideBar: false,
+            thumbRadius: 0,
+
+            timeLabelLocation: TimeLabelLocation.none,
+            //onSeek: (d) {
+            //  if (playerState.isFinished) {
+            //    playerBloc.add(UpdateSeekPosition(d));
+            //    playerBloc.add(InitStream(
+            //        playerState.currentIdSong,
+            //        d.inSeconds,
+            //        playerState.currentNameSong,
+            //        playerState.duration));
+            //  }
+            //},
           ),
-          SizedBox(
-            width: size.width * 0.9,
-            child: ProgressBar(
-              progress: playerState.position,
-              total: playerState.duration,
-              buffered: playerState.bufferedDuration,
-              bufferedBarColor: const Color.fromARGB(255, 68, 66, 66),
-              barHeight: 5,
-              baseBarColor: Colors.black,
-              thumbCanPaintOutsideBar: false,
-              thumbRadius: 0,
-              timeLabelLocation: TimeLabelLocation.none,
-              onSeek: (d) {
-                if (playerState.isFinished) {
-                  playerBloc.add(UpdateSeekPosition(d));
-                  playerBloc.add(InitStream(
-                      playerState.currentIdSong,
-                      d.inSeconds,
-                      playerState.currentNameSong,
-                      playerState.duration));
-                }
-              },
-            ),
-          ),
+
           Padding(
             padding: EdgeInsets.only(top: size.width * 0.01),
             child: FittedBox(

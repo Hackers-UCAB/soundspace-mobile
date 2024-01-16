@@ -77,6 +77,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _initStream(InitStream event, Emitter<PlayerState> emit) {
+    playerService.clean();
+
     emit(state.copyWith(
       currentIdSong: event.songId,
       currentNameSong: event.nameSong,
@@ -94,7 +96,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     add(UpdateWaveForm());
     add(const UpdateUse(isUsed: true));
 
-    playerService.clean();
     GetIt.instance
         .get<SocketBloc>()
         .add(SendIdSong(event.songId, event.second));

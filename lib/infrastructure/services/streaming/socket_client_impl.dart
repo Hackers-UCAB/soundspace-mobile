@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/datasources/local/local_storage.dart';
 import 'package:sign_in_bloc/application/model/socket_chunk.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -56,7 +59,12 @@ class SocketClientImpl extends SocketClient {
     final streamController = StreamController<SocketChunk>();
 
     socket.on('message-from-server', (data) {
-      streamController.add(SocketChunk.fromJson(data));
+      if (data['chunk'].isNotEmpty) {
+        streamController.add(SocketChunk.fromJson(data));
+      } else {
+        print('finaliza');
+        GetIt.instance.get<PlayerBloc>().add(UpdateFinish(true));
+      }
     });
 
     streamController.stream.listen((chunk) async {

@@ -61,8 +61,9 @@ class MusicWavePlayer extends StatelessWidget {
                         playerState.duration));
                   }
                 },
-                scrollable: true,
+                scrollable: false,
                 waveformStyle: WaveformStyle(
+                  
                     isRoundedRectangle: true,
                     borderWidth: 1,
                     inactiveColor: Colors.grey,
