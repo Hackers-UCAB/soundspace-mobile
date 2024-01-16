@@ -38,14 +38,22 @@ class MusicPlayer extends StatelessWidget {
           ProgressBar(
             progress: playerState.position,
             total: playerState.duration,
+            buffered: playerState.bufferedDuration,
+            bufferedBarColor: Colors.red,
             barHeight: 5,
+            baseBarColor: Colors.black,
             thumbCanPaintOutsideBar: false,
             thumbRadius: 0,
             timeLabelLocation: TimeLabelLocation.none,
             onSeek: (d) {
-              playerBloc.add(UpdateSeekPosition(d));
-              playerBloc.add(InitStream(playerState.currentIdSong, d.inSeconds,
-                  playerState.currentNameSong, playerState.duration));
+              if (playerState.isFinished) {
+                playerBloc.add(UpdateSeekPosition(d));
+                playerBloc.add(InitStream(
+                    playerState.currentIdSong,
+                    d.inSeconds,
+                    playerState.currentNameSong,
+                    playerState.duration));
+              }
             },
           ),
 

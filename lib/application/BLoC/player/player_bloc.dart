@@ -18,16 +18,32 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<ReceiveChunkFromSocket>(_setChunkToJustAudio);
     on<PlayerPlaybackStateChanged>(_playbackStateChanged);
     on<TrackingCurrentPosition>(_updatingCurrentPosition);
-    on<UpdatingDuration>(_updateDuration);
+    on<UpdatingBufferedDuration>(_updateDuration);
     on<ResetPlayer>(_resetPlayer);
     on<AskForChunk>(_askForChunk);
     on<InitStream>(_initStream);
     on<UpdateInitState>(_updateInitState);
-    on<UpdateRequiredState>(_updateRequiredState);
     on<UpdateWaveForm>(_updateWaveForm);
     on<UpdateUse>(_updateUserUse);
     on<UpdateLoading>(_updateLoading);
     on<UpdateSeekPosition>(_updateSeekPosition);
+    on<UpdateSpeed>(_updateSpeed);
+    on<UpdateVolume>(_updateVolume);
+    on<UpdateFinish>(_updateFinish);
+  }
+
+  void _updateFinish(UpdateFinish event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(isFinished: event.isFinished));
+  }
+
+  void _updateSpeed(UpdateSpeed event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(speed: event.speed));
+    playerService.setSpeed(event.speed);
+  }
+
+  void _updateVolume(UpdateVolume event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(volume: event.volume));
+    playerService.setVolume(event.volume);
   }
 
   void _updateSeekPosition(
@@ -40,7 +56,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _updateUserUse(UpdateUse event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(isUsed: true));
+    emit(state.copyWith(isUsed: event.isUsed));
   }
 
   void _updateWaveForm(UpdateWaveForm event, Emitter<PlayerState> emit) {
@@ -49,16 +65,11 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     } else if (state.waveForm.length == 1) {
       emit(state.copyWith(
           waveForm: List<double>.generate(
-              180,
+              220,
               (i) =>
                   (Random().nextBool() ? 1 : -1) * Random().nextDouble() * 100)
             ..shuffle()));
     }
-  }
-
-  void _updateRequiredState(
-      UpdateRequiredState event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(isRequired: event.isRequired));
   }
 
   void _updateInitState(UpdateInitState event, Emitter<PlayerState> emit) {
@@ -66,12 +77,12 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _initStream(InitStream event, Emitter<PlayerState> emit) {
-    playerService.clean();
     emit(state.copyWith(
       currentIdSong: event.songId,
       currentNameSong: event.nameSong,
       duration: event.durationSong,
       isInit: false,
+      isFinished: false,
     ));
     if (event.second == 0) {
       add(UpdateSeekPosition(Duration.zero));
@@ -81,7 +92,9 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     }
 
     add(UpdateWaveForm());
-    add(UpdateUse());
+    add(const UpdateUse(isUsed: true));
+
+    playerService.clean();
     GetIt.instance
         .get<SocketBloc>()
         .add(SendIdSong(event.songId, event.second));
@@ -94,12 +107,16 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _resetPlayer(ResetPlayer event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(position: Duration.zero));
+    emit(state.copyWith(
+        position: Duration.zero,
+        seekPosition: Duration.zero,
+        bufferedDuration: Duration.zero));
     playerService.reset();
   }
 
-  void _updateDuration(UpdatingDuration event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(duration: event.duration));
+  void _updateDuration(
+      UpdatingBufferedDuration event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(bufferedDuration: event.bufferedDuration));
   }
 
   void _updatingCurrentPosition(
@@ -120,8 +137,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   Future<void> _setChunkToJustAudio(
       ReceiveChunkFromSocket event, Emitter<PlayerState> emit) async {
-    add(UpdateRequiredState(true));
-
     await playerService.setAudioSource(event.chunk);
   }
 
