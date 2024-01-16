@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
-
-import '../config/router/app_router.dart';
+import '../../config/router/app_router.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor;
@@ -60,12 +59,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   navigator.navigateTo('/profile');
                   break;
                 case 'Cerrar Sesion':
-                  logOutBloc.add(LogOutEvent());
+                  logOutBloc.add(LogOutEventTriggered());
                   break;
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              if (userPermissions.state.isSubscribed)
+              if (userPermissions.state.isSubscribed &&
+                  navigator.currentLocation != '/profile')
                 PopupMenuItem<String>(
                   value: 'Perfil',
                   child: Text('Perfil', style: bodySmallStyle),

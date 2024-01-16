@@ -51,7 +51,8 @@ class UpdateWaveForm extends PlayerEvent {
 }
 
 class UpdateUse extends PlayerEvent {
-  UpdateUse();
+  final bool isUsed;
+  const UpdateUse({required this.isUsed});
 }
 
 class UpdateLoading extends PlayerEvent {

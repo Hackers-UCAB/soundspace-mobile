@@ -13,38 +13,35 @@ class GenderPickerField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String selectedOption = state.user.genre ?? genderOptions[0];
+    final bodySmall = Theme.of(context).textTheme.bodySmall;
+    final size = MediaQuery.of(context).size;
     return Flexible(
       flex: 2,
       child: DropdownMenu<String>(
-        label: const Text(
+        label: Text(
           "Género",
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          style: bodySmall!.copyWith(fontSize: size.width * 0.045),
         ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: const OutlineInputBorder(
+        inputDecorationTheme: const InputDecorationTheme(
+          border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide: BorderSide(width: 1, color: Colors.transparent),
           ),
-          enabledBorder: const OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide:
                 BorderSide(width: 1, color: Color.fromARGB(0, 85, 51, 51)),
           ),
-          disabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0)),
-            borderSide: BorderSide(width: 1, color: Colors.black),
-          ),
-          focusedBorder: const OutlineInputBorder(
+          focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide: BorderSide(width: 2, color: Colors.white),
           ),
-          constraints: BoxConstraints.loose(Size.fromWidth(200)),
           fillColor: Color.fromARGB(82, 129, 118, 160),
           filled: true,
         ),
         enabled: state.editable,
         enableSearch: false,
-        textStyle: const TextStyle(color: Colors.white, fontSize: 17),
+        textStyle: bodySmall.copyWith(fontSize: size.width * 0.045),
         menuStyle: const MenuStyle(
             backgroundColor: MaterialStatePropertyAll<Color>(
           Color.fromARGB(255, 129, 118, 160),

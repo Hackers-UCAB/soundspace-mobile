@@ -56,7 +56,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _updateUserUse(UpdateUse event, Emitter<PlayerState> emit) {
-    emit(state.copyWith(isUsed: true));
+    emit(state.copyWith(isUsed: event.isUsed));
   }
 
   void _updateWaveForm(UpdateWaveForm event, Emitter<PlayerState> emit) {
@@ -94,7 +94,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     }
 
     add(UpdateWaveForm());
-    add(UpdateUse());
+    add(const UpdateUse(isUsed: true));
 
     GetIt.instance
         .get<SocketBloc>()

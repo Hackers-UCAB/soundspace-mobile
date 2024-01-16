@@ -36,7 +36,6 @@ class LocalNotificationsImpl extends LocalNotifications {
     const initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
 
-    //TODO: despues
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
 
@@ -53,7 +52,6 @@ class LocalNotificationsImpl extends LocalNotifications {
     const initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
 
-    //TODO: despues
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
   }
@@ -92,7 +90,6 @@ class LocalNotificationsImpl extends LocalNotifications {
       String? title,
       String? body,
       Map<String, dynamic>? data}) async {
-    //TODO: CUADRAR LO DE LA IMAGEN CON HTTP
     const androidDetails = AndroidNotificationDetails(
         "channelId", "channelName",
         playSound: true,
@@ -102,7 +99,6 @@ class LocalNotificationsImpl extends LocalNotifications {
 
     const notificationDetails = NotificationDetails(
       android: androidDetails,
-      //TODO: IOS DETAILS
     );
 
     await _flutterLocalNotificationsPlugin
@@ -111,7 +107,6 @@ class LocalNotificationsImpl extends LocalNotifications {
 
   @override
   Future<String?> getToken() async {
-    //TODO: Se deberian manejar los errores de esto
     return await _messaging.getToken();
   }
 

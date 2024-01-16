@@ -192,7 +192,6 @@ class InjectManager {
     getIt.registerSingleton<AppNavigator>(AppNavigator(
         authRouteGuard: authGuard, subscriptionRouteGuard: subscriptionGuard));
 
-    //TODO: Quitamos esto or what
     HttpOverrides.global = MyHttpOverrides();
   }
 }

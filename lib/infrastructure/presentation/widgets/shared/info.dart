@@ -30,18 +30,18 @@ class Info extends StatelessWidget {
             children: [
               Text(
                 name,
-                style: bodyMedium!.copyWith(fontSize: size.width * 0.1),
+                style: bodyMedium!.copyWith(fontSize: size.width * 0.08),
               ),
               const SizedBox(height: 5),
               if (artistName != null)
                 Text(
                   artistName!.join(', '),
-                  style: bodyMedium.copyWith(fontSize: size.width * 0.06),
+                  style: bodyMedium.copyWith(fontSize: size.width * 0.04),
                 ),
               const SizedBox(height: 5),
               Text(
                 '${songs.length.toString()} cancion${songs.length > 1 ? 'es' : ''}',
-                style: bodyMedium.copyWith(fontSize: size.width * 0.05),
+                style: bodyMedium.copyWith(fontSize: size.width * 0.04),
               ),
               const SizedBox(height: 5),
               Row(
@@ -52,7 +52,7 @@ class Info extends StatelessWidget {
                   ),
                   Text(
                     ' $duration min${duration.startsWith('0') || duration.startsWith('1') ? '' : 's'}',
-                    style: bodyMedium.copyWith(fontSize: size.width * 0.05),
+                    style: bodyMedium.copyWith(fontSize: size.width * 0.04),
                   ),
                 ],
               ),

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/user/user_bloc.dart';
@@ -6,9 +8,9 @@ import 'package:sign_in_bloc/application/use_cases/user/get_user_profile_data_us
 import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/widgets/date_picker_field.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/widgets/gender_dropdown_field.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/profile/widgets/submit_button.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/custom_circular_progress_indicator.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/error_page.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/ipage.dart';
 import '../../../../application/use_cases/user/cancel_user_subscription_use_case.dart';
 import '../../../../application/use_cases/user/save_user_profile_data_use_case.dart';
 import 'widgets/user_profile_form_text_field.dart';
@@ -26,7 +28,7 @@ String? validateEmail(String? value) {
   final regex = RegExp(pattern);
 
   return value!.isNotEmpty && !regex.hasMatch(value)
-      ? 'Enter a valid email address'
+      ? 'Ingrese un correo válido'
       : null;
 }
 
@@ -74,19 +76,21 @@ class ProfilePage extends IPage {
   }
 
   @override
-  Future<void> onRefresh() {
-    // TODO: implement onRefresh
-    throw UnimplementedError();
+  Future<void> onRefresh() async {
+    userBloc.add(FetchUserProfileDataEvent());
   }
 }
 
 class ProfileForm extends StatelessWidget {
   final UserProfileLoadedState state;
   final UserBloc userBloc;
+
   ProfileForm({required this.state, required this.userBloc, super.key});
 
   @override
   Widget build(BuildContext context) {
+    final bodyMedium = Theme.of(context).textTheme.bodyMedium;
+    final size = MediaQuery.of(context).size;
     return Form(
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -95,15 +99,12 @@ class ProfileForm extends StatelessWidget {
             const SizedBox(height: 30),
 
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
                   'Perfil',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: bodyMedium!.copyWith(
+                      fontSize: size.width * 0.12, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -142,8 +143,8 @@ class ProfileForm extends StatelessWidget {
               onChanged: (value) => userBloc
                   .add(EmailEditedEvent(user: state.user, email: value)),
               validator: validateEmail,
+              errorMessage: "Por favor, ingrese un correo válido",
             ),
-            //EmailTextFormField(state: state, userBloc: userBloc),
 
             const SizedBox(height: 30),
             Row(
@@ -158,14 +159,20 @@ class ProfileForm extends StatelessWidget {
             const SizedBox(height: 30),
 
             Row(
-              children: [SubmitButton(state: state, userBloc: userBloc)],
+              children: [
+                SubmitButton(
+                  state: state,
+                  userBloc: userBloc,
+                  formKey: _formKey,
+                )
+              ],
             ),
             const SizedBox(height: 80),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Si deseas cancelar tu suscripción',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: bodyMedium.copyWith(fontSize: size.width * 0.045),
               ),
             ),
 
@@ -175,9 +182,11 @@ class ProfileForm extends StatelessWidget {
               child: GestureDetector(
                 onTap: () =>
                     userBloc.add(CanceledSubscripcionEvent(user: state.user)),
-                child: const Text(
+                child: Text(
                   'Haz Click Aquí',
-                  style: TextStyle(color: Colors.lightBlue, fontSize: 16),
+                  style: bodyMedium.copyWith(
+                      fontSize: size.width * 0.045,
+                      color: Colors.lightBlueAccent),
                 ),
               ),
             ),

@@ -8,6 +8,7 @@ class ArtistMapper {
     return Artist(
       id: json['id'],
       name: json['name'],
+      genre: json['genre'],
       image: json['image'] != null
           ? ImageConverter.convert(json['image']['data'])
           : null,

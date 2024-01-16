@@ -8,7 +8,8 @@ class LandingPromo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.46,
+      height: MediaQuery.of(context).size.height * 0.45,
+      width: MediaQuery.of(context).size.width,
       foregroundDecoration: const BoxDecoration(
           gradient: LinearGradient(
         begin: Alignment.topCenter,

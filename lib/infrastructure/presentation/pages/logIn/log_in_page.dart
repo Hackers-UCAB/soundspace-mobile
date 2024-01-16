@@ -6,13 +6,13 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/infrastructure/presentation/config/router/app_router.dart';
 import '../../../../application/use_cases/user/log_in_use_case.dart';
 import '../../../../application/use_cases/user/subscribe_use_case.dart';
-import '../../widgets/ipage.dart';
+import '../../widgets/shared/ipage.dart';
 import 'Widgets/custom_text_form_field.dart';
 import 'Widgets/error_square.dart';
 import 'Widgets/my_button.dart';
 import 'Widgets/operators_button.dart';
 
-class RegisterScreen extends IPage {
+class RegisterScreen extends StatelessWidget {
   final getIt = GetIt.instance;
   late final LogInSubscriberBloc logInSubscriberBloc;
   RegisterScreen({super.key}) {
@@ -22,54 +22,63 @@ class RegisterScreen extends IPage {
   }
 
   @override
-  Future<void> onRefresh() {
-    return Future<void>.value(); //TODO: Pensar en una mejor idea que esto
-  }
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final bodyMedium = Theme.of(context).textTheme.bodyMedium;
+    final bodyLarge = Theme.of(context).textTheme.bodyLarge;
 
-  @override
-  Widget child(BuildContext context) {
-    return BlocProvider(
-      create: (context) => logInSubscriberBloc,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 140),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                child: Text(
-                  'Iniciar sesión',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 37,
-                    fontWeight: FontWeight.w500,
+    return Scaffold(
+      body: BlocProvider(
+        create: (context) => logInSubscriberBloc,
+        child: Stack(
+          children: [
+            const GradientBackground(),
+            SingleChildScrollView(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 140),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'Iniciar sesión',
+                          style:
+                              bodyLarge!.copyWith(fontSize: size.width * 0.1),
+
+                          // TextStyle(
+                          //   color: Colors.white,
+                          //   fontSize: 37,
+                          //   fontWeight: FontWeight.w500,
+                          // ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      //Numero de teléfono text
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Text(
+                          'Número de teléfono',
+                          style: bodyMedium,
+                        ),
+                      ),
+
+                      const SizedBox(height: 15),
+
+                      _RegisterForm(
+                          registerBloc: logInSubscriberBloc, getIt: getIt),
+
+                      const SizedBox(height: 20),
+                    ],
                   ),
                 ),
               ),
-
-              const SizedBox(height: 30),
-
-              //Numero de teléfono text
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                child: Text(
-                  'Número de teléfono',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              _RegisterForm(registerBloc: logInSubscriberBloc, getIt: getIt),
-
-              const SizedBox(height: 20),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
@@ -85,6 +94,9 @@ class _RegisterForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final getIt = GetIt.instance;
     final appNavigator = getIt.get<AppNavigator>();
+    final size = MediaQuery.of(context).size;
+    final bodyMedium = Theme.of(context).textTheme.bodyMedium;
+    final bodyLarge = Theme.of(context).textTheme.bodyLarge;
 
     return BlocListener<UserPermissionsBloc, UserPermissionsState>(
         listener: (context, state) {
@@ -126,32 +138,25 @@ class _RegisterForm extends StatelessWidget {
               }),
             // Suscríbete text
             const SizedBox(height: 65),
-            const Row(
+            Row(
               mainAxisAlignment:
                   MainAxisAlignment.start, // Alinea el Row a la izquierda
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
                     'Suscríbete',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 37,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: bodyLarge!.copyWith(fontSize: size.width * 0.1),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Text(
                 'Si no tienes cuenta suscríbete con tu operadora',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
+                style: bodyMedium,
               ),
             ),
             const SizedBox(height: 30),

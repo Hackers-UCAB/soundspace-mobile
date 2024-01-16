@@ -8,9 +8,6 @@ class NoSessionFailure extends Failure {
       : super(message);
 }
 
-//TODO: Todos podrian tener tambien el codigo http de falla
-//TODO: Estos mensajes creo que los podemos tomar de la respuesta del back
-
 class ServerFailure extends Failure {
   const ServerFailure(
       {String message =
@@ -33,5 +30,5 @@ class UnnableToCheckLocationFailure extends Failure {
 }
 
 class UnknownFailure extends Failure {
-  const UnknownFailure({required String message}) : super(message);
+  const UnknownFailure() : super('Oppss!! Algo salió mal, inténtalo de nuevo');
 }

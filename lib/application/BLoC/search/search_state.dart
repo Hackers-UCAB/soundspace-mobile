@@ -1,7 +1,7 @@
 part of 'search_bloc.dart';
 
 class SearchState extends Equatable {
-  final List<String> filter;
+  final String filter;
   final String data;
   final List<Map<String, String>> searchList;
   final int page;
@@ -17,7 +17,7 @@ class SearchState extends Equatable {
       this.scrollPosition = 0});
 
   SearchState copyWith(
-          {List<String>? filter,
+          {String? filter,
           String? data,
           List<Map<String, String>>? searchList,
           int? page,

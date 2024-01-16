@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_null_aware_operators
 import 'package:sign_in_bloc/infrastructure/datasources/api/api_connection_manager.dart';
 import 'package:sign_in_bloc/infrastructure/mappers/album/album_mapper.dart';
 import 'package:sign_in_bloc/infrastructure/mappers/artist/artist_mapper.dart';
@@ -16,7 +15,7 @@ class SearchEntitiesByNameImpl implements SearchEntitiesByName {
 
   @override
   Future<Result<EntitiesByName>> call(
-      String name, List<String>? entitiesFilter, int limit, int offset) async {
+      String name, String? entitiesFilter, int limit, int offset) async {
     final result = await _apiConnectionManager
         .request<EntitiesByName>('search/$name', 'GET', (data) {
       final albums = data['albums'] != null && data['albums'].isNotEmpty
@@ -40,7 +39,7 @@ class SearchEntitiesByNameImpl implements SearchEntitiesByName {
         songs: songs,
       );
     }, queryParameters: {
-      'type': entitiesFilter,
+      if (entitiesFilter != null) 'type': entitiesFilter,
       'limit': limit,
       'offset': offset
     });

@@ -11,10 +11,10 @@ class DatePickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bodySmall = Theme.of(context).textTheme.bodySmall;
+    final size = MediaQuery.of(context).size;
     return Flexible(
       flex: 3,
-      //TODO: Separar en otro widget - Jorge
-      // FECHA DE NACIMIENTO
       child: TextFormField(
         enabled: state.editable,
         controller: TextEditingController(
@@ -34,31 +34,27 @@ class DatePickerField extends StatelessWidget {
             }
           });
         },
-        style: const TextStyle(color: Colors.white, fontSize: 17),
-        decoration: const InputDecoration(
+        style: bodySmall!.copyWith(fontSize: size.width * 0.045),
+        decoration: InputDecoration(
           hintText: 'DD/MM/YYYY',
-          hintStyle: TextStyle(color: Color.fromARGB(146, 0, 0, 0)),
-          border: OutlineInputBorder(
+          hintStyle: bodySmall.copyWith(fontSize: size.width * 0.045),
+          border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide: BorderSide(width: 1, color: Colors.transparent),
           ),
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide:
                 BorderSide(width: 1, color: Color.fromARGB(0, 85, 51, 51)),
           ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0)),
-            borderSide: BorderSide(width: 1, color: Colors.black),
-          ),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
             borderSide: BorderSide(width: 2, color: Colors.white),
           ),
-          fillColor: Color.fromARGB(82, 129, 118, 160),
+          fillColor: const Color.fromARGB(82, 129, 118, 160),
           filled: true,
           labelText: 'Fecha de Nacimiento',
-          labelStyle: TextStyle(color: Colors.white, fontSize: 18),
+          labelStyle: bodySmall.copyWith(fontSize: size.width * 0.045),
         ),
       ),
     );

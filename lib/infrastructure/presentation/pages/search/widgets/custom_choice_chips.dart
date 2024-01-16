@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 import '../../../../../application/BLoC/search/search_bloc.dart';
 
 class CustomChoiceChips extends StatefulWidget {
-  late final List<String> choices;
+  late final List<Map<String, dynamic>> choices;
   final SearchBloc searchBloc;
 
   CustomChoiceChips({super.key, required this.searchBloc}) {
-    choices = ['Artista', 'Album', 'Playlist', 'Song'];
+    choices = [
+      {'name': 'Artista', 'filter': 'artists'},
+      {'name': 'Album', 'filter': 'albums'},
+      {'name': 'Playlist', 'filter': 'playlists'},
+      {'name': 'Song', 'filter': 'songs'}
+    ];
   }
 
   @override
@@ -18,25 +23,21 @@ class CustomChoiceChips extends StatefulWidget {
 class _CustomChoiceChipsState extends State<CustomChoiceChips> {
   Timer? _debounce;
 
-  String? _lastFilter;
-
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme.bodySmall;
     final List<Widget> chips = widget.choices
-        .map<ChoiceChip>((String choice) => ChoiceChip(
-              label: Text(choice,
-                  style: widget.searchBloc.state.filter.contains(choice)
+        .map<ChoiceChip>((Map<String, dynamic> choice) => ChoiceChip(
+              label: Text(choice['name'],
+                  style: widget.searchBloc.state.filter == choice['filter']
                       ? textTheme?.copyWith(color: Colors.black)
                       : textTheme),
-              selected:
-                  widget.searchBloc.state.filter.contains(choice.toLowerCase()),
+              selected: widget.searchBloc.state.filter == choice['filter'],
               onSelected: (bool selected) {
                 if (_debounce?.isActive ?? false) _debounce?.cancel();
-                _lastFilter = _mapChoiceToFilter(choice);
                 _debounce = Timer(const Duration(milliseconds: 500), () {
-                  widget.searchBloc
-                      .add(SearchFilterChanged(filter: _lastFilter!));
+                  widget.searchBloc.add(SearchFilterChanged(
+                      filter: selected ? choice['filter'] : ''));
                 });
               },
               selectedColor: const Color.fromARGB(255, 255, 255, 255),
@@ -54,20 +55,5 @@ class _CustomChoiceChipsState extends State<CustomChoiceChips> {
         children: chips,
       ),
     );
-  }
-
-  String _mapChoiceToFilter(String choice) {
-    switch (choice) {
-      case 'Artista':
-        return 'artist';
-      case 'Album':
-        return 'album';
-      case 'Playlist':
-        return 'playlist';
-      case 'Song':
-        return 'song';
-      default:
-        return '';
-    }
   }
 }

@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/log_in_guest/log_in_guest_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/ipage.dart';
 import '../../../../application/use_cases/user/log_in_guest_use_case.dart';
 import '../../config/router/app_router.dart';
 import 'widgets/landing_promo.dart';
 import 'widgets/register_button.dart';
 
-class LandingPage extends IPage {
+class LandingPage extends StatelessWidget {
   final getIt = GetIt.instance;
   late final LogInGuestBloc logInGuestBloc;
 
@@ -19,129 +19,112 @@ class LandingPage extends IPage {
   }
 
   @override
-  Future<void> onRefresh() {
-    return Future<void>.value(); //TODO: Pensar en una mejor idea que esto
-  }
-
-  @override
-  Widget child(BuildContext context) {
+  Widget build(BuildContext context) {
     final appNavigator = getIt.get<AppNavigator>();
 
-    return BlocProvider(
-      create: (context) => logInGuestBloc,
-      child: BlocListener<UserPermissionsBloc, UserPermissionsState>(
-        listener: (context, state) {
-          if (state.isAuthenticated) {
-            appNavigator.go('/home');
-          }
-        },
-        child: BlocBuilder<LogInGuestBloc, LogInGuestState>(
-          builder: (context, state) {
-            return SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // Imagen
-                  const LandingPromo(promoPath: 'images/aqustico2.png'),
-                  const SizedBox(height: 20),
-                  // Texto
-                  const Padding(
-                    padding: EdgeInsetsDirectional.symmetric(horizontal: 20),
-                    child: Text(
-                      "Te brindamos la experiencia de estar en Aqustico 7 días gratis.",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  // Botón de registro
-                  const RegisterButtom(),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        '¿Tienes una cuenta? ',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
-                      if (state is! LogInGuestPosting)
-                        GestureDetector(
-                          onTap: () {
-                            appNavigator.navigateTo('/logIn');
-                          },
-                          child: const Text(
-                            'Inicia sesión',
-                            style: TextStyle(
-                              color: Colors.lightBlue,
-                              decoration: TextDecoration.underline,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      if (state is LogInGuestPosting)
-                        const Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'O ingresa como ',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          logInGuestBloc.add(LogInGuestSubmitted());
-                        },
-                        child: const Text(
-                          //TODO: Tomar el style del theme o crear uno
-                          'Invitado',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.lightBlue,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                      //TODO: Usar el widget de oriana para el estado Failed
-                    ],
-                  ),
-                  const SizedBox(height: 90),
-                  //Image
-                  Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: Image.asset(
-                        'images/logo_conectium.png',
-                        width: 120,
-                      )),
-                  Image.asset(
-                    'images/hojitas.png',
-                    width: 120,
-                  ),
-                ],
-              ),
-            );
+    return Scaffold(
+      body: BlocProvider(
+        create: (context) => logInGuestBloc,
+        child: BlocListener<UserPermissionsBloc, UserPermissionsState>(
+          listener: (context, state) {
+            if (state.isAuthenticated) {
+              appNavigator.go('/home');
+            }
           },
+          child: BlocBuilder<LogInGuestBloc, LogInGuestState>(
+            builder: (context, state) {
+              final size = MediaQuery.of(context).size;
+              final bodySmall = Theme.of(context).textTheme.bodySmall;
+              return Stack(
+                children: [
+                  const GradientBackground(),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Imagen
+                        const LandingPromo(promoPath: 'images/aqustico2.png'),
+                        SizedBox(height: size.height * 0.04),
+                        // Texto
+                        Padding(
+                          padding: EdgeInsetsDirectional.symmetric(
+                              horizontal: size.width * 0.1),
+                          child: Text(
+                            "Te brindamos la experiencia de estar en Aqustico 7 días gratis.",
+                            style: bodySmall,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(height: size.height * 0.03),
+                        // Botón de registro
+                        const RegisterButtom(),
+                        SizedBox(height: size.height * 0.03),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '¿Tienes una cuenta? ',
+                              style: bodySmall,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                appNavigator.navigateTo('/logIn');
+                              },
+                              child: Text('Inicia sesión',
+                                  style: bodySmall!.copyWith(
+                                    color: Colors.lightBlue,
+                                  )),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: size.height * 0.01),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'O ingresa como ',
+                              style: bodySmall,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                logInGuestBloc.add(LogInGuestSubmitted());
+                              },
+                              child: Text(
+                                'Invitado',
+                                style: bodySmall.copyWith(
+                                  color: Colors.lightBlue,
+                                ),
+                              ),
+                            ),
+                            if (state is LogInGuestPosting)
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(left: size.width * 0.02),
+                                child: SizedBox(
+                                    width: size.width * 0.04,
+                                    height: size.width * 0.04,
+                                    child: const CircularProgressIndicator()),
+                              ),
+                          ],
+                        ),
+                        SizedBox(height: size.height * 0.13),
+                        //Image
+                        Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child: Image.asset(
+                              'images/logo_conectium.png',
+                              width: 120,
+                            )),
+                        Image.asset(
+                          'images/hojitas.png',
+                          width: 120,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

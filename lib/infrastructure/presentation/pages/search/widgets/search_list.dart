@@ -109,17 +109,27 @@ class _SearchListItem extends StatelessWidget {
     return SizedBox(
       height: 65,
       child: ListTile(
-        title: Text(
-          name,
-          style: Theme.of(context).textTheme.bodyMedium,
+        title: SizedBox(
+          height: 30,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                name,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          ),
         ),
         subtitle: Row(
           children: [
             icon,
+            const SizedBox(width: 3),
             Text(
               filter,
-              style:
-                  Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 15),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontSize: MediaQuery.of(context).size.width * 0.04),
             )
           ],
         ),

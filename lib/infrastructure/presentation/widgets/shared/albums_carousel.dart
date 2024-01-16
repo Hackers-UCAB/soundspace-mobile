@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gallery_3d/gallery3d.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/router/app_router.dart';
-import '../../../domain/album/album.dart';
+import '../../../../domain/album/album.dart';
 
 class AlbumsCarousel extends StatefulWidget {
   final List<Album> albums;
@@ -23,15 +23,23 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
     List<_AlbumCard> albumsCard =
         widget.albums.map((album) => _AlbumCard(album: album)).toList();
 
-    //FIXME: esto es un parche para que no se rompa la galeria
-    if (albumsCard.length <= 3) {
-      albumsCard.addAll([
-        _AlbumCard(album: Album(id: '')),
-        _AlbumCard(
-          album: Album(id: ''),
-        ),
-        _AlbumCard(album: Album(id: ''))
-      ]);
+    if (albumsCard.length < 3) {
+      return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: albumsCard
+              .map<Widget>((card) => GestureDetector(
+                    onTap: () => GetIt.instance
+                        .get<AppNavigator>()
+                        .navigateTo('/album/${card.album.id}'),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: SizedBox(
+                          width: size.width * 0.4,
+                          height: size.width * 0.4,
+                          child: card),
+                    ),
+                  ))
+              .toList());
     }
 
     return Gallery3D(
