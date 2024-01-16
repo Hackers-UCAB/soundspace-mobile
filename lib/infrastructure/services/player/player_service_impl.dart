@@ -48,12 +48,7 @@ class PlayerServiceImpl extends PlayerService {
         await player.setAudioSource(byteDataSource);
         await player.play();
       } else {
-        if (chunk.data.isNotEmpty) {
-          byteDataSource.add(chunk.data);
-        } else {
-          GetIt.instance.get<PlayerBloc>().add(UpdateFinish(true));
-          print('finaliza');
-        }
+        byteDataSource.add(chunk.data);
       }
     } on PlayerInterruptedException catch (e) {
       print("Connection aborted: ${e.message}");
@@ -115,6 +110,7 @@ class PlayerServiceImpl extends PlayerService {
   void clean() async {
     await player.pause();
     await player.stop();
+
     byteDataSource = ByteDataSource();
   }
 

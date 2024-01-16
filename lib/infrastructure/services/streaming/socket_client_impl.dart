@@ -62,6 +62,7 @@ class SocketClientImpl extends SocketClient {
       if (data['chunk'].isNotEmpty) {
         streamController.add(SocketChunk.fromJson(data));
       } else {
+        print('finaliza');
         GetIt.instance.get<PlayerBloc>().add(UpdateFinish(true));
       }
     });

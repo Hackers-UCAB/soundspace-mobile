@@ -88,7 +88,7 @@ class _TracklistItem extends StatelessWidget {
                         if (state.isFinished) {
                           playerBloc.add(InitStream(
                               song.id,
-                              160,
+                              0,
                               song.name,
                               Duration(
                                   minutes:
