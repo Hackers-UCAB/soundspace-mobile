@@ -28,13 +28,9 @@ class AppNavigator {
       routes: [
         GoRoute(
           path: '/',
-<<<<<<< HEAD
-          builder: (context, state) => const LandingPage(),
-=======
           builder: (context, state) {
             return LandingPage();
           },
->>>>>>> dev-javi
           redirect: _authProtectedNavigation,
         ),
         GoRoute(
