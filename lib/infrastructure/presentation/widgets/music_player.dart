@@ -44,17 +44,18 @@ class MusicPlayer extends StatelessWidget {
             baseBarColor: Colors.black,
             thumbCanPaintOutsideBar: false,
             thumbRadius: 0,
+
             timeLabelLocation: TimeLabelLocation.none,
-            onSeek: (d) {
-              if (playerState.isFinished) {
-                playerBloc.add(UpdateSeekPosition(d));
-                playerBloc.add(InitStream(
-                    playerState.currentIdSong,
-                    d.inSeconds,
-                    playerState.currentNameSong,
-                    playerState.duration));
-              }
-            },
+            //onSeek: (d) {
+            //  if (playerState.isFinished) {
+            //    playerBloc.add(UpdateSeekPosition(d));
+            //    playerBloc.add(InitStream(
+            //        playerState.currentIdSong,
+            //        d.inSeconds,
+            //        playerState.currentNameSong,
+            //        playerState.duration));
+            //  }
+            //},
           ),
 
           Padding(
