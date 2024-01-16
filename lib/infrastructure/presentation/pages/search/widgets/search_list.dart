@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
+
 import '../../../config/router/app_router.dart';
 
 class SearchList extends StatefulWidget {
@@ -65,7 +66,7 @@ class SearchListState extends State<SearchList> {
               onTap: widget.items[index]['filter'] == 'song'
                   ? () => playerBloc.add(InitStream(
                       widget.items[index]['id']!,
-                      10,
+                      0,
                       widget.items[index]['name']!,
                       Duration(
                           minutes: int.parse(
