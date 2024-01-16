@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
@@ -8,7 +10,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/pages/home/widgets/prom
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/error_page.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../application/use_cases/playlist/get_trending_playlists_use_case.dart';
 import '../../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
 import '../../../../application/use_cases/song/get_trending_songs_use_case.dart';
@@ -19,6 +21,7 @@ import 'widgets/playlist_wrap.dart';
 class HomePage extends IPage {
   final getIt = GetIt.instance;
   late final TrendingsBloc trendingsBloc;
+  late final PlayerBloc playerBloc;
 
   HomePage({super.key}) {
     trendingsBloc = TrendingsBloc(
@@ -27,11 +30,13 @@ class HomePage extends IPage {
         getPromotionalBannerUseCase: getIt.get<GetPromotionalBannerUseCase>(),
         getTrendingPlaylistsUseCase: getIt.get<GetTrendingPlaylistsUseCase>(),
         getTrendingSongsUseCase: getIt.get<GetTrendingSongsUseCase>());
+
   }
 
   @override
   Future<void> onRefresh() async {
     trendingsBloc.add(FetchTrendingsEvent());
+
   }
 
   @override

@@ -111,7 +111,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     emit(state.copyWith(
         position: Duration.zero,
         seekPosition: Duration.zero,
-        bufferedDuration: Duration.zero));
+        bufferedDuration: Duration.zero,
+        isUsed: false));
     playerService.reset();
   }
 
