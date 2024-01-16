@@ -13,7 +13,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({required SearchEntitiesByName searchEntitiesByName})
       : _searchEntitiesByName = searchEntitiesByName,
         super(const SearchInitial(
-            filter: [], searchList: [], data: '', lastPage: false, page: 0)) {
+            filter: '', searchList: [], data: '', lastPage: false, page: 0)) {
     on<SearchFilterChanged>(_searchFilterChanged);
     on<SearchDataChanged>(_searchDataChanged);
     on<FetchSearchedData>(_fetchSearchedData);
@@ -22,15 +22,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   //cada vez que cambia la seleccion del CustomChoiceChip
   Future<void> _searchFilterChanged(
       SearchFilterChanged event, Emitter<SearchState> emit) async {
-    List<String> filter = [];
-
-    state.filter.contains(event.filter)
-        ? filter =
-            state.filter.where((element) => element != event.filter).toList()
-        : filter = state.filter + [event.filter];
-
     emit(state.copyWith(
-        filter: filter, searchList: [], lastPage: false, page: 0));
+        filter: event.filter, searchList: [], lastPage: false, page: 0));
     add(FetchSearchedData(page: 0, scrollPosition: 0));
   }
 
@@ -58,13 +51,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
           int page = event.page;
           bool notEmpty = true;
           while (items.length < 15 && notEmpty) {
-            final result = await _searchEntitiesByName.call(
-                state.data,
-                state.filter
-                    .map<String>((string) => string.toLowerCase())
-                    .toList(),
-                15,
-                page);
+            final result = await _searchEntitiesByName.call(state.data,
+                state.filter.isNotEmpty ? state.filter : null, 15, page);
 
             if (result.hasValue()) {
               notEmpty = false;
@@ -104,7 +92,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         }
       } else if (state.filter.isEmpty) {
         emit(const SearchInitial(
-            filter: [], data: '', page: 0, lastPage: false, searchList: []));
+            filter: '', data: '', page: 0, lastPage: false, searchList: []));
       }
     }
   }

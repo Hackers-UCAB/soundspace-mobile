@@ -13,7 +13,6 @@ class MusicWavePlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = context.mediaQuery.size;
     return SizedBox(
-    return SizedBox(
       width: size.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

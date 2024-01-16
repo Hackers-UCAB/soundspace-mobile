@@ -7,11 +7,13 @@ class Artist {
   final List<int>? image;
   final List<Album>? albums;
   final List<Song>? songs;
+  final String? genre;
 
   Artist(
       {required this.id,
       required this.name,
       this.image,
       this.albums,
-      this.songs});
+      this.songs,
+      this.genre});
 }
