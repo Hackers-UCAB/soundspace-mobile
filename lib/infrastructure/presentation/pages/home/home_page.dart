@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/trendings/trendings_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/artist/get_trending_artists_use_case.dart';
@@ -21,7 +20,6 @@ import 'widgets/playlist_wrap.dart';
 class HomePage extends IPage {
   final getIt = GetIt.instance;
   late final TrendingsBloc trendingsBloc;
-  late final PlayerBloc playerBloc;
 
   HomePage({super.key}) {
     trendingsBloc = TrendingsBloc(
@@ -36,7 +34,6 @@ class HomePage extends IPage {
   @override
   Future<void> onRefresh() async {
     trendingsBloc.add(FetchTrendingsEvent());
-
   }
 
   @override
