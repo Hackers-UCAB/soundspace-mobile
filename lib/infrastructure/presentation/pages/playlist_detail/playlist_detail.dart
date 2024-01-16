@@ -62,6 +62,7 @@ class PlaylistDetail extends IPage {
                   ),
                   const SizedBox(height: 30),
                   Tracklist(songs: playlistState.playlist.songs!),
+                  const SizedBox(height: 100),
                 ],
               ),
             )

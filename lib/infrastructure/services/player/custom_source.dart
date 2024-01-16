@@ -3,9 +3,14 @@ import 'dart:async';
 import 'package:just_audio/just_audio.dart';
 
 class ByteDataSource extends StreamAudioSource {
-  StreamController<List<int>> streamControllerBuffer;
+  StreamController<List<int>> streamControllerBuffer =
+      StreamController<List<int>>.broadcast();
 
-  ByteDataSource(this.streamControllerBuffer);
+  void add(List<int> data) {
+    if (data.isNotEmpty) {
+      streamControllerBuffer.add(data);
+    }
+  }
 
   @override
   Future<StreamAudioResponse> request([int? start, int? end]) async {

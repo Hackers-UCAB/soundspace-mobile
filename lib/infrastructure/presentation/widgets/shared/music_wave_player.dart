@@ -38,21 +38,24 @@ class MusicWavePlayer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               GeneralAudioWaveform(
-                scalingAlgorithmType: ScalingAlgorithmType.median,
                 waveformType: WaveformType.rectangle,
-                height: 50,
+                height: 70,
                 width: size.width * 0.7,
-                maxSamples: playerState.waveForm.length,
                 source: AudioDataSource(samples: playerState.waveForm),
                 maxDuration: playerState.duration,
-                elapsedDuration: playerBloc.state.position,
+                elapsedDuration:
+                    playerState.duration > playerBloc.state.position
+                        ? playerBloc.state.position
+                        : playerState.duration,
                 elapsedIsChanged: (d) {
-                  playerBloc.add(UpdateSeekPosition(d));
-                  playerBloc.add(InitStream(
-                      playerState.currentIdSong,
-                      d.inSeconds,
-                      playerState.currentNameSong,
-                      playerState.duration));
+                  if (playerState.isFinished) {
+                    playerBloc.add(UpdateSeekPosition(d));
+                    playerBloc.add(InitStream(
+                        playerState.currentIdSong,
+                        d.inSeconds,
+                        playerState.currentNameSong,
+                        playerState.duration));
+                  }
                 },
                 scrollable: true,
                 waveformStyle: WaveformStyle(
@@ -68,30 +71,68 @@ class MusicWavePlayer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
+                      onPressed: () {
+                        if ((playerState.position.inSeconds - 10 > 0) &&
+                            (playerState.isFinished)) {
+                          playerBloc.add(InitStream(
+                              playerState.currentIdSong,
+                              playerState.position.inSeconds - 10,
+                              playerState.currentNameSong,
+                              playerState.duration));
+                        }
+                      },
+                      icon: Icon(
                         Icons.replay_10_outlined,
-                        color: Colors.white,
+                        color: ((playerState.position.inSeconds - 10 > 0) &&
+                                (playerState.isFinished))
+                            ? Colors.white
+                            : Colors.grey,
                         size: 35,
                       )),
                   IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
+                      onPressed: () {
+                        if ((playerState.position.inSeconds + 10 <
+                                playerState.duration.inSeconds) &&
+                            (playerState.isFinished)) {
+                          playerBloc.add(InitStream(
+                              playerState.currentIdSong,
+                              playerState.position.inSeconds + 10,
+                              playerState.currentNameSong,
+                              playerState.duration));
+                        }
+                      },
+                      icon: Icon(
                         Icons.replay_30_outlined,
+                        color: ((playerState.position.inSeconds + 10 <
+                                    playerState.duration.inSeconds) &&
+                                (playerState.isFinished))
+                            ? Colors.white
+                            : Colors.grey,
+                        size: 35,
+                      )),
+                  IconButton(
+                      onPressed: () {
+                        playerState.speed == 1.0
+                            ? playerBloc.add(UpdateSpeed(1.5))
+                            : playerBloc.add(UpdateSpeed(1.0));
+                      },
+                      icon: Icon(
+                        playerState.speed == 1.0
+                            ? Icons.one_k_outlined
+                            : Icons.two_k_outlined,
                         color: Colors.white,
                         size: 35,
                       )),
                   IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.one_x_mobiledata_outlined,
-                        color: Colors.white,
-                        size: 35,
-                      )),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.volume_up_outlined,
+                      onPressed: () {
+                        playerState.volume == 1.0
+                            ? playerBloc.add(UpdateVolume(0.0))
+                            : playerBloc.add(UpdateVolume(1.0));
+                      },
+                      icon: Icon(
+                        playerState.volume == 1.0
+                            ? Icons.volume_up_outlined
+                            : Icons.volume_mute_outlined,
                         color: Colors.white,
                         size: 35,
                       ))

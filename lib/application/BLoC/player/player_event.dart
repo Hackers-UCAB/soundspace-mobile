@@ -19,9 +19,9 @@ class TrackingCurrentPosition extends PlayerEvent {
   TrackingCurrentPosition(this.position);
 }
 
-class UpdatingDuration extends PlayerEvent {
-  final Duration duration;
-  UpdatingDuration(this.duration);
+class UpdatingBufferedDuration extends PlayerEvent {
+  final Duration bufferedDuration;
+  UpdatingBufferedDuration(this.bufferedDuration);
 }
 
 class ResetPlayer extends PlayerEvent {
@@ -46,17 +46,13 @@ class UpdateInitState extends PlayerEvent {
   UpdateInitState(this.isInit);
 }
 
-class UpdateRequiredState extends PlayerEvent {
-  final bool isRequired;
-  UpdateRequiredState(this.isRequired);
-}
-
 class UpdateWaveForm extends PlayerEvent {
   UpdateWaveForm();
 }
 
 class UpdateUse extends PlayerEvent {
-  UpdateUse();
+  final bool isUsed;
+  const UpdateUse({required this.isUsed});
 }
 
 class UpdateLoading extends PlayerEvent {
@@ -67,4 +63,19 @@ class UpdateLoading extends PlayerEvent {
 class UpdateSeekPosition extends PlayerEvent {
   final Duration seekPosition;
   UpdateSeekPosition(this.seekPosition);
+}
+
+class UpdateVolume extends PlayerEvent {
+  final double volume;
+  UpdateVolume(this.volume);
+}
+
+class UpdateSpeed extends PlayerEvent {
+  final double speed;
+  UpdateSpeed(this.speed);
+}
+
+class UpdateFinish extends PlayerEvent {
+  final bool isFinished;
+  UpdateFinish(this.isFinished);
 }

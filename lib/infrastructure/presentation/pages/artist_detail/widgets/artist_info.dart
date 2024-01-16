@@ -36,7 +36,7 @@ class ArtistInfo extends StatelessWidget {
                     style: bodyMedium!.copyWith(fontSize: size.width * 0.07)),
               ),
               Text(
-                'Genero',
+                artist.genre!,
                 style: bodyMedium.copyWith(fontSize: size.width * 0.035),
               ),
               const SizedBox(height: 20),

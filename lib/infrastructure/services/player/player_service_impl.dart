@@ -8,10 +8,9 @@ import 'package:sign_in_bloc/infrastructure/services/player/custom_source.dart';
 import '../../../application/services/player/player_services.dart';
 
 class PlayerServiceImpl extends PlayerService {
-  late final AudioPlayer player;
-  late final ByteDataSource byteDataSource;
+  late AudioPlayer player;
+  late ByteDataSource byteDataSource;
 
-  final streamController = StreamController<List<int>>.broadcast();
   ConcatenatingAudioSource concatenatingAudioSource = ConcatenatingAudioSource(
       children: [],
       shuffleOrder: DefaultShuffleOrder(),
@@ -20,8 +19,7 @@ class PlayerServiceImpl extends PlayerService {
   @override
   void initialize() async {
     player = AudioPlayer();
-    byteDataSource = ByteDataSource(streamController);
-    trackingDuration();
+    trackingBufferedDuration();
     trackingPosition();
     trackingState();
     trackingProccesingState();
@@ -42,19 +40,20 @@ class PlayerServiceImpl extends PlayerService {
   }
 
   @override
-  void seek(Duration duration) {
-    player.seek(duration);
-  }
-
-  @override
   Future<void> setAudioSource(SocketChunk chunk) async {
     try {
-      streamController.add(chunk.data);
-
       if (!GetIt.instance.get<PlayerBloc>().state.isInit) {
         GetIt.instance.get<PlayerBloc>().add(UpdateInitState(true));
+        byteDataSource = ByteDataSource();
         await player.setAudioSource(byteDataSource);
         await player.play();
+      } else {
+        if (chunk.data.isNotEmpty) {
+          byteDataSource.add(chunk.data);
+        } else {
+          GetIt.instance.get<PlayerBloc>().add(UpdateFinish(true));
+          print('finaliza');
+        }
       }
     } on PlayerInterruptedException catch (e) {
       print("Connection aborted: ${e.message}");
@@ -64,16 +63,20 @@ class PlayerServiceImpl extends PlayerService {
   }
 
   @override
-  void reset() {
+  void reset() async {
     player.seek(Duration.zero);
-    player.stop();
+    await player.stop();
   }
 
   @override
-  void trackingDuration() {
+  void trackingBufferedDuration() {
+    final playerBloc = GetIt.instance.get<PlayerBloc>();
     // TODO es realmente necesario??
-    player.durationStream.listen((duration) {
-      print('DURACION ACTUAL ${duration?.inSeconds}');
+    player.bufferedPositionStream.listen((event) async {
+      if (event > Duration.zero) {
+        playerBloc.add(
+            UpdatingBufferedDuration(event + playerBloc.state.seekPosition));
+      }
     });
   }
 
@@ -82,43 +85,47 @@ class PlayerServiceImpl extends PlayerService {
     final playerBloc = GetIt.instance.get<PlayerBloc>();
 
     player.positionStream.listen((position) async {
-      //sprint(playerBloc.state.position);
-      //if (player.duration != null) {
-      //  if (((player.duration!.inSeconds - position.inSeconds) == 4) &&
-      //      playerBloc.state.isRequired) {
-      //    if (player.sequence != null && player.currentIndex != null) {
-      //      var totalDuration = Duration.zero;
-      //      for (var i = 0; i < player.currentIndex!; i++) {
-      //        totalDuration += player.sequence![i].duration!;
-      //      }
-      //      totalDuration += player.position + playerBloc.state.seekPosition;
-      //      GetIt.instance.get<PlayerBloc>().add(UpdateRequiredState(
-      //          !GetIt.instance.get<PlayerBloc>().state.isRequired));
-      //      print("TOTAL DURATION ${totalDuration}");
-      //      print("TOTAL POSITION ${playerBloc.state.position}");
-      //      GetIt.instance
-      //          .get<PlayerBloc>()
-      //          .add(AskForChunk(totalDuration.inSeconds));
-      //    }
-      //  }
-      //}
+      if (player.bufferedPosition > Duration.zero) {
+        if ((playerBloc.state.bufferedDuration.inSeconds -
+                playerBloc.state.position.inSeconds) ==
+            10) {
+          playerBloc.add(AskForChunk(player.bufferedPosition.inSeconds));
+        }
+
+        if ((playerBloc.state.bufferedDuration.inSeconds -
+                playerBloc.state.position.inSeconds) ==
+            1) {
+          player.pause();
+          playerBloc.add(ResetPlayer());
+        }
+
+        if ((player.bufferedPosition.inSeconds ==
+            playerBloc.state.duration.inSeconds)) {
+          player.pause();
+          playerBloc.add(ResetPlayer());
+        }
+      }
 
       playerBloc.add(
           TrackingCurrentPosition(position + playerBloc.state.seekPosition));
-
-      //if (player.sequence != null && player.currentIndex != null) {
-      //  var totalDuration = Duration.zero;
-      //  for (var i = 0; i < player.currentIndex!; i++) {
-      //    totalDuration += player.sequence![i].duration!;
-      //  }
-      //  totalDuration += player.position + playerBloc.state.seekPosition;
-      //  playerBloc.add(TrackingCurrentPosition(totalDuration));
-      //}
     });
   }
 
-  void clean() {
-    player.pause();
+  @override
+  void clean() async {
+    await player.pause();
+    await player.stop();
+    byteDataSource = ByteDataSource();
+  }
+
+  @override
+  void setSpeed(double speed) {
+    player.setSpeed(speed);
+  }
+
+  @override
+  void setVolume(double volume) {
+    player.setVolume(volume);
   }
 
   @override
@@ -127,6 +134,7 @@ class PlayerServiceImpl extends PlayerService {
       GetIt.instance
           .get<PlayerBloc>()
           .add(PlayerPlaybackStateChanged(event.playing));
+      if (!event.playing) {}
     });
 
     player.playbackEventStream.listen((event) {
@@ -139,8 +147,18 @@ class PlayerServiceImpl extends PlayerService {
     player.processingStateStream.listen((event) async {
       if (event == ProcessingState.ready) {
         GetIt.instance.get<PlayerBloc>().add(UpdateLoading(false));
-      } else if (event != ProcessingState.completed) {
+      }
+
+      if (event == ProcessingState.buffering) {
         GetIt.instance.get<PlayerBloc>().add(UpdateLoading(true));
+      }
+
+      if (event == ProcessingState.loading) {
+        GetIt.instance.get<PlayerBloc>().add(UpdateLoading(true));
+      }
+
+      if (event == ProcessingState.idle) {
+        GetIt.instance.get<PlayerBloc>().add(UpdateLoading(false));
       }
     });
   }
