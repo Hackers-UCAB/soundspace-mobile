@@ -12,6 +12,10 @@ class MusicWavePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = context.mediaQuery.size;
+    final speedImage = playerState.speed == 1.0
+        ? 'images/speed-x1.png'
+        : 'images/speed-x2.png';
+
     return SizedBox(
       width: size.width,
       child: Row(
@@ -81,14 +85,13 @@ class MusicWavePlayer extends StatelessWidget {
                               playerState.duration));
                         }
                       },
-                      icon: Icon(
-                        Icons.replay_10_outlined,
-                        color: ((playerState.position.inSeconds - 10 > 0) &&
-                                (playerState.isFinished))
-                            ? Colors.white
-                            : Colors.grey,
-                        size: 35,
-                      )),
+                      icon: Image.asset('images/replay-10.png',
+                          width: size.width * 0.08,
+                          color: ((playerState.position.inSeconds + 10 <
+                                      playerState.duration.inSeconds) &&
+                                  (playerState.isFinished))
+                              ? Colors.white
+                              : Colors.grey)),
                   IconButton(
                       onPressed: () {
                         if ((playerState.position.inSeconds + 10 <
@@ -101,28 +104,26 @@ class MusicWavePlayer extends StatelessWidget {
                               playerState.duration));
                         }
                       },
-                      icon: Icon(
-                        Icons.replay_30_outlined,
-                        color: ((playerState.position.inSeconds + 10 <
-                                    playerState.duration.inSeconds) &&
-                                (playerState.isFinished))
-                            ? Colors.white
-                            : Colors.grey,
-                        size: 35,
-                      )),
+                      icon: Image.asset('images/forward-10.png',
+                          width: size.width * 0.08,
+                          color: ((playerState.position.inSeconds + 10 <
+                                      playerState.duration.inSeconds) &&
+                                  (playerState.isFinished))
+                              ? Colors.white
+                              : Colors.grey)),
                   IconButton(
                       onPressed: () {
                         playerState.speed == 1.0
                             ? playerBloc.add(UpdateSpeed(1.5))
                             : playerBloc.add(UpdateSpeed(1.0));
                       },
-                      icon: Icon(
-                        playerState.speed == 1.0
-                            ? Icons.one_k_outlined
-                            : Icons.two_k_outlined,
-                        color: Colors.white,
-                        size: 35,
-                      )),
+                      icon: Image.asset(speedImage,
+                          width: size.width * 0.08,
+                          color: ((playerState.position.inSeconds + 10 <
+                                      playerState.duration.inSeconds) &&
+                                  (playerState.isFinished))
+                              ? Colors.white
+                              : Colors.grey)),
                   IconButton(
                       onPressed: () {
                         playerState.volume == 1.0
