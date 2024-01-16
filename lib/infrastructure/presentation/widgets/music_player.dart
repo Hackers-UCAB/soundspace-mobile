@@ -29,121 +29,114 @@ class MusicPlayer extends StatelessWidget {
       playerBloc.add(ResetPlayer());
     }
 
+    final size = MediaQuery.of(context).size;
+    final bodySmall = Theme.of(context).textTheme.bodySmall;
+
     return Container(
-      height: 82, //TODO: Cuidado con esto y la onda comentada
-      width: double.infinity,
-      decoration: const BoxDecoration(color: Color.fromARGB(255, 24, 15, 35)),
+      height: 102, //TODO: Cuidado con esto y la onda comentada
+      decoration: BoxDecoration(
+          color: Color.fromARGB(255, 24, 15, 35),
+          borderRadius: BorderRadius.circular(15)),
       child: Column(
         children: [
-          ProgressBar(
-            progress: playerState.position,
-            total: playerState.duration,
-            buffered: playerState.bufferedDuration,
-            bufferedBarColor: Colors.red,
-            barHeight: 5,
-            baseBarColor: Colors.black,
-            thumbCanPaintOutsideBar: false,
-            thumbRadius: 0,
-            timeLabelLocation: TimeLabelLocation.none,
-            onSeek: (d) {
-              if (playerState.isFinished) {
-                playerBloc.add(UpdateSeekPosition(d));
-                playerBloc.add(InitStream(
-                    playerState.currentIdSong,
-                    d.inSeconds,
-                    playerState.currentNameSong,
-                    playerState.duration));
-              }
-            },
+          SizedBox(
+            height: size.width * 0.02,
           ),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 8),
-            child: Row(
-              children: [
-                playerState.isLoading
-                    ? const CircularProgressIndicator()
-                    : IconButton(
-                        padding: const EdgeInsets.all(0),
-                        onPressed: () {
-                          playerBloc.add(PlayerPlaybackStateChanged(
-                              !playerBloc.state.playbackState));
-                        },
-                        icon: Icon(
-                          playerState.playbackState
-                              ? Icons.pause_circle
-                              : Icons.play_circle_fill,
-                          size: 50,
-                          color: const Color(0xff1de1ee),
-                        ),
-                      ),
-                Padding(
-                  padding: const EdgeInsets.all(14),
-                  child: Column(children: [
-                    Text(
+          SizedBox(
+            width: size.width * 0.9,
+            child: ProgressBar(
+              progress: playerState.position,
+              total: playerState.duration,
+              buffered: playerState.bufferedDuration,
+              bufferedBarColor: const Color.fromARGB(255, 68, 66, 66),
+              barHeight: 5,
+              baseBarColor: Colors.black,
+              thumbCanPaintOutsideBar: false,
+              thumbRadius: 0,
+              timeLabelLocation: TimeLabelLocation.none,
+              onSeek: (d) {
+                if (playerState.isFinished) {
+                  playerBloc.add(UpdateSeekPosition(d));
+                  playerBloc.add(InitStream(
+                      playerState.currentIdSong,
+                      d.inSeconds,
                       playerState.currentNameSong,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    )
-                  ]),
-                ),
-                Expanded(child: Container()),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        '$addMinuteZero${playerBloc.state.position.inMinutes}:$addSecondZero${playerBloc.state.position.inSeconds % 60}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall!
-                            .copyWith(fontSize: 12),
-                      ),
-                      const SizedBox(width: 6),
-                      //IconButton(
-                      //  padding: const EdgeInsets.all(0),
-                      //  onPressed: () => {
-                      //    playerBloc.add(
-                      //      InitStream(
-                      //          'ac75ed9c-4f69-4c59-a4cc-8843c8a33108', 15),
-                      //    )
-                      //  },
-                      //  icon: const Icon(
-                      //    Icons.play_arrow_sharp,
-                      //    color: Color(0xff1de1ee),
-                      //  ),
-                      //),
-                    ],
-                  ),
-                )
-              ],
+                      playerState.duration));
+                }
+              },
             ),
           ),
-          // GeneralAudioWaveform(
-          //   scalingAlgorithmType: ScalingAlgorithmType.median,
-          //   waveformType: WaveformType.rectangle,
-          //   height: 80,
-          //   width: 400,
-          //   maxSamples: GetIt.instance.get<PlayerBloc>().state.waveForm.length,
-          //   source: AudioDataSource(
-          //       samples: GetIt.instance.get<PlayerBloc>().state.waveForm),
-          //   maxDuration: const Duration(minutes: 3, seconds: 13),
-          //   elapsedDuration: playerBloc.state.position,
-          //   elapsedIsChanged: (d) {
-          //     playerBloc.add(UpdateSeekPosition(d));
-          //     playerBloc.add(InitStream(
-          //         'ac75ed9c-4f69-4c59-a4cc-8843c8a33108', d.inSeconds));
-          //   },
-          //   scrollable: true,
-          //   waveformStyle: WaveformStyle(
-          //       isRoundedRectangle: true,
-          //       borderWidth: 1,
-          //       inactiveColor: Colors.grey,
-          //       inactiveBorderColor: Colors.grey,
-          //       activeColor: Colors.red,
-          //       activeBorderColor: Colors.red),
-          // ),
+          Padding(
+            padding: EdgeInsets.only(top: size.width * 0.01),
+            child: FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                playerState.currentNameSong,
+                style: bodySmall!.copyWith(fontSize: size.width * 0.04),
+              ),
+            ),
+          ),
+          Text(
+            '$addMinuteZero${playerBloc.state.position.inMinutes}:$addSecondZero${playerBloc.state.position.inSeconds % 60}',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(fontSize: size.width * 0.03),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                  padding: const EdgeInsets.all(0),
+                  onPressed: () {
+                    if ((playerState.position.inSeconds - 10 > 0) &&
+                        (playerState.isFinished)) {
+                      playerBloc.add(InitStream(
+                          playerState.currentIdSong,
+                          playerState.position.inSeconds - 10,
+                          playerState.currentNameSong,
+                          playerState.duration));
+                    }
+                  },
+                  icon: Image.asset(
+                    'images/replay-10.png',
+                    width: size.width * 0.065,
+                  )),
+              playerState.isLoading
+                  ? const CircularProgressIndicator()
+                  : IconButton(
+                      padding: const EdgeInsets.all(0),
+                      onPressed: () {
+                        playerBloc.add(PlayerPlaybackStateChanged(
+                            !playerBloc.state.playbackState));
+                      },
+                      icon: Icon(
+                        playerState.playbackState
+                            ? Icons.pause_circle_outline_outlined
+                            : Icons.play_circle_outline_outlined,
+                        size: size.width * 0.09,
+                        color: Colors.white,
+                      ),
+                    ),
+              IconButton(
+                  padding: const EdgeInsets.all(0),
+                  onPressed: () {
+                    if ((playerState.position.inSeconds + 10 <
+                            playerState.duration.inSeconds) &&
+                        (playerState.isFinished)) {
+                      playerBloc.add(InitStream(
+                          playerState.currentIdSong,
+                          playerState.position.inSeconds + 10,
+                          playerState.currentNameSong,
+                          playerState.duration));
+                    }
+                  },
+                  icon: Image.asset(
+                    'images/forward-10.png',
+                    width: size.width * 0.065,
+                  )),
+            ],
+          ),
         ],
       ),
     );
