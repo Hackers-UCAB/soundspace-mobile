@@ -20,3 +20,5 @@ class FetchSearchedData extends SearchEvent {
 
   FetchSearchedData({required this.page, required this.scrollPosition});
 }
+
+class SearchRestarted extends SearchEvent {}
