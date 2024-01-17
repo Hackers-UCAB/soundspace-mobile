@@ -31,6 +31,7 @@ class HomePage extends IPage {
 
   @override
   Future<void> onRefresh() async {
+    super.onRefresh();
     trendingsBloc.add(FetchTrendingsEvent());
   }
 

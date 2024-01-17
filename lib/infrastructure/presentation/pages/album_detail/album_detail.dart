@@ -22,6 +22,7 @@ class AlbumDetail extends IPage {
 
   @override
   Future<void> onRefresh() async {
+    super.onRefresh();
     albumBloc.add(FetchAlbumDetailEvent(albumId: albumId));
   }
 

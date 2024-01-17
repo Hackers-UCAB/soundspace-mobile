@@ -26,7 +26,7 @@ class ReplayForwardIcon extends StatelessWidget {
           (playerState.isConnected));
     } else {
       return ((playerState.position.inSeconds + 10 <
-              playerState.duration.inSeconds) &&
+              playerState.bufferedDuration.inSeconds) &&
           (playerState.isFinished) &&
           (userPermissionsBloc.state.isSubscribed) &&
           (playerState.isConnected));
