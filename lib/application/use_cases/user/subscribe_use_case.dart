@@ -5,7 +5,6 @@ import '../../../common/use_case.dart';
 import '../../../domain/user/repository/user_repository.dart';
 import '../../datasources/local/local_storage.dart';
 import '../../services/foreground_notifications/local_notifications.dart';
-import '../../services/streaming/socket_client.dart';
 
 class SubscribeUseCaseInput extends IUseCaseInput {
   final String number;
@@ -18,12 +17,10 @@ class SubscribeUseCase extends IUseCase<SubscribeUseCaseInput, User> {
   final UserRepository userRepository;
   final LocalStorage localStorage;
   final LocalNotifications localNotifications;
-  final SocketClient socketClient;
   SubscribeUseCase(
       {required this.userRepository,
       required this.localStorage,
-      required this.localNotifications,
-      required this.socketClient});
+      required this.localNotifications});
 
   @override
   Future<Result<User>> execute(SubscribeUseCaseInput params) async {
@@ -34,16 +31,13 @@ class SubscribeUseCase extends IUseCase<SubscribeUseCaseInput, User> {
           params.number, notificationsToken, params.operator);
       if (result.hasValue()) {
         final user = result.value!;
+        await localStorage.removeKey('appToken');
+        await localStorage.removeKey('role');
+        await localStorage.removeKey('notificationsToken');
         await localStorage.setKeyValue('appToken', user.id);
         await localStorage.setKeyValue(
             'notificationsToken', notificationsToken);
         await localStorage.setKeyValue('role', user.role.toString());
-        if (socketClient.isDisconnected()) {
-          socketClient.inicializeSocket();
-        } else if (socketClient.isInitializated()) {
-          socketClient.disconnectSocket();
-          socketClient.inicializeSocket();
-        }
       }
 
       return result;
