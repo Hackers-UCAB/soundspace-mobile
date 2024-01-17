@@ -8,6 +8,7 @@ import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/config/theme/app_theme.dart';
 import 'package:sign_in_bloc/infrastructure/services/config/inject_manager.dart';
+import 'package:sign_in_bloc/infrastructure/services/pending_tasks_manager/pending_tasks_manager.dart';
 import 'application/BLoC/player/player_bloc.dart';
 import 'application/BLoC/socket/socket_bloc.dart';
 import 'infrastructure/presentation/config/router/app_router.dart';
@@ -20,8 +21,33 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      PendingTasksManager.handlePendingTasks();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

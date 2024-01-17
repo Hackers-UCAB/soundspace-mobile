@@ -5,6 +5,7 @@ import '../../../common/use_case.dart';
 import '../../../domain/user/repository/user_repository.dart';
 import '../../datasources/local/local_storage.dart';
 import '../../services/foreground_notifications/local_notifications.dart';
+import '../../services/streaming/socket_client.dart';
 
 class SubscribeUseCaseInput extends IUseCaseInput {
   final String number;
@@ -17,10 +18,12 @@ class SubscribeUseCase extends IUseCase<SubscribeUseCaseInput, User> {
   final UserRepository userRepository;
   final LocalStorage localStorage;
   final LocalNotifications localNotifications;
+  final SocketClient socketClient;
   SubscribeUseCase(
       {required this.userRepository,
       required this.localStorage,
-      required this.localNotifications});
+      required this.localNotifications,
+      required this.socketClient});
 
   @override
   Future<Result<User>> execute(SubscribeUseCaseInput params) async {
@@ -35,6 +38,12 @@ class SubscribeUseCase extends IUseCase<SubscribeUseCaseInput, User> {
         await localStorage.setKeyValue(
             'notificationsToken', notificationsToken);
         await localStorage.setKeyValue('role', user.role.toString());
+        if (socketClient.isDisconnected()) {
+          socketClient.inicializeSocket();
+        } else if (socketClient.isInitializated()) {
+          socketClient.disconnectSocket();
+          socketClient.inicializeSocket();
+        }
       }
 
       return result;

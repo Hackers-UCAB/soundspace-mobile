@@ -36,6 +36,7 @@ import 'package:sign_in_bloc/infrastructure/services/notifications/notification_
 import 'package:sign_in_bloc/infrastructure/services/search_entities_by_name_impl.dart';
 import '../../../application/BLoC/connectivity/connectivity_bloc.dart';
 import '../../../application/BLoC/socket/socket_bloc.dart';
+import '../../../application/services/streaming/socket_client.dart';
 import '../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
 import '../../../application/use_cases/user/log_in_guest_use_case.dart';
@@ -44,7 +45,7 @@ import '../../presentation/config/router/app_router.dart';
 import '../../repositories/playlist/playlist_repository_impl.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../repositories/user/user_repository_impl.dart';
-import '../foreground_notifications/local_notifications_impl.dart';
+import '../notifications/local_notifications_impl.dart';
 import '../player/player_service_impl.dart';
 import '../streaming/socket_client_impl.dart';
 
@@ -65,9 +66,9 @@ class InjectManager {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    //env
+
     await dotenv.load(fileName: ".env");
-    //services
+
     final sharedPreferences = await SharedPreferences.getInstance();
     final localStorage = LocalStorageImpl(prefs: sharedPreferences);
     final playerService = PlayerServiceImpl();
@@ -85,11 +86,13 @@ class InjectManager {
     final connectionManager =
         ConnectionManagerImpl(connectivity: Connectivity());
 
+    print(await localNotifications.getToken());
+
     final token = localStorage.getValue('appToken');
     if (token != null) {
       apiConnectionManagerImpl.setHeaders('Authorization', 'Bearer $token');
     }
-    //repositories
+
     final userRepository =
         UserRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
     final promotionalBannerRepository = PromotionalBannerRepositoryImpl(
@@ -102,17 +105,21 @@ class InjectManager {
         ArtistRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
     final songRepository =
         SongRepositoryImpl(apiConnectionManager: apiConnectionManagerImpl);
-    //usecases
+
     final LogInUseCase logInUseCase = LogInUseCase(
         userRepository: userRepository,
         localStorage: localStorage,
-        localNotifications: localNotifications);
+        localNotifications: localNotifications,
+        socketClient: socketClient);
     final LogInGuestUseCase logInGuestUseCase = LogInGuestUseCase(
-        userRepository: userRepository, localStorage: localStorage);
+        userRepository: userRepository,
+        localStorage: localStorage,
+        socketClient: socketClient);
     final SubscribeUseCase subscribeUseCase = SubscribeUseCase(
         userRepository: userRepository,
         localStorage: localStorage,
-        localNotifications: localNotifications);
+        localNotifications: localNotifications,
+        socketClient: socketClient);
     final LogOutUserUseCase logOutUserUseCase =
         LogOutUserUseCase(localStorage: localStorage);
     final GetPromotionalBannerUseCase getPromotionalBannerUseCase =
@@ -164,11 +171,12 @@ class InjectManager {
     getIt.registerSingleton<CancelSubscriptionUseCase>(
         cancelSubscriptionUseCase);
 
+    getIt.registerSingleton<SocketClient>(socketClient);
+
     getIt.registerSingleton<SearchBloc>(SearchBloc(
         searchEntitiesByName: SearchEntitiesByNameImpl(
             apiConnectionManager: apiConnectionManagerImpl)));
 
-    //common blocs
     getIt.registerSingleton<UserPermissionsBloc>(UserPermissionsBloc(
         getUserLocalDataUseCase: getUserLocalDataUseCase,
         connectionManager: connectionManager,

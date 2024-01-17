@@ -10,10 +10,7 @@ class NotificationActionManager {
           'handler': _navigateToHandler,
           'needsInteraction': true,
         },
-        'changeUserRole': {
-          'handler': _changeUserRoleHandler,
-          'needsInteraction': false,
-        },
+        'changeUserRole': {'handler': _changeUserRoleHandler},
       };
 
   static void selectActionHandler(
@@ -22,7 +19,8 @@ class NotificationActionManager {
 
     for (var key in actions.keys) {
       if (key == action &&
-          actions[key]!['needsInteraction'] == needsInteraction) {
+          (!actions.containsKey('needsInteraction') ||
+              actions[key]!['needsInteraction'] == needsInteraction)) {
         actions[key]!['handler'](data);
       }
     }
@@ -34,10 +32,11 @@ class NotificationActionManager {
     final getIt = GetIt.instance;
     localStorage.setKeyValue('role', 'guest');
     if (getIt.isRegistered<UserPermissionsBloc>()) {
-      getIt
-          .get<UserPermissionsBloc>()
-          .add(UserPermissionsChanged(isSubscribed: false));
+      getIt.get<UserPermissionsBloc>().add(
+          UserPermissionsChanged(isSubscribed: false, isAuthenticated: true));
       getIt.get<AppNavigator>().navigateTo('/home');
+    } else {
+      await localStorage.setKeyValue('pendingTask', 'changeUserRole');
     }
   }
 

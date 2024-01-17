@@ -10,10 +10,11 @@ import '../../../application/services/streaming/socket_client.dart';
 
 class SocketClientImpl extends SocketClient {
   LocalStorage localStorage;
-
+  bool _isInitializated = false;
+  bool _isDisconnected = false;
   SocketClientImpl({required this.localStorage});
 
-  late final IO.Socket socket;
+  late IO.Socket socket;
 
   @override
   void inicializeSocket() async {
@@ -40,6 +41,9 @@ class SocketClientImpl extends SocketClient {
     socket.onConnect((_) {
       print('connect');
     });
+
+    _isInitializated = true;
+    _isDisconnected = false;
   }
 
   @override
@@ -70,5 +74,21 @@ class SocketClientImpl extends SocketClient {
     streamController.stream.listen((chunk) async {
       GetIt.instance.get<SocketBloc>().add(SocketReceiveChunk(chunk));
     });
+  }
+
+  @override
+  bool isInitializated() {
+    return _isInitializated;
+  }
+
+  @override
+  void disconnectSocket() {
+    socket.disconnect();
+    _isDisconnected = true;
+  }
+
+  @override
+  bool isDisconnected() {
+    return _isDisconnected;
   }
 }
