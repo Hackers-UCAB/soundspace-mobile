@@ -6,6 +6,7 @@ import 'package:sign_in_bloc/infrastructure/presentation/pages/search/widgets/cu
 import 'package:sign_in_bloc/infrastructure/presentation/pages/search/widgets/custom_textfield.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/custom_circular_progress_indicator.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/error_page.dart';
+
 import '../../widgets/shared/ipage.dart';
 import 'widgets/search_list.dart';
 
@@ -36,6 +37,7 @@ class SearchPage extends IPage {
             children: [
               CustomTextFormField(
                 onChanged: searchBloc.onChangeData,
+                hint: "¿Qué deseas buscar?"
               ),
               const SizedBox(height: 10),
               CustomChoiceChips(searchBloc: searchBloc),
@@ -43,8 +45,10 @@ class SearchPage extends IPage {
               if (searchState is SearchLoading)
                 const CustomCircularProgressIndicator(),
               if (searchState.searchList.isNotEmpty)
-                SearchList(
-                    items: searchState.searchList, searchBloc: searchBloc),
+                Container(
+                  height: 500,
+                  child: SearchList(items: searchState.searchList, searchBloc: searchBloc),
+                ),
               if (searchState.searchList.isEmpty && searchState.lastPage)
                 Center(
                   child: Text(
