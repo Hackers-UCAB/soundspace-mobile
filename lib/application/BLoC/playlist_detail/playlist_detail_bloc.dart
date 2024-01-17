@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/playlist/get_playlist_data_use_case.dart';
 import 'package:sign_in_bloc/common/failure.dart';
 import 'package:sign_in_bloc/domain/playlist/playlist.dart';
@@ -24,8 +26,9 @@ class PlaylistDetailBloc
 
     if (result.hasValue()) {
       final Playlist playlist = result.value!;
-
       emit(PlaylistDetailLoaded(playlist: playlist));
+
+      GetIt.instance.get<PlayerBloc>().add(UpdatePlaylist(playlist.songs!));
     } else {
       emit(PlaylistDetailFailed(failure: result.failure!));
     }

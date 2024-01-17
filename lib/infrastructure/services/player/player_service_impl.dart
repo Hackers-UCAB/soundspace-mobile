@@ -71,7 +71,7 @@ class PlayerServiceImpl extends PlayerService {
       if (event > Duration.zero) {
         playerBloc.add(
             UpdatingBufferedDuration(event + playerBloc.state.seekPosition));
-      }
+      } else {}
     });
   }
 

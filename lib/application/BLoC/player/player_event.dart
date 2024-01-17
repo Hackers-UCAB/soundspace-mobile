@@ -87,4 +87,9 @@ class UpdateConnection extends PlayerEvent {
   UpdateConnection(this.isConnected);
 }
 
+class UpdatePlaylist extends PlayerEvent {
+  final List<Song> playlist;
+  UpdatePlaylist(this.playlist);
+}
+
 class RefreshPlayer extends PlayerEvent {}

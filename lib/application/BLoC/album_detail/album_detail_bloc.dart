@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sign_in_bloc/domain/album/album.dart';
@@ -23,6 +25,7 @@ class AlbumDetailBloc extends Bloc<AlbumDetailEvent, AlbumDetailState> {
     if (result.hasValue()) {
       final Album album = result.value!;
       emit(AlbumDetailLoaded(album: album));
+      GetIt.instance.get<PlayerBloc>().add(UpdatePlaylist(album.songs!));
     } else {
       emit(AlbumDetailFailed(failure: result.failure!));
     }

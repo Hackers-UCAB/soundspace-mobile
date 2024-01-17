@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/socket/socket_bloc.dart';
 import 'package:sign_in_bloc/application/model/socket_chunk.dart';
 import 'package:sign_in_bloc/application/services/internet_connection/connection_manager.dart';
+import 'package:sign_in_bloc/domain/song/song.dart';
 
 import '../../services/player/player_services.dart';
 
@@ -37,8 +38,13 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<ConnectivityCheckRequestedPlayer>(_checkInitialConnection);
     on<UpdateConnection>(_updateConnection);
     on<RefreshPlayer>(_onRefresh);
+    on<UpdatePlaylist>(_updatePlaylist);
 
     add(ConnectivityCheckRequestedPlayer());
+  }
+
+  void _updatePlaylist(UpdatePlaylist event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(playlist: event.playlist));
   }
 
   void _onRefresh(RefreshPlayer event, Emitter<PlayerState> emit) {
@@ -171,9 +177,44 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     emit(state.copyWith(
         position: Duration.zero,
         seekPosition: Duration.zero,
-        bufferedDuration: Duration.zero,
-        isUsed: false));
+        bufferedDuration: Duration.zero));
+
     playerService.reset();
+
+    //si tiene una playlist guardada
+    if (state.playlist.isNotEmpty) {
+      //si esta reproduciendo alguna cancion de esa playlist
+      if (state.playlist.any((song) => song.id == state.currentIdSong)) {
+        //posicion en la playlist
+        var index =
+            state.playlist.indexWhere((song) => song.id == state.currentIdSong);
+        //si no es la ultima de la playlist
+        if (index + 1 < state.playlist.length) {
+          //inicia la siguente
+          add(InitStream(
+              state.playlist[index + 1].id,
+              0,
+              state.playlist[index + 1].name,
+              Duration(
+                  minutes: int.parse(
+                      state.playlist[index + 1].duration!.split(':')[0]),
+                  seconds: int.parse(
+                      state.playlist[index + 1].duration!.split(':')[1]))));
+        }
+        //si es la ultima de la playlist
+        else {
+          emit(state.copyWith(isUsed: false));
+        }
+      }
+      // si no esta reproduciendo una cancion de la playlist
+      else {
+        emit(state.copyWith(isUsed: false));
+      }
+    }
+    //si no tiene una playlist guardada
+    else {
+      emit(state.copyWith(isUsed: false));
+    }
   }
 
   void _updateDuration(

@@ -23,12 +23,13 @@ class SocketClientImpl extends SocketClient {
           dotenv.env['SOCKET_SERVER']!,
           IO.OptionBuilder()
               .setTransports(['websocket', 'polling'])
-              .setPath('/socket.io')
+              .setPath(dotenv.env['PATH'].toString())
               .setAuth({'token': localStorage.getValue('appToken')})
               .build());
     } else if (dotenv.env['TEAM']! == 'GEEKS') {
       socket = IO.io(dotenv.env['SOCKET_SERVER']!, <String, dynamic>{
-        'transports': ['websocket']
+        'transports': ['websocket'],
+        'auth': {'token': localStorage.getValue('appToken')},
       });
     }
 

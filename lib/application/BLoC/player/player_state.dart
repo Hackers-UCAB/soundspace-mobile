@@ -2,6 +2,7 @@ part of 'player_bloc.dart';
 
 class PlayerState extends Equatable {
   final List<double> waveForm;
+  final List<Song> playlist;
   final Duration duration;
   final Duration bufferedDuration;
   final Duration position;
@@ -21,6 +22,7 @@ class PlayerState extends Equatable {
   const PlayerState(
       {this.seekPosition = Duration.zero,
       this.isLoading = false,
+      this.playlist = const [],
       this.isRefresh = false,
       this.waveForm = const [0],
       this.isInit = false,
@@ -39,6 +41,7 @@ class PlayerState extends Equatable {
   PlayerState copyWith(
           {bool? isLoading,
           List<double>? waveForm,
+          List<Song>? playlist,
           bool? isInit,
           bool? userIsPlaying,
           String? currentIdSong,
@@ -56,6 +59,7 @@ class PlayerState extends Equatable {
           bool? isUsed}) =>
       PlayerState(
           waveForm: waveForm ?? this.waveForm,
+          playlist: playlist ?? this.playlist,
           isInit: isInit ?? this.isInit,
           currentIdSong: currentIdSong ?? this.currentIdSong,
           currentNameSong: currentNameSong ?? this.currentNameSong,
@@ -80,6 +84,7 @@ class PlayerState extends Equatable {
         duration,
         bufferedDuration,
         position,
+        playlist,
         seekPosition,
         playbackState,
         isFinished,
