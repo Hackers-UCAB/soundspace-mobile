@@ -52,9 +52,6 @@ class ArtistDetail extends IPage {
                       height: 40,
                     ),
                     Tracklist(songs: artistState.artist.songs!),
-                    const SizedBox(
-                      height: 100,
-                    )
                   ],
                 ),
               ),

@@ -75,7 +75,6 @@ class HomePage extends IPage {
                       _Collapse(name: 'Tracklist', child: [
                         Tracklist(songs: trendingsState.trendingSongs)
                       ]),
-                      const SizedBox(height: 100)
                     ],
                   ),
                 ),

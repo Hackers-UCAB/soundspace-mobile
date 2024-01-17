@@ -9,6 +9,8 @@ import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/ipage.da
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/image_cover.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/info.dart';
 import '../../../../application/BLoC/album_detail/album_detail_bloc.dart';
+import '../../../../application/BLoC/player/player_bloc.dart';
+import '../../widgets/shared/music_wave_player.dart';
 import '../../widgets/shared/tracklist.dart';
 
 class AlbumDetail extends IPage {
@@ -52,10 +54,23 @@ class AlbumDetail extends IPage {
                       songs: albumState.album.songs!,
                       duration: albumState.album.duration!,
                     ),
-                    //TODO: Wave  ()
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BlocBuilder<PlayerBloc, PlayerState>(
+                            builder: (contex, state) {
+                          return Visibility(
+                              visible: state.isUsed &&
+                                  albumState.album.songs!.any(
+                                      (song) => song.id == state.currentIdSong),
+                              child: MusicWavePlayer(
+                                  playerBloc: GetIt.instance.get<PlayerBloc>(),
+                                  playerState: state));
+                        }),
+                      ],
+                    ),
                     const SizedBox(height: 30),
                     Tracklist(songs: albumState.album.songs!),
-                    const SizedBox(height: 100),
                   ],
                 ),
               ),

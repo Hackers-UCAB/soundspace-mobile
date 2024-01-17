@@ -53,7 +53,9 @@ class PlaylistDetail extends IPage {
                       BlocBuilder<PlayerBloc, PlayerState>(
                           builder: (contex, state) {
                         return Visibility(
-                            visible: state.isUsed,
+                            visible: state.isUsed &&
+                                playlistState.playlist.songs!.any(
+                                    (song) => song.id == state.currentIdSong),
                             child: MusicWavePlayer(
                                 playerBloc: GetIt.instance.get<PlayerBloc>(),
                                 playerState: state));
@@ -62,7 +64,6 @@ class PlaylistDetail extends IPage {
                   ),
                   const SizedBox(height: 30),
                   Tracklist(songs: playlistState.playlist.songs!),
-                  const SizedBox(height: 100),
                 ],
               ),
             )

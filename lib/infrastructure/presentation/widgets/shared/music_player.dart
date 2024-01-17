@@ -35,7 +35,7 @@ class MusicPlayer extends StatelessWidget {
     final bodySmall = Theme.of(context).textTheme.bodySmall;
 
     return Container(
-      height: 105, //TODO: Cuidado con esto
+      height: size.width * 0.262, //TODO: Cuidado con esto
       decoration: BoxDecoration(
           color: const Color.fromARGB(255, 24, 15, 35),
           borderRadius: BorderRadius.circular(15)),

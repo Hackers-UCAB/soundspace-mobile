@@ -19,7 +19,7 @@ class Tracklist extends StatelessWidget {
         .toList();
 
     return Column(
-      children: tracklist,
+      children: [...tracklist, const SizedBox(height: 140)],
     );
   }
 }
