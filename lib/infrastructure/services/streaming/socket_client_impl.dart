@@ -19,6 +19,7 @@ class SocketClientImpl extends SocketClient {
   @override
   void inicializeSocket() async {
     // NO MUY HEXAGONAL LO SE PERO HAY QUE RESOLVER, ME ENTIENDEN?
+    print('tokeeeeeen ${localStorage.getValue('appToken')}');
     if (dotenv.env['TEAM']! == 'HACKERS') {
       socket = IO.io(
           dotenv.env['SOCKET_SERVER']!,
