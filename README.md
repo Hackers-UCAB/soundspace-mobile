@@ -1,7 +1,7 @@
 # SoundSpace Mobile
 
 ## Descripción
-Aplicación frontend para streaming de música
+Aplicación frontend para app de streaming de música (SoundSpace)
 
 ## Instalación
 ```
@@ -26,5 +26,5 @@ $ flutter pub get
 | Miembros | Actividades |
 | -------- | -------- |
 | Francis Bompart   | Home Page |
-| Javier Molina   | Album Page & Artis Page |
-
+| Javier Molina   | Album Page & Artist Page |
+| Oriana Toubia | Log In & Subscribe Page |
