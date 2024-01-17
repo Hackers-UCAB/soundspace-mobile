@@ -2,8 +2,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import '../../../application/BLoC/player/player_bloc.dart';
-import '../../../domain/song/song.dart';
+import '../../../../application/BLoC/player/player_bloc.dart';
+import '../../../../domain/song/song.dart';
 
 class Tracklist extends StatelessWidget {
   final List<Song> songs;
@@ -85,7 +85,7 @@ class _TracklistItem extends StatelessWidget {
                       builder: (context, state) {
                     return IconButton(
                       onPressed: () {
-                        if (state.isFinished) {
+                        if (state.isFinished && state.isConnected) {
                           playerBloc.add(InitStream(
                               song.id,
                               0,
@@ -99,8 +99,9 @@ class _TracklistItem extends StatelessWidget {
                       },
                       icon: Icon(
                         Icons.play_arrow_sharp,
-                        color:
-                            state.isFinished ? Color(0xff1de1ee) : Colors.grey,
+                        color: state.isFinished && state.isConnected
+                            ? const Color(0xff1de1ee)
+                            : Colors.grey,
                       ),
                     );
                   }),

@@ -79,3 +79,12 @@ class UpdateFinish extends PlayerEvent {
   final bool isFinished;
   UpdateFinish(this.isFinished);
 }
+
+class ConnectivityCheckRequestedPlayer extends PlayerEvent {}
+
+class UpdateConnection extends PlayerEvent {
+  final bool isConnected;
+  UpdateConnection(this.isConnected);
+}
+
+class RefreshPlayer extends PlayerEvent {}

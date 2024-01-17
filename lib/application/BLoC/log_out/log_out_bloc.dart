@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
@@ -13,7 +15,8 @@ class LogOutBloc extends Bloc<LogOutEvent, LogOutState> {
   LogOutBloc({required LogOutUserUseCase logOutUserUseCase})
       : _logOutUserUseCase = logOutUserUseCase,
         super(LogOutInitial()) {
-    on<LogOutEvent>(_logOutHandler);
+    on<LogOutEventTriggered>(_logOutHandler);
+    on<LogOutReseted>(_logOutInitializedHandler);
   }
 
   Future<void> _logOutHandler(
@@ -25,5 +28,9 @@ class LogOutBloc extends Bloc<LogOutEvent, LogOutState> {
     } else {
       emit(LogOutFailed(failure: result.failure!));
     }
+  }
+
+  void _logOutInitializedHandler(LogOutEvent event, Emitter<LogOutState> emit) {
+    emit(LogOutInitial());
   }
 }

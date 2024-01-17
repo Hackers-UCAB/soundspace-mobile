@@ -6,7 +6,7 @@ import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_
 import 'package:sign_in_bloc/infrastructure/presentation/config/router/app_router.dart';
 import '../../../../application/use_cases/user/log_in_use_case.dart';
 import '../../../../application/use_cases/user/subscribe_use_case.dart';
-import '../../widgets/ipage.dart';
+import '../../widgets/shared/ipage.dart';
 import 'Widgets/custom_text_form_field.dart';
 import 'Widgets/error_square.dart';
 import 'Widgets/my_button.dart';

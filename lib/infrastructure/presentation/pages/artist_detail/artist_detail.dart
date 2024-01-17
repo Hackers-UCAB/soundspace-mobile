@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/artist_detail/artist_detail_bloc.dart';
 import 'package:sign_in_bloc/infrastructure/presentation/pages/artist_detail/widgets/artist_info.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/albums_carousel.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/custom_circular_progress_indicator.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/ipage.dart';
-import 'package:sign_in_bloc/infrastructure/presentation/widgets/tracklist.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/albums_carousel.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/custom_circular_progress_indicator.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/ipage.dart';
+import 'package:sign_in_bloc/infrastructure/presentation/widgets/shared/tracklist.dart';
 import '../../../../application/use_cases/artist/get_artist_data_use_case.dart';
-import '../../widgets/error_page.dart';
+import '../../widgets/shared/error_page.dart';
 
 class ArtistDetail extends IPage {
   final String artistId;
@@ -21,6 +21,7 @@ class ArtistDetail extends IPage {
 
   @override
   Future<void> onRefresh() async {
+    super.onRefresh();
     artistBloc.add(FetchArtistDetailEvent(artistId: artistId));
   }
 

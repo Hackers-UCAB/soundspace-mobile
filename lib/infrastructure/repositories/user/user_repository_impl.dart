@@ -77,9 +77,9 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
-  Future<Result<bool>> changeUserRole() {
+  Future<Result<bool>> cancelUserSubscription() {
     final response = _apiConnectionManager.request<bool>(
-      'subscription/cancel', //TODO: change to correct endpoint
+      'subscription/cancel',
       'POST',
       (_) => true,
     );

@@ -1,3 +1,7 @@
 part of 'log_out_bloc.dart';
 
-class LogOutEvent {}
+abstract class LogOutEvent {}
+
+class LogOutEventTriggered extends LogOutEvent {}
+
+class LogOutReseted extends LogOutEvent {}

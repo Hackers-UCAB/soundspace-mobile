@@ -77,7 +77,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     User newUser = event.user;
     newUser.birthdate = event.fecha;
     Map<String, String> newEditData = Map<String, String>.from(state.editData);
-    newEditData['birthdate'] = DateFormat('MM/DD/yyyy').format(event.fecha);
+    newEditData['birthdate'] = DateFormat('MM/dd/yyyy').format(event.fecha);
     emit(UserProfileLoadedState(
         editable: state.editable, user: newUser, editData: newEditData));
   }
@@ -86,7 +86,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     User newUser = event.user;
     newUser.genre = event.genre;
     Map<String, String> newEditData = Map<String, String>.from(state.editData);
-    newEditData['gender'] = event.genre; //TODO: Arreglar esto en el back
+    newEditData['gender'] = event.genre; //TODO: Arreglar esto
     emit(UserProfileLoadedState(
         editable: state.editable, user: newUser, editData: newEditData));
   }
