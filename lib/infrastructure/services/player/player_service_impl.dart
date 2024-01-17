@@ -104,7 +104,6 @@ class PlayerServiceImpl extends PlayerService {
   @override
   void clean() async {
     await player.pause();
-    await player.stop();
 
     byteDataSource = ByteDataSource();
   }
