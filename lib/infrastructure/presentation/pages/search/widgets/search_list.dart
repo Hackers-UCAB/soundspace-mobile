@@ -63,15 +63,20 @@ class SearchListState extends State<SearchList> {
             return _SearchListItem(
               name: widget.items[index]['name']!,
               onTap: widget.items[index]['filter'] == 'song'
-                  ? () => playerBloc.add(InitStream(
-                      widget.items[index]['id']!,
-                      10,
-                      widget.items[index]['name']!,
-                      Duration(
-                          minutes: int.parse(
-                              widget.items[index]['duration']!.split(':')[0]),
-                          seconds: int.parse(widget.items[index]['duration']!
-                              .split(':')[1])))) //TODO: Javi revisa esto
+                  ? () => (playerBloc.state.isFinished &&
+                          playerBloc.state.isConnected)
+                      ? playerBloc.add(InitStream(
+                          widget.items[index]['id']!,
+                          0,
+                          widget.items[index]['name']!,
+                          Duration(
+                              minutes: int.parse(widget.items[index]
+                                      ['duration']!
+                                  .split(':')[0]),
+                              seconds: int.parse(widget.items[index]
+                                      ['duration']!
+                                  .split(':')[1]))))
+                      : () {} //TODO: Javi revisa esto
                   : () => appNavigator.navigateTo(
                       '/${widget.items[index]['filter']}/${widget.items[index]['id']}'),
               filter: widget.items[index]['filter']!,
