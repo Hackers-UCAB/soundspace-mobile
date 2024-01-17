@@ -11,23 +11,31 @@ class LogInGuestUseCaseInput extends IUseCaseInput {}
 class LogInGuestUseCase extends IUseCase<LogInGuestUseCaseInput, User> {
   final UserRepository _userRepository;
   final LocalStorage _localStorage;
+  final SocketClient _socketClient;
 
   LogInGuestUseCase(
       {required UserRepository userRepository,
       required LocalStorage localStorage,
       required SocketClient socketClient})
       : _userRepository = userRepository,
-        _localStorage = localStorage;
+        _localStorage = localStorage,
+        _socketClient = socketClient;
 
   @override
   Future<Result<User>> execute(LogInGuestUseCaseInput params) async {
     final result = await _userRepository.logInGuest();
     if (result.hasValue()) {
       final user = result.value!;
-      await _localStorage.removeKey('appToken');
-      await _localStorage.removeKey('role');
       await _localStorage.setKeyValue('appToken', user.id);
       await _localStorage.setKeyValue('role', user.role.toString());
+
+      if (_socketClient.isDisconnected()) {
+        _socketClient.inicializeSocket();
+      } else if (_socketClient.isInitializated()) {
+        _socketClient.disconnectSocket();
+        _socketClient.disposeSocket();
+        _socketClient.inicializeSocket();
+      }
     }
     return result;
   }

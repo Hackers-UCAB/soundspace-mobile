@@ -19,6 +19,7 @@ class SocketClientImpl extends SocketClient {
   @override
   void inicializeSocket() async {
     // NO MUY HEXAGONAL LO SE PERO HAY QUE RESOLVER, ME ENTIENDEN?
+    print('tokeeeeeen ${localStorage.getValue('appToken')}');
     if (dotenv.env['TEAM']! == 'HACKERS') {
       socket = IO.io(
           dotenv.env['SOCKET_SERVER']!,
@@ -49,9 +50,6 @@ class SocketClientImpl extends SocketClient {
   @override
   void sendIdSongToServer(
       bool isPreview, String songId, int second, bool isStreaming) {
-    print('tokeeeeen ${localStorage.getValue('appToken')}');
-    socket.auth = {'token': localStorage.getValue('appToken')};
-
     socket.emit('message-from-client', {
       'preview': false,
       'songId': songId,
@@ -93,5 +91,10 @@ class SocketClientImpl extends SocketClient {
   @override
   bool isDisconnected() {
     return _isDisconnected;
+  }
+
+  @override
+  void disposeSocket() {
+    socket.dispose();
   }
 }

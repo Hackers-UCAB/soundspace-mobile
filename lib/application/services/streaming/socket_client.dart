@@ -1,6 +1,7 @@
 abstract class SocketClient {
   void inicializeSocket();
   void disconnectSocket();
+  void disposeSocket();
   bool isInitializated();
   bool isDisconnected();
   void sendIdSongToServer(

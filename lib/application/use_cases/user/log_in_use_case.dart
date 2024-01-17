@@ -33,13 +33,18 @@ class LogInUseCase extends IUseCase<LogInUseCaseInput, User> {
           await userRepository.logInUser(params.number, notificationsToken);
       if (result.hasValue()) {
         final user = result.value!;
-        await localStorage.removeKey('appToken');
-        await localStorage.removeKey('role');
-        await localStorage.removeKey('notificationsToken');
         await localStorage.setKeyValue('appToken', user.id);
         await localStorage.setKeyValue(
             'notificationsToken', notificationsToken);
         await localStorage.setKeyValue('role', user.role.toString());
+
+        if (socketClient.isDisconnected()) {
+          socketClient.inicializeSocket();
+        } else if (socketClient.isInitializated()) {
+          socketClient.disconnectSocket();
+          socketClient.disposeSocket();
+          socketClient.inicializeSocket();
+        }
       }
       return result;
     } else {

@@ -118,7 +118,8 @@ class InjectManager {
     final SubscribeUseCase subscribeUseCase = SubscribeUseCase(
         userRepository: userRepository,
         localStorage: localStorage,
-        localNotifications: localNotifications);
+        localNotifications: localNotifications,
+        socketClient: socketClient);
     final LogOutUserUseCase logOutUserUseCase =
         LogOutUserUseCase(localStorage: localStorage);
     final GetPromotionalBannerUseCase getPromotionalBannerUseCase =
