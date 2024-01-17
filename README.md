@@ -4,7 +4,13 @@
 Aplicación frontend para streaming de música
 
 ## Instalación
+```
+# Limpiar las dependencias
+$ flutter clean
 
+# Cargar las dependencias
+$ flutter pub get
+```
 ##  <i>Project members <i>
 
 - [Francis Bompart](https://github.com/fransbompart)
