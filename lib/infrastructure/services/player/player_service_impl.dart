@@ -83,12 +83,6 @@ class PlayerServiceImpl extends PlayerService {
       if (player.bufferedPosition > Duration.zero) {
         if ((playerBloc.state.bufferedDuration.inSeconds -
                 playerBloc.state.position.inSeconds) ==
-            10) {
-          playerBloc.add(AskForChunk(player.bufferedPosition.inSeconds));
-        }
-
-        if ((playerBloc.state.bufferedDuration.inSeconds -
-                playerBloc.state.position.inSeconds) ==
             1) {
           player.pause();
           playerBloc.add(ResetPlayer());

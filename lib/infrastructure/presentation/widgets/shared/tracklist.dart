@@ -99,7 +99,7 @@ class _TracklistItem extends StatelessWidget {
                       },
                       icon: Icon(
                         Icons.play_arrow_sharp,
-                        color: state.isFinished
+                        color: state.isFinished && state.isConnected
                             ? const Color(0xff1de1ee)
                             : Colors.grey,
                       ),

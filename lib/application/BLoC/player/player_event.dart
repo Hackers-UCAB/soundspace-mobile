@@ -86,3 +86,5 @@ class UpdateConnection extends PlayerEvent {
   final bool isConnected;
   UpdateConnection(this.isConnected);
 }
+
+class RefreshPlayer extends PlayerEvent {}

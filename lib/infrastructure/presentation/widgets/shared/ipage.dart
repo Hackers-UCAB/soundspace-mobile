@@ -13,7 +13,13 @@ abstract class IPage extends StatelessWidget {
 
   Widget child(BuildContext context);
 
-  Future<void> onRefresh();
+  Future<void> onRefresh() async {
+    final playerBloc = GetIt.instance.get<PlayerBloc>();
+    if (!playerBloc.state.isFinished) {
+      playerBloc.add(RefreshPlayer());
+      playerBloc.add(ResetPlayer());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -51,7 +51,6 @@ class MusicWavePlayer extends StatelessWidget {
                 },
                 scrollable: false,
                 waveformStyle: WaveformStyle(
-                  
                     isRoundedRectangle: true,
                     borderWidth: 1,
                     inactiveColor: Colors.grey,
@@ -63,10 +62,6 @@ class MusicWavePlayer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  PlayPauseIcon(
-                      playerBloc: playerBloc,
-                      playerState: playerState,
-                      scale: 0.08),
                   ReplayForwardIcon(
                       playerBloc: playerBloc,
                       playerState: playerState,

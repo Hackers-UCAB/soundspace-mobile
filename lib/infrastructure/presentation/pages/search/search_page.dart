@@ -19,6 +19,7 @@ class SearchPage extends IPage {
 
   @override
   Future<void> onRefresh() async {
+    super.onRefresh();
     searchBloc.add(FetchSearchedData(
         page: 0, scrollPosition: searchBloc.state.scrollPosition));
   }

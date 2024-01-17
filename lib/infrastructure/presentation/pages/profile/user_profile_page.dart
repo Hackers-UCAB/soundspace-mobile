@@ -77,6 +77,7 @@ class ProfilePage extends IPage {
 
   @override
   Future<void> onRefresh() async {
+    super.onRefresh();
     userBloc.add(FetchUserProfileDataEvent());
   }
 }

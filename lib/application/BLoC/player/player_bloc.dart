@@ -36,8 +36,29 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<UpdateFinish>(_updateFinish);
     on<ConnectivityCheckRequestedPlayer>(_checkInitialConnection);
     on<UpdateConnection>(_updateConnection);
+    on<RefreshPlayer>(_onRefresh);
 
     add(ConnectivityCheckRequestedPlayer());
+  }
+
+  void _onRefresh(RefreshPlayer event, Emitter<PlayerState> emit) {
+    emit(state.copyWith(
+        seekPosition: Duration.zero,
+        isLoading: false,
+        waveForm: const [0],
+        isInit: true,
+        isRefresh: true,
+        currentIdSong: 'empty',
+        currentNameSong: 'empty',
+        duration: const Duration(seconds: 1),
+        bufferedDuration: Duration.zero,
+        position: Duration.zero,
+        isUsed: false,
+        isFinished: true,
+        playbackState: true,
+        isConnected: true,
+        speed: 1.0,
+        volume: 1.0));
   }
 
   void handleDisconnection() {
@@ -123,6 +144,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       duration: event.durationSong,
       isInit: false,
       isFinished: false,
+      isRefresh: false,
     ));
     if (event.second == 0) {
       add(UpdateSeekPosition(Duration.zero));
@@ -149,7 +171,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     emit(state.copyWith(
         position: Duration.zero,
         seekPosition: Duration.zero,
-        bufferedDuration: Duration.zero));
+        bufferedDuration: Duration.zero,
+        isUsed: false));
     playerService.reset();
   }
 
