@@ -15,9 +15,14 @@ abstract class IPage extends StatelessWidget {
 
   Future<void> onRefresh() async {
     final playerBloc = GetIt.instance.get<PlayerBloc>();
+
     if (!playerBloc.state.isFinished) {
       playerBloc.add(RefreshPlayer());
-      playerBloc.add(ResetPlayer());
+      await playerBloc.pause();
+
+      Future.delayed(Duration(seconds: 7), () {
+        playerBloc.add(ResetPlayer());
+      });
     }
   }
 

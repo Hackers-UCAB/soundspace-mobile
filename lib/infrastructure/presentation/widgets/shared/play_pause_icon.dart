@@ -23,7 +23,8 @@ class PlayPauseIcon extends StatelessWidget {
       return IconButton(
         padding: const EdgeInsets.all(0),
         onPressed: () {
-          if (playerState.isConnected && (playerState.bufferedDuration.inSeconds > 0)) {
+          if (playerState.isConnected &&
+              (playerState.bufferedDuration.inSeconds > 0)) {
             playerBloc.add(
                 PlayerPlaybackStateChanged(!playerBloc.state.playbackState));
           }
