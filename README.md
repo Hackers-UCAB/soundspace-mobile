@@ -26,7 +26,5 @@ $ flutter pub get
 | Miembros | Actividades |
 | -------- | -------- |
 | Francis Bompart   | Home Page |
-| -------- | -------- |
-| Javier Molina   | Album Page & Artis Page     |
-| -------- | -------- |
+| Javier Molina   | Album Page & Artis Page |
 
