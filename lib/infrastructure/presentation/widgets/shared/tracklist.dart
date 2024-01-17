@@ -85,7 +85,7 @@ class _TracklistItem extends StatelessWidget {
                       builder: (context, state) {
                     return IconButton(
                       onPressed: () {
-                        if (state.isFinished) {
+                        if (state.isFinished && state.isConnected) {
                           playerBloc.add(InitStream(
                               song.id,
                               0,
@@ -99,7 +99,7 @@ class _TracklistItem extends StatelessWidget {
                       },
                       icon: Icon(
                         Icons.play_arrow_sharp,
-                        color: state.isFinished
+                        color: state.isFinished && state.isConnected
                             ? const Color(0xff1de1ee)
                             : Colors.grey,
                       ),

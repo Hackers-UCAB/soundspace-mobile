@@ -78,6 +78,7 @@ class PlaylistDetail extends IPage {
 
   @override
   Future<void> onRefresh() async {
+    super.onRefresh();
     playlistBloc.add(FetchPlaylistDetailEvent(playlistId: playlistId));
   }
 }

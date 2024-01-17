@@ -21,6 +21,7 @@ class ArtistDetail extends IPage {
 
   @override
   Future<void> onRefresh() async {
+    super.onRefresh();
     artistBloc.add(FetchArtistDetailEvent(artistId: artistId));
   }
 

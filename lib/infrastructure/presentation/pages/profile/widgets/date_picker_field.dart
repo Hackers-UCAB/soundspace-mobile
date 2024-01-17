@@ -28,6 +28,7 @@ class DatePickerField extends StatelessWidget {
             initialDate: DateTime.now(),
             firstDate: DateTime(1900),
             lastDate: DateTime.now(),
+            initialEntryMode: DatePickerEntryMode.calendarOnly,
           ).then((value) {
             if (value != null) {
               userBloc.add(FechaEditedEvent(user: state.user, fecha: value));

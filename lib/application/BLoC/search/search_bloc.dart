@@ -17,9 +17,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<SearchFilterChanged>(_searchFilterChanged);
     on<SearchDataChanged>(_searchDataChanged);
     on<FetchSearchedData>(_fetchSearchedData);
+    on<SearchRestarted>(_searchRestarter);
   }
 
-  //cada vez que cambia la seleccion del CustomChoiceChip
   Future<void> _searchFilterChanged(
       SearchFilterChanged event, Emitter<SearchState> emit) async {
     emit(state.copyWith(
@@ -109,5 +109,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Future<void> close() {
     _debounce?.cancel();
     return super.close();
+  }
+
+  void _searchRestarter(SearchEvent event, Emitter<SearchState> emit) {
+    emit(SearchInitial(
+        filter: state.filter,
+        searchList: state.searchList,
+        data: state.data,
+        lastPage: state.lastPage,
+        page: state.page));
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
+
 import '../../../config/router/app_router.dart';
 
 class SearchList extends StatefulWidget {
@@ -56,29 +58,34 @@ class SearchListState extends State<SearchList> {
           }
           return true;
         },
-        child: ListView.builder(
-          controller: _scrollController,
-          itemCount: widget.items.length,
-          itemBuilder: (context, index) {
-            return _SearchListItem(
-              name: widget.items[index]['name']!,
-              onTap: widget.items[index]['filter'] == 'song'
-                  ? () => playerBloc.add(InitStream(
-                      widget.items[index]['id']!,
-                      10,
-                      widget.items[index]['name']!,
-                      Duration(
-                          minutes: int.parse(
-                              widget.items[index]['duration']!.split(':')[0]),
-                          seconds: int.parse(widget.items[index]['duration']!
-                              .split(':')[1])))) //TODO: Javi revisa esto
-                  : () => appNavigator.navigateTo(
-                      '/${widget.items[index]['filter']}/${widget.items[index]['id']}'),
-              filter: widget.items[index]['filter']!,
+        child: BlocBuilder<PlayerBloc, PlayerState>(
+          builder: (context, state) {
+            return ListView.builder(
+              controller: _scrollController,
+              itemCount: widget.items.length,
+              itemBuilder: (context, index) {
+                return _SearchListItem(
+                  name: widget.items[index]['name']!,
+                  filter: widget.items[index]['filter']!,
+                  onTap: widget.items[index]['filter'] == 'song'
+                      ? () => state.isFinished && state.isConnected
+                          ? playerBloc.add(InitStream(
+                              widget.items[index]['id']!,
+                              0,
+                              widget.items[index]['name']!,
+                              Duration(
+                                  minutes: int.parse(
+                                      widget.items[index]['duration']!.split(':')[0]),
+                                  seconds: int.parse(widget.items[index]['duration']!
+                                      .split(':')[1])))) //TODO: Javi revisa esto
+                          : null
+                      : () => appNavigator.navigateTo(
+                          '/${widget.items[index]['filter']}/${widget.items[index]['id']}'),
+                );
+              },
+              physics: const BouncingScrollPhysics(),
             );
-          },
-          physics: const BouncingScrollPhysics(),
-        ),
+        }),
       ),
     );
   }

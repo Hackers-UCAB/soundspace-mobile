@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../application/BLoC/player/player_bloc.dart';
 
 class PlayPauseIcon extends StatelessWidget {
@@ -23,8 +24,10 @@ class PlayPauseIcon extends StatelessWidget {
       return IconButton(
         padding: const EdgeInsets.all(0),
         onPressed: () {
-          playerBloc
-              .add(PlayerPlaybackStateChanged(!playerBloc.state.playbackState));
+          if (playerState.isConnected && playerState.bufferedDuration.inSeconds > 0) {
+            playerBloc.add(
+                PlayerPlaybackStateChanged(!playerBloc.state.playbackState));
+          }
         },
         icon: Icon(
           playerState.playbackState

@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_bloc/application/BLoC/log_out/log_out_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/notifications/notifications_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
+import 'package:sign_in_bloc/application/BLoC/search/search_bloc.dart';
 import 'package:sign_in_bloc/application/BLoC/user_permissions/user_permissions_bloc.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_album_data_use_case.dart';
 import 'package:sign_in_bloc/application/use_cases/album/get_trending_albums_use_case.dart';
@@ -39,7 +40,6 @@ import '../../../application/use_cases/artist/get_artist_data_use_case.dart';
 import '../../../application/use_cases/promotional_banner/get_promotional_banner_use_case.dart';
 import '../../../application/use_cases/user/log_in_guest_use_case.dart';
 import '../../../application/use_cases/user/log_in_use_case.dart';
-import '../../../domain/services/search_entities_by_name.dart';
 import '../../presentation/config/router/app_router.dart';
 import '../../repositories/playlist/playlist_repository_impl.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -157,8 +157,6 @@ class InjectManager {
     getIt.registerSingleton<GetTrendingSongsUseCase>(getTrendingSongsUseCase);
     getIt.registerSingleton<GetArtistDataUseCase>(getArtistDataUseCase);
     getIt.registerSingleton<GetAlbumDataUseCase>(getAlbumDataUseCase);
-    getIt.registerSingleton<SearchEntitiesByName>(SearchEntitiesByNameImpl(
-        apiConnectionManager: apiConnectionManagerImpl));
     getIt.registerSingleton<FetchUserProfileDataUseCase>(
         fetchUserProfileDataUseCase);
     getIt.registerSingleton<SaveUserProfileDataUseCase>(
@@ -166,13 +164,17 @@ class InjectManager {
     getIt.registerSingleton<CancelSubscriptionUseCase>(
         cancelSubscriptionUseCase);
 
+    getIt.registerSingleton<SearchBloc>(SearchBloc(
+        searchEntitiesByName: SearchEntitiesByNameImpl(
+            apiConnectionManager: apiConnectionManagerImpl)));
+
     //common blocs
     getIt.registerSingleton<UserPermissionsBloc>(UserPermissionsBloc(
         getUserLocalDataUseCase: getUserLocalDataUseCase,
         connectionManager: connectionManager,
         locationChecker: locationChecker));
-    getIt.registerSingleton<PlayerBloc>(
-        PlayerBloc(playerService: playerService));
+    getIt.registerSingleton<PlayerBloc>(PlayerBloc(
+        playerService: playerService, connectionManager: connectionManager));
     getIt.registerSingleton<SocketBloc>(SocketBloc(socketClient: socketClient));
     playerService.initialize();
     getIt.registerSingleton<LogOutBloc>(

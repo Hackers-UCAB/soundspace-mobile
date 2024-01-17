@@ -1,16 +1,30 @@
-# sign_in_bloc
+# SoundSpace Mobile
 
-A new Flutter project.
+## Descripción
+Aplicación frontend para streaming de música
 
-## Getting Started
+## Instalación
+```
+# Limpiar las dependencias
+$ flutter clean
 
-This project is a starting point for a Flutter application.
+# Cargar las dependencias
+$ flutter pub get
+```
+##  <i>Project members <i>
 
-A few resources to get you started if this is your first Flutter project:
+- [Francis Bompart](https://github.com/fransbompart)
+- [Javier Molina](https://github.com/jav1212)
+- [Oriana Toubia](https://github.com/ovtoubia)
+- [Jorge Esclasans](https://github.com/Jstarturo)
+- [Gabriel Izaguirre](https://github.com/IzaeI)
+- [Arturo Hung](https://github.com/ahungm)
+- [Aaron Palacios](https://github.com/APalaciosQ)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Contribuciones
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+| Miembros | Actividades |
+| -------- | -------- |
+| Francis Bompart   | Home Page |
+| Javier Molina   | Album Page & Artis Page |
+

@@ -5,6 +5,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:sign_in_bloc/application/BLoC/player/player_bloc.dart';
 import 'package:sign_in_bloc/application/model/socket_chunk.dart';
 import 'package:sign_in_bloc/infrastructure/services/player/custom_source.dart';
+
 import '../../../application/services/player/player_services.dart';
 
 class PlayerServiceImpl extends PlayerService {
@@ -48,12 +49,7 @@ class PlayerServiceImpl extends PlayerService {
         await player.setAudioSource(byteDataSource);
         await player.play();
       } else {
-        if (chunk.data.isNotEmpty) {
-          byteDataSource.add(chunk.data);
-        } else {
-          GetIt.instance.get<PlayerBloc>().add(UpdateFinish(true));
-          print('finaliza');
-        }
+        byteDataSource.add(chunk.data);
       }
     } on PlayerInterruptedException catch (e) {
       print("Connection aborted: ${e.message}");
@@ -88,12 +84,6 @@ class PlayerServiceImpl extends PlayerService {
       if (player.bufferedPosition > Duration.zero) {
         if ((playerBloc.state.bufferedDuration.inSeconds -
                 playerBloc.state.position.inSeconds) ==
-            10) {
-          playerBloc.add(AskForChunk(player.bufferedPosition.inSeconds));
-        }
-
-        if ((playerBloc.state.bufferedDuration.inSeconds -
-                playerBloc.state.position.inSeconds) ==
             1) {
           player.pause();
           playerBloc.add(ResetPlayer());
@@ -115,6 +105,7 @@ class PlayerServiceImpl extends PlayerService {
   void clean() async {
     await player.pause();
     await player.stop();
+
     byteDataSource = ByteDataSource();
   }
 

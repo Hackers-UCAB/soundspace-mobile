@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:just_audio/just_audio.dart';
 
 class ByteDataSource extends StreamAudioSource {
-  StreamController<List<int>> streamControllerBuffer =
-      StreamController<List<int>>.broadcast();
+  StreamController<Uint8List> streamControllerBuffer =
+      StreamController<Uint8List>.broadcast();
 
-  void add(List<int> data) {
+  void add(Uint8List data) {
     if (data.isNotEmpty) {
       streamControllerBuffer.add(data);
     }
