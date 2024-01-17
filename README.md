@@ -20,3 +20,13 @@ $ flutter pub get
 - [Gabriel Izaguirre](https://github.com/IzaeI)
 - [Arturo Hung](https://github.com/ahungm)
 - [Aaron Palacios](https://github.com/APalaciosQ)
+
+## Contribuciones
+
+| Miembros | Actividades |
+| -------- | -------- |
+| Francis Bompart   | Home Page |
+| -------- | -------- |
+| Javier Molina   | Album Page & Artis Page     |
+| -------- | -------- |
+
