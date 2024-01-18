@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./images/logo.png" width="200" alt="Descripción de la imagen" />
+</p>
+
 # SoundSpace Mobile
 
 ## Descripción
