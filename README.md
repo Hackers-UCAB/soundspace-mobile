@@ -43,3 +43,6 @@ $ flutter pub get
                 - User Mapper
                 - User Repository implementation
                 - Log in & subscribe screen
+            
+    Otros:
+    Apoyo en validación de ubicación de usuario, Widgets de landing page, diseño y creación de logo y splash screen, creación de íconos.
