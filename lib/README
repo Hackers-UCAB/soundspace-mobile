@@ -43,7 +43,12 @@ $ flutter pub get
     los permisos del usuario.
 
 ### Javier Molina:
+    Diseño de la estructura del proyecto en base a la arquitectura hexagonal, en conjunto con ciertos patrones de DDD 
+    para la aplicación de las reglas de negocio, además del uso de BLoC para el manejo del estado de la aplicación. 
+    Al establecer el flujo de comunicación entre las capas y sus componentes se tomaron en cuenta principios y 
+    técnicas como SOLID, Dependency Injection y patrones como Singleton.
 
+    Participación en la realización de múltiples funcionalidades, sin embargo se resalta la implementación del reproductor de música con just_audio, la integración de firebase y local_notification para el apartado de notificaciones, implementación del client socket con socketio, implementación de la lógica de streaming e implentación de las pantallas de álbum y artista con sus respectivos BLoCs.
 
 ### Oriana Toubia:
     Log In & Subscribe Page
