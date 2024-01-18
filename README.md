@@ -14,6 +14,12 @@ $ flutter clean
 # Cargar las dependencias
 $ flutter pub get
 
+# Ejecutar la aplicacion
+Modo debug
+$ flutter debug
+Modo run
+$ flutter run
+
 ## Diagrama arquitectura hexagonal
 
 <p align="center">
