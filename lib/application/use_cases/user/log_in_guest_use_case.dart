@@ -1,7 +1,4 @@
-import 'package:get_it/get_it.dart';
-import 'package:sign_in_bloc/application/BLoC/socket/socket_bloc.dart';
 import 'package:sign_in_bloc/application/services/streaming/socket_client.dart';
-
 import '../../../common/result.dart';
 import '../../../common/use_case.dart';
 import '../../../domain/user/repository/user_repository.dart';
@@ -31,8 +28,7 @@ class LogInGuestUseCase extends IUseCase<LogInGuestUseCaseInput, User> {
       await _localStorage.setKeyValue('appToken', user.id);
       await _localStorage.setKeyValue('role', user.role.toString());
 
-      final getIt = GetIt.instance;
-      getIt.get<SocketBloc>().socketClient.updateAuth();
+      _socketClient.updateAuth();
     }
     return result;
   }
