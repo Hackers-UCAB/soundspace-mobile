@@ -158,3 +158,12 @@ $ flutter run
                 - Playlist Mapper
                 - Song Repository implementation
                 - Playlist Repository implementation
+
+## Dependencias
+
+  - Socket IO https://pub.dev/packages/socket_io_client
+  - Just Audio Flutter https://pub.dev/packages/just_audio
+  - BLoC https://pub.dev/packages/flutter_bloc
+  - Shared Preferences Flutter https://pub.dev/packages/shared_preferences
+  
+  
