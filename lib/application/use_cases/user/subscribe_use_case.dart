@@ -1,3 +1,5 @@
+import 'package:get_it/get_it.dart';
+import 'package:sign_in_bloc/application/BLoC/socket/socket_bloc.dart';
 import 'package:sign_in_bloc/common/failure.dart';
 import 'package:sign_in_bloc/domain/user/user.dart';
 import '../../../common/result.dart';
@@ -38,13 +40,8 @@ class SubscribeUseCase extends IUseCase<SubscribeUseCaseInput, User> {
         await localStorage.setKeyValue(
             'notificationsToken', notificationsToken);
         await localStorage.setKeyValue('role', user.role.toString());
-        if (socketClient.isDisconnected()) {
-          socketClient.inicializeSocket();
-        } else if (socketClient.isInitializated()) {
-          socketClient.disconnectSocket();
-          socketClient.disposeSocket();
-          socketClient.inicializeSocket();
-        }
+        final getIt = GetIt.instance;
+        getIt.get<SocketBloc>().socketClient.updateAuth();
       }
 
       return result;

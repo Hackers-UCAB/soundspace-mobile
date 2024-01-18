@@ -19,21 +19,31 @@ class SocketClientImpl extends SocketClient {
   @override
   void inicializeSocket() async {
     // NO MUY HEXAGONAL LO SE PERO HAY QUE RESOLVER, ME ENTIENDEN?
-    print('tokeeeeeen ${localStorage.getValue('appToken')}');
     if (dotenv.env['TEAM']! == 'HACKERS') {
-      socket = IO.io(
-          dotenv.env['SOCKET_SERVER']!,
-          IO.OptionBuilder()
-              .setTransports(['websocket', 'polling'])
-              .setPath(dotenv.env['PATH'].toString())
-              .setAuth({'token': localStorage.getValue('appToken')})
-              .build());
+      print('tokeeeeeen ${localStorage.getValue('appToken')}');
+      socket = IO.io(dotenv.env['SOCKET_SERVER']!, <String, dynamic>{
+        'auth': {
+          'token': localStorage.getValue('appToken').toString(),
+        },
+        'path': dotenv.env['PATH'].toString(),
+        'transports': ['websocket'],
+      });
+
+      //socket = IO.io(
+      //    dotenv.env['SOCKET_SERVER']!,
+      //    IO.OptionBuilder()
+      //        .setTransports(['websocket', 'polling'])
+      //        .setAuth({'token': localStorage.getValue('appToken')})
+      //        .setPath(dotenv.env['PATH'].toString())
+      //        .build());
     } else if (dotenv.env['TEAM']! == 'GEEKS') {
       socket = IO.io(dotenv.env['SOCKET_SERVER']!, <String, dynamic>{
         'transports': ['websocket'],
-        'auth': {'token': localStorage.getValue('appToken')},
+        'auth': {'token': localStorage.getValue('appToken').toString()},
       });
     }
+    print('inicializa ${socket.auth}');
+    socket.auth;
 
     socket.connect();
 
@@ -46,6 +56,8 @@ class SocketClientImpl extends SocketClient {
     _isInitializated = true;
     _isDisconnected = false;
   }
+
+  void setAuth() {}
 
   @override
   void sendIdSongToServer(
@@ -96,5 +108,14 @@ class SocketClientImpl extends SocketClient {
   @override
   void disposeSocket() {
     socket.dispose();
+  }
+
+  @override
+  updateAuth() {
+    print(socket.io.options!['auth']);
+    socket.disconnect();
+    socket.auth['token'] = localStorage.getValue('appToken').toString();
+    socket.connect();
+    print('actualiza ${socket.auth}');
   }
 }
