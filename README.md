@@ -30,6 +30,16 @@ $ flutter pub get
 | Oriana Toubia | Log In & Subscribe Page |
 
 ### Oriana Toubia:
-    Log In & Subscripe Page
-        -Log In:
-            -a
+    Log In & Subscribe Page
+            - Domain:
+                - User entity
+                - User repository 
+            - Application:
+                - Subscribe use case
+                - Log in use case
+                - Log in BLoC
+                - Subscribe BLoC
+            - Infrastructure
+                - User Mapper
+                - User Repository implementation
+                - Log in & subscribe screen
