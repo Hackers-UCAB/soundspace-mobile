@@ -1,16 +1,46 @@
-# sign_in_bloc
+# SoundSpace Mobile
 
-A new Flutter project.
+## Descripción
+Aplicación frontend para app de streaming de música (SoundSpace)
 
-## Getting Started
+## Instalación
+```
+# Limpiar las dependencias
+$ flutter clean
 
-This project is a starting point for a Flutter application.
+# Cargar las dependencias
+$ flutter pub get
+```
+##  <i>Project members <i>
 
-A few resources to get you started if this is your first Flutter project:
+- [Francis Bompart](https://github.com/fransbompart)
+- [Javier Molina](https://github.com/jav1212)
+- [Oriana Toubia](https://github.com/ovtoubia)
+- [Jorge Esclasans](https://github.com/Jstarturo)
+- [Gabriel Izaguirre](https://github.com/IzaeI)
+- [Arturo Hung](https://github.com/ahungm)
+- [Aaron Palacios](https://github.com/APalaciosQ)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Contribuciones
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+| Miembros | Actividades |
+| -------- | -------- |
+| Francis Bompart   | Home Page |
+| Javier Molina   | Album Page & Artist Page |
+| Oriana Toubia | Log In & Subscribe Page |
+| Jorge Esclasans | Landing Page & Profile Page |
+
+### Jorge Esclasans:
+    Profile Page
+            - Domain:
+                - User entity all attributes
+                - User repository 
+            - Application:
+                - Get User Profile Data use case
+                - Save User Profile Data use case
+                - User BLoC 
+            - Infrastructure
+                - User Mapper
+                - User Repository implementation
+                - Landing Page BLoCless screen & widgets
+                - Profile Page screen & widgets
