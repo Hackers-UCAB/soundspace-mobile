@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./documents/Diagrama Hexagonal Front Hackers Desarrollo SW-2.png" alt="Descripción de la imagen" />
+</p>
+
 # SoundSpace Mobile
 
 ## Descripción
