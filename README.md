@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="./documents/Diagrama Hexagonal Front Hackers Desarrollo SW-2.png" alt="Descripción de la imagen" />
-</p>
-
 # SoundSpace Mobile
 
 ## Descripción
@@ -14,6 +10,12 @@ $ flutter clean
 
 # Cargar las dependencias
 $ flutter pub get
+
+## Diagrama arquitectura hexagonal
+
+<p align="center">
+  <img src="./documents/Diagrama Hexagonal Front Hackers Desarrollo SW-2.png" alt="Descripción de la imagen" />
+</p>
 
 ##  <i>Project members <i>
 
