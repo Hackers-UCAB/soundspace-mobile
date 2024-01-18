@@ -4,13 +4,13 @@
 Aplicación frontend para app de streaming de música (SoundSpace)
 
 ## Instalación
-```
+
 # Limpiar las dependencias
 $ flutter clean
 
 # Cargar las dependencias
 $ flutter pub get
-```
+
 ##  <i>Project members <i>
 
 - [Francis Bompart](https://github.com/fransbompart)
@@ -30,16 +30,17 @@ $ flutter pub get
 | Oriana Toubia | Log In & Subscribe Page |
 | Jorge Esclasans | Landing Page & Profile Page
 | Gabriel Izaguirre | Search Page |
-| Aaron Palacios | Apoyo en Home & Album Page |
+| Arturo Hung | Album Page |
+| Aaron Palacios | Home & Artist Page |
 
 ### Francis Bompart:
     Diseño de la estructura del proyecto en base a la arquitectura hexagonal, en conjunto con ciertos patrones de DDD 
-    para la aplicacion de las reglas de negocio, ademas del uso de BLoC para el manejo del estado de la aplicacion. 
-    Al establecer el flujo de comunicacion entre las capas y sus componentes se tomaron en cuenta principios y 
-    tecnicas como SOLID, Dependency injection y patrones como Singleton.
+    para la aplicación de las reglas de negocio, además del uso de BLoC para el manejo del estado de la aplicación. 
+    Al establecer el flujo de comunicación entre las capas y sus componentes se tomaron en cuenta principios y 
+    técnicas como SOLID, Dependency Injection y patrones como Singleton.
 
-    Participacion en la realizacion de multiples funcionalidades, sin embargo se resalta la implementacion del manejo 
-    de excepciones, chequeo de la conexion a internet y la ubicacion del usuario, la navegacion en la aplicacion y 
+    Participación en la realización de múltiples funcionalidades, sin embargo se resalta la implementación del manejo 
+    de excepciones, chequeo de la conexión a internet y la ubicación del usuario, la navegación en la aplicación y 
     los permisos del usuario.
 
 ### Javier Molina:
@@ -48,7 +49,11 @@ $ flutter pub get
     Al establecer el flujo de comunicación entre las capas y sus componentes se tomaron en cuenta principios y 
     técnicas como SOLID, Dependency Injection y patrones como Singleton.
 
-    Participación en la realización de múltiples funcionalidades, sin embargo se resalta la implementación del reproductor de música con just_audio, la integración de firebase y local_notification para el apartado de notificaciones, implementación del client socket con socketio, implementación de la lógica de streaming e implentación de las pantallas de álbum y artista con sus respectivos BLoCs.
+    Participación en la realización de múltiples funcionalidades, sin embargo se resalta la 
+    implementación del reproductor de música con just_audio, la integración de firebase y 
+    local_notification para el apartado de notificaciones, implementación del client socket con 
+    socketio, implementación de la lógica de streaming e implementación de las pantallas de álbum/playlist 
+     y artista con sus respectivos BLoCs.
 
 ### Oriana Toubia:
     Log In & Subscribe Page
@@ -83,9 +88,44 @@ $ flutter pub get
                 - Landing Page BLoCless screen & widgets
                 - Profile Page screen & widgets
 
+### Gabriel Izaguirre:
+    Search Page
+            - Domain:
+                - Search service with entities by name
+            - Application:
+                - Search BLoC
+            - Infrastructure
+                - Search Service with entities by name
+                - Search Page screen and widgets
+
+    Otros:
+    Apoyo en el debuggeo del search page y del music player.
+
+### Arturo Hung:
+    Album Detail
+            - Domain:
+                - Album entity
+                - Promotional Banner entity
+                - Album repository
+                - Promotional Banner repository
+            - Application:
+                - Get Album Data use case
+                - Get Albums By Artist use case
+                - Get Trending Albums use case
+                - Get Promotional Banner use case
+                - Album Detail BLoC:
+                    - Album Detail BLoC
+                    - Album Detail Event
+                    - Album Detail State
+            - Infrastructure
+                - Album Mapper
+                - Promotional Banner Mapper
+                - Album Repository implementation
+                - Promotional Banner Repository implementation
+                - Album Detail widgets
 
 ### Aaron Palacios:
-    Artist Detail BLoC Pattern Implementation
+    Artist Detail
             - Domain:
                 - Song entity
                 - Playlist entity
