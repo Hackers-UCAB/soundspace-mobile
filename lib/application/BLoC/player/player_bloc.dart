@@ -125,16 +125,10 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _updateWaveForm(UpdateWaveForm event, Emitter<PlayerState> emit) {
-    if (state.waveForm.length > 1) {
-      emit(state.copyWith(waveForm: [0]));
-    } else if (state.waveForm.length == 1) {
-      emit(state.copyWith(
-          waveForm: List<double>.generate(
-              220,
-              (i) =>
-                  (Random().nextBool() ? 1 : -1) * Random().nextDouble() * 100)
-            ..shuffle()));
-    }
+    emit(state.copyWith(
+        waveForm: List<double>.generate(80,
+            (i) => (Random().nextBool() ? 1 : -1) * Random().nextDouble() * 100)
+          ..shuffle()));
   }
 
   void _updateInitState(UpdateInitState event, Emitter<PlayerState> emit) {
