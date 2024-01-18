@@ -28,3 +28,8 @@ $ flutter pub get
 | Francis Bompart   | Home Page |
 | Javier Molina   | Album Page & Artist Page |
 | Oriana Toubia | Log In & Subscribe Page |
+
+### Oriana Toubia:
+    Log In & Subscripe Page
+        -Log In:
+            -a
