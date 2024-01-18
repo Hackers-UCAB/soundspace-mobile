@@ -166,4 +166,5 @@ $ flutter run
   - BLoC https://pub.dev/packages/flutter_bloc
   - Shared Preferences Flutter https://pub.dev/packages/shared_preferences
   
-  
+## Guías 
+  - Fernando Herrera (Curso Udemy): https://www.udemy.com/course/flutter-cero-a-experto/
