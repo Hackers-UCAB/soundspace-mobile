@@ -51,6 +51,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     emit(state.copyWith(
         seekPosition: Duration.zero,
         isLoading: false,
+        playlist: [],
         waveForm: const [0],
         isInit: true,
         isRefresh: true,
@@ -65,6 +66,9 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         isConnected: true,
         speed: 1.0,
         volume: 1.0));
+
+    playerService.setSpeed(1);
+    playerService.setVolume(1);
   }
 
   void handleDisconnection() {
@@ -138,6 +142,10 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   void _initStream(InitStream event, Emitter<PlayerState> emit) {
     playerService.clean();
 
+    if (event.songId != state.currentIdSong) {
+      add(UpdateWaveForm());
+    }
+
     emit(state.copyWith(
       currentIdSong: event.songId,
       currentNameSong: event.nameSong,
@@ -153,7 +161,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
           minutes: (event.second) ~/ 60, seconds: (event.second) % 60)));
     }
 
-    add(UpdateWaveForm());
     add(const UpdateUse(isUsed: true));
 
     GetIt.instance
