@@ -45,8 +45,8 @@ $ flutter run
 | Oriana Toubia | Log In & Subscribe Page |
 | Jorge Esclasans | Landing Page & Profile Page
 | Gabriel Izaguirre | Search Page |
-| Arturo Hung | Album Page |
-| Aaron Palacios | Home & Artist Page |
+| Arturo Hung | Apoyo en la realizacion del Home & Album Page |
+| Aaron Palacios | Apoyo en la realizacion del Home & Artist Page |
 
 ### Francis Bompart:
     Diseño de la estructura del proyecto en base a la arquitectura hexagonal, en conjunto con ciertos patrones de DDD 
