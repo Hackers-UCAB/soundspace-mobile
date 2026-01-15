@@ -120,49 +120,6 @@ $ flutter run
     Otros:
     Apoyo en el debuggeo del search page y del music player.
 
-### Arturo Hung:
-    Album Detail
-            - Domain:
-                - Album entity
-                - Promotional Banner entity
-                - Album repository
-                - Promotional Banner repository
-            - Application:
-                - Get Album Data use case
-                - Get Albums By Artist use case
-                - Get Trending Albums use case
-                - Get Promotional Banner use case
-                - Album Detail BLoC:
-                    - Album Detail BLoC
-                    - Album Detail Event
-                    - Album Detail State
-            - Infrastructure
-                - Album Mapper
-                - Promotional Banner Mapper
-                - Album Repository implementation
-                - Promotional Banner Repository implementation
-                - Album Detail widgets
-
-### Aaron Palacios:
-    Artist Detail
-            - Domain:
-                - Song entity
-                - Playlist entity
-                - Song repository
-                - Playlist repository
-            - Application:
-                - Song use case
-                - Playlist use case
-                - Artist Detail BLoC:
-                    - Artist Detail BLoC
-                    - Artist Detail Event
-                    - Artist Detail State
-            - Infrastructure
-                - Song Mapper
-                - Playlist Mapper
-                - Song Repository implementation
-                - Playlist Repository implementation
-
 ## Dependencias
 
   - Socket IO https://pub.dev/packages/socket_io_client
